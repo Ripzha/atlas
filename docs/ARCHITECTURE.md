@@ -1,0 +1,113 @@
+# Architecture
+
+[Deutsch](ARCHITECTURE.de.md) · **English**
+
+## Overview
+
+Static frontend on GitHub Pages, repo `ripzha/atlas`. No build step:
+what is in the repo is what gets served.
+
+Entry pages live in the root on purpose, so forum links stay short and stable.
+
+| Page | URL | Purpose | Status |
+|---|---|---|---|
+| `index.html` | `/` | ATLAS — interactive world map | here |
+| `news.html` | `/news.html` | SimsWelt News kiosk | here |
+| `simstagram.html` | `/simstagram.html` | Character feed | still in `simswelt`, stage 5 |
+| `metaverse.html` | `/metaverse.html` | Blog for interviews & OOC | still in `simswelt`, stage 5 |
+| `rpg_char_html.html` | `/rpg_char_html.html` | Character sheet generator | still in `simswelt`, stage 5 (becomes `character-sheet.html`) |
+
+---
+
+## Directories
+
+Target layout. Folders only appear once files land in them — Git does not
+store empty directories.
+
+```
+src/
+  shared/      Used by more than one page (config, API, helpers)
+  atlas/       ATLAS application
+    core/      State, data access
+    data/      Static data (buildings, portal worlds, routes, colors)
+    features/  One folder per domain area
+    ui/        Cross-cutting UI building blocks
+  news/        Kiosk
+  simstagram/  Feed
+  metaverse/   Blog
+
+styles/        CSS, mirrors the src/ layout
+docs/          This documentation
+assets/        Images and static files
+```
+
+A feature folder answers "where is X". Dijkstra routing goes to
+`src/atlas/features/routing/`, the character view to `features/characters/`.
+
+---
+
+## Load order in `index.html`
+
+The order is binding:
+
+1. `styles/atlas/atlas.css`
+2. `src/atlas/ui/viewport.js` — **classic script, not a module**
+3. Markup
+4. `src/atlas/core.js`
+5. `src/atlas/features/events/event-pill.js`
+6. Loading screen markup, then `src/atlas/ui/loading.js`
+
+### Why `viewport.js` must not be a module
+
+The Galaxy fix rewrites media queries in the CSSOM and has to run **before**
+the first render. Browsers always defer modules (like `defer`) — the fix would
+come too late and phones would briefly see the desktop layout. As a classic
+script, the browser also waits until the preceding stylesheet is loaded,
+which is exactly what we need.
+
+---
+
+## State of `core.js`
+
+`core.js` is still the undivided core logic from the former single file
+(4987 lines, 111 functions in the global scope, comments still in German).
+Splitting it into `features/` folders is stage 3.
+
+Two things to watch:
+
+- **96 inline handlers** in the markup (`onclick="goBack()"` etc.) call
+  52 different functions. Modules have their own scope, so these functions
+  must be attached to `window` explicitly — otherwise the handlers break.
+- The functions call each other across areas. Every cut needs matching
+  `import` lines.
+
+---
+
+## What does *not* live here
+
+These tools run in the forum, not on GitHub Pages. They sit in the Xobor
+fields "Eigenes JavaScript" and header, and are unaffected by this repo:
+
+- Last-seen tracker
+- Lot assignment tool
+- Character editor
+- Event pill (forum version — to be merged with the ATLAS version later)
+- Eve and Delsyn guides (forum header)
+
+---
+
+## Backend
+
+Unchanged, on purpose:
+
+- **Google Sheet** `1PmIvQOMLqO-54h3Xwi24MD2IHNrlycg_7-H7O51BRUc` holds
+  characters, lots and events. It is also the editing interface for the
+  team — that is why there is no database.
+  Tabs: characters `474514580`, lots `306313316`, events `1218058837`.
+  Column names are German and are part of the data contract. Do not rename.
+- **Apps Script** works around CORS and serves the data.
+  Changes there require a new deployment.
+- **Images** are hosted by Xobor at `files.homepagemodules.de`.
+
+The sheet is the source of truth for names, addresses and images. The
+hardcoded data in `core.js` contains only coordinates and `nr:` fields.

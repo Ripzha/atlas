@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sims Welt News – Kiosk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/news/news.css">
+  <script type="module" src="src/news/main.js"></script>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="header-inner">
+      <div class="logo-block">
+        <img src="https://files.homepagemodules.de/b855163/a_279_d39db36e.png" alt="SimsWelt News Logo" style="height:60px;width:auto;flex-shrink:0;">
+        <div>
+          <p class="masthead-eyebrow">Simswelt Forum · Pressekiosk</p>
+          <h1 class="masthead">Simswelt<br>News</h1>
+        </div>
+      </div>
+      <div class="header-right">
+        <a href="https://www.simsforumrpg.de" class="back-btn">← Zurück zum Forum</a>
+        <p class="header-tagline">Das Magazin der SimsWelt.<br>Alle blätterbaren Ausgaben.</p>
+        <span class="atlas-badge"><span class="atlas-dot"></span>Ein Projekt Atlas Feature</span>
+      </div>
+    </div>
+    <div class="header-stats" id="stats"></div>
+  </header>
+
+  <section>
+    <div class="section-rule"><h2>Aktuelle Ausgabe</h2></div>
+    <div id="hero"></div>
+  </section>
+
+  <section>
+    <div class="section-rule"><h2>Alle Ausgaben</h2></div>
+    <div class="issues-grid" id="grid"></div>
+  </section>
+
+  <footer>
+    <p>Sims Welt News &nbsp;·&nbsp; simsforumrpg.de &nbsp;·&nbsp; Ein Projekt Atlas Feature &nbsp;·&nbsp; © SimsForumRPG</p>
+  </footer>
+
+</div>
+</body>
+</html>
