@@ -62,8 +62,10 @@ Die Reihenfolge ist bindend:
 4. `src/atlas/config.js` — `BASE`, `IMG`, `ADMIN_PASS`
 5. `src/atlas/data/buildings.js`, `worlds.js`, `world-lots.js` — feste Daten
 6. `src/atlas/core.js`
-7. `src/atlas/features/events/event-pill.js`
-8. Loading-Screen-Markup, danach `src/atlas/ui/loading.js`
+7. UI-Bausteine: `src/atlas/ui/tooltips.js`, `mobile-sheets.js`,
+   `pinch-zoom.js`, `mobile-dot-bar.js`, `draggable.js`
+8. `src/atlas/features/events/event-pill.js`
+9. Loading-Screen-Markup, danach `src/atlas/ui/loading.js`
 
 Bis Etappe 3b sind alle ATLAS-Scripts klassische Scripts, die sich den globalen
 Raum teilen. Jede Datei muss nach den Dateien laden, deren Werte sie beim Laden
@@ -81,9 +83,10 @@ bis das vorangehende Stylesheet geladen ist. Genau das brauchen wir.
 
 ## Zustand von `core.js`
 
-`core.js` ist noch die Kern-Logik aus dem früheren Single-File (rund 4300
-Zeilen, 111 Funktionen im globalen Namensraum, Kommentare noch deutsch).
-Konfiguration und feste Daten sind bereits ausgelagert (Etappe 3a, Schnitt 1).
+`core.js` ist noch die Kern-Logik aus dem früheren Single-File (rund 4000
+Zeilen, Funktionen im globalen Namensraum, Kommentare noch deutsch).
+In Etappe 3a bereits ausgelagert: Konfiguration und feste Daten (Schnitt 1)
+und die UI-Bausteine in `src/atlas/ui/` (Schnitt 2).
 Die Aufteilung des Rests in `features/`-Ordner läuft in Etappe 3a weiter, die
 Umstellung auf ES-Module ist Etappe 3b.
 

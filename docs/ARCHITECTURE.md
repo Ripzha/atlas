@@ -60,8 +60,10 @@ The order is binding:
 4. `src/atlas/config.js` — `BASE`, `IMG`, `ADMIN_PASS`
 5. `src/atlas/data/buildings.js`, `worlds.js`, `world-lots.js` — static data
 6. `src/atlas/core.js`
-7. `src/atlas/features/events/event-pill.js`
-8. Loading screen markup, then `src/atlas/ui/loading.js`
+7. UI building blocks: `src/atlas/ui/tooltips.js`, `mobile-sheets.js`,
+   `pinch-zoom.js`, `mobile-dot-bar.js`, `draggable.js`
+8. `src/atlas/features/events/event-pill.js`
+9. Loading screen markup, then `src/atlas/ui/loading.js`
 
 Until stage 3b, all ATLAS scripts are classic scripts that share the global
 scope. Each file must load after the files whose values it uses at load time.
@@ -78,9 +80,10 @@ which is exactly what we need.
 
 ## State of `core.js`
 
-`core.js` is still the core logic from the former single file (about 4300
-lines, 111 functions in the global scope, comments still in German).
-Configuration and static data have already been moved out (stage 3a, cut 1).
+`core.js` is still the core logic from the former single file (about 4000
+lines, functions in the global scope, comments still in German).
+Already moved out in stage 3a: configuration and static data (cut 1) and the
+UI building blocks in `src/atlas/ui/` (cut 2).
 Splitting the rest into `features/` folders continues in stage 3a; converting
 to ES modules is stage 3b.
 

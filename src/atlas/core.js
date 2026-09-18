@@ -735,49 +735,6 @@ function hideActivityPreview(){
   }
 }
 
-// ── Sidebar Nav-Tooltips ────────────────────────────────────
-// Hover-Tooltip für Sidebar-Items mit data-tip Attribut.
-// Stil identisch zu .activity-preview, aber ohne fetch/async.
-var _navTipEl = null;
-function showNavTip(item, text){
-  hideNavTip();
-  var rect = item.getBoundingClientRect();
-  var div = document.createElement('div');
-  div.className = 'activity-preview';
-  div.textContent = text;
-  document.body.appendChild(div);
-  _navTipEl = div;
-  // Echte Breite messen statt max-width annehmen — sonst rutscht der Tooltip
-  // bei kurzen Texten unnötig weit weg vom Item
-  var w = div.offsetWidth;
-  var left = rect.right + 12;
-  var side = 'right';
-  if(left + w > window.innerWidth - 8){
-    left = rect.left - w - 12;
-    side = 'left';
-  }
-  var top = rect.top + rect.height/2 - div.offsetHeight/2;
-  if(top < 8) top = 8;
-  if(top + div.offsetHeight > window.innerHeight - 8) top = window.innerHeight - div.offsetHeight - 8;
-  div.style.left = left + 'px';
-  div.style.top = top + 'px';
-  div.classList.add(side);
-}
-function hideNavTip(){
-  if(_navTipEl){
-    _navTipEl.remove();
-    _navTipEl = null;
-  }
-}
-document.addEventListener('mouseover', function(e){
-  var t = e.target.closest('[data-tip]');
-  if(t) showNavTip(t, t.getAttribute('data-tip'));
-});
-document.addEventListener('mouseout', function(e){
-  var t = e.target.closest('[data-tip]');
-  if(t) hideNavTip();
-});
-
 function updateSidebarStats(){
   // Fetch live forum stats from Apps Script
   fetch(SCRIPT_URL+'?action=stats')
@@ -2361,53 +2318,6 @@ function toggleCustomActive(wname,idx){customLots[wname][idx].active=!customLots
 function copyExport(){const combined={};[...Object.keys(worldLots),...Object.keys(customLots)].forEach(k=>{const renamed=renamedLots[k]||{};combined[k]=[...(worldLots[k]||[]).filter(l=>!(hiddenLots[k]||[]).includes(l.name)).map(l=>({...l,name:renamed[l.name]||l.name})),...(customLots[k]||[]).map(l=>{const c={...l};delete c._src;delete c._needsCalib;return c;})];});navigator.clipboard.writeText('const worldLots='+JSON.stringify(combined,null,2)+';').then(()=>alert('✓ Kopiert! Jetzt in GitHub einfügen.'));}
 function clearAllCustom(){if(!confirm('Alle custom Lots löschen?'))return;customLots={};localStorage.removeItem('sw_custom_lots');if(currentWorld)renderLots(currentWorld);renderAdminContent();}
 
-// ═══════════════════════════════════════════
-// USER SUGGEST
-// ═══════════════════════════════════════════
-
-
-// ═══════════════════════════════════════════
-// MOBILE SHEETS
-// ═══════════════════════════════════════════
-function openSheet(id){
-  document.getElementById('sheet-overlay').classList.add('open');
-  ['nav','activity'].forEach(s=>document.getElementById('sheet-'+s).classList.toggle('open',s===id));
-  // Activity-Sheet: Inhalt + Click-Handler aus Desktop-Sidebar klonen.
-  // syncMobileActivitySheet übernimmt das (greift nur wenn Sheet offen)
-  if(id === 'activity' && typeof syncMobileActivitySheet === 'function'){
-    syncMobileActivitySheet();
-  }
-}
-function closeSheet(){document.getElementById('sheet-overlay').classList.remove('open');document.querySelectorAll('.sheet').forEach(s=>s.classList.remove('open'));}
-
-// Synct den Inhalt vom Desktop-Sidebar in das Mobile-Activity-Sheet wenn offen.
-// Wird nach jedem updateSidebar* aufgerufen damit das Sheet live mitupdatet.
-function syncMobileActivitySheet(){
-  var sheet = document.getElementById('sheet-activity');
-  if(!sheet || !sheet.classList.contains('open')) return;
-  try {
-    var pairs = [
-      ['sidebar-activity', 'sidebar-activity-mob'],
-      ['sidebar-newchars', 'sidebar-newchars-mob'],
-      ['sidebar-forum',    'sidebar-forum-mob']
-    ];
-    pairs.forEach(function(p){
-      var src = document.getElementById(p[0]);
-      var dst = document.getElementById(p[1]);
-      if(!src || !dst) return;
-      dst.innerHTML = src.innerHTML;
-      // Click-Handler nach innerHTML-Copy wieder dranhängen (innerHTML kopiert keine Listener).
-      // Hover-Preview-Listener werden NICHT gesetzt — auf Touch nutzlos und macht Code unnötig schwer.
-      // Auch data-tip Attribute entfernen — sind Desktop-Tooltips.
-      dst.querySelectorAll('[data-url]').forEach(function(item){
-        item.removeAttribute('data-tip');
-        var url = item.getAttribute('data-url');
-        if(!url) return;
-        item.addEventListener('click', function(){ window.open(url, '_blank'); });
-      });
-    });
-  } catch(_){}
-}
 let calibBuildingMode=false,calibBuildingData=[];
 
 function getBuildingCalibLots(){
@@ -2462,133 +2372,6 @@ document.addEventListener('DOMContentLoaded',function(){
     document.getElementById('calib-building-count').textContent=calibBuildingData.length+' / '+lots.length;
   });
 });
-// ═══════════════════════════════════════════
-// MOBILE PINCH-ZOOM + PAN
-// ═══════════════════════════════════════════
-function makePinchZoom(el,opts={}){
-  let tx=0,ty=0,sc=1;
-  let p1x=0,p1y=0;
-  let nlx=0,nly=0,lx0=0,ly0=0,pd0=1,sc0=1;
-  const maxSc=opts.maxScale||5,thresh=opts.labelThreshold||1.8;
-  const wrap=el.parentElement;
-  function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
-  function apply(){
-    el.style.transform=`translate(${tx}px,${ty}px) scale(${sc})`;
-    el.classList.toggle('zoom-labels',sc>=thresh);
-    // Tokens-Anzeige auf Touch-Devices: ab 50% Zoom (sc >= 1.5)
-    el.classList.toggle('tokens-on-zoom',sc>=1.5);
-  }
-  function clampPan(){
-    const ww=wrap.clientWidth,wh=wrap.clientHeight;
-    const ew=el.offsetWidth,eh=el.offsetHeight;
-    const sw=ew*sc,sh=eh*sc;
-    // transform-origin: 50% 50% — Element wird von Mitte aus skaliert.
-    // Bei tx=0, ty=0 ist Element flex-zentriert im Wrap.
-    // Max-Pan: solang Element-Kante nicht in den Wrap reinrutscht.
-    // Wenn sw > ww: max |tx| = (sw - ww) / 2
-    // Wenn sw <= ww: tx muss 0 sein (sonst Lücken sichtbar)
-    // Auf Touch + Zoom: vertikales Pan erlauben für 16:9-Karten auf Hochformat
-    const isTouch = window.matchMedia && window.matchMedia('(pointer:coarse)').matches;
-    const isZoomed = sc > 1.05;
-    const allowExtraPan = isTouch && isZoomed;
-    if(sw <= ww && !allowExtraPan){
-      tx = 0;
-    } else {
-      const maxTx = Math.max((sw - ww) / 2, allowExtraPan ? sw / 4 : 0);
-      tx = clamp(tx, -maxTx, maxTx);
-    }
-    if(sh <= wh && !allowExtraPan){
-      ty = 0;
-    } else {
-      const maxTy = Math.max((sh - wh) / 2, allowExtraPan ? sh / 4 : 0);
-      ty = clamp(ty, -maxTy, maxTy);
-    }
-  }
-  function reset(){tx=0;ty=0;sc=1;apply();}
-  wrap.addEventListener('touchstart',e=>{
-    if(opts.guard&&opts.guard())return;
-    // Touch auf dem "Andere Welten"-Portal soll Portal-Drag triggern, nicht Karten-Pan
-    if(e.target.closest && e.target.closest('#otherworld-portal')) return;
-    if(e.touches.length===1){
-      p1x=e.touches[0].clientX-tx;
-      p1y=e.touches[0].clientY-ty;
-    }
-    if(e.touches.length===2){
-      const a=e.touches[0],b=e.touches[1];
-      pd0=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)||1;
-      sc0=sc;
-      // Wrap-Center als Anker (passt zu transform-origin: 50% 50%)
-      const wr=wrap.getBoundingClientRect();
-      const wcx=wr.left+wr.width/2, wcy=wr.top+wr.height/2;
-      const mx=(a.clientX+b.clientX)/2,my=(a.clientY+b.clientY)/2;
-      // Element-lokale Koord des Fingerpunkts vor Skalierung (relativ zur Element-Mitte)
-      // Element-Mitte im Screen ist (wcx + tx, wcy + ty)
-      lx0=(mx-(wcx+tx))/sc0;
-      ly0=(my-(wcy+ty))/sc0;
-      // Wrap-Center als nlx/nly speichern für Move
-      nlx=wcx; nly=wcy;
-    }
-  },{passive:true});
-  wrap.addEventListener('touchmove',e=>{
-    if(opts.guard&&opts.guard())return;
-    if(e.target.closest && e.target.closest('#otherworld-portal')) return;
-    if(e.touches.length===1&&sc>1.05){
-      tx=e.touches[0].clientX-p1x;
-      ty=e.touches[0].clientY-p1y;
-      clampPan();apply();e.preventDefault();
-    } else if(e.touches.length===1&&sc<=1.05){
-      // scale=1: allow natural page scroll, do nothing
-    }
-    if(e.touches.length===2){
-      const a=e.touches[0],b=e.touches[1];
-      const pd=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)||1;
-      sc=clamp(sc0*(pd/pd0),1,maxSc);
-      const mx=(a.clientX+b.clientX)/2,my=(a.clientY+b.clientY)/2;
-      // Fingerpunkt soll bei selben Element-Lokalkoord (lx0,ly0) bleiben
-      // -> mx = nlx + tx + lx0*sc -> tx = mx - nlx - lx0*sc
-      tx=mx-nlx-lx0*sc;
-      ty=my-nly-ly0*sc;
-      clampPan();apply();e.preventDefault();
-    }
-  },{passive:false});
-  wrap.addEventListener('touchend',e=>{
-    if(e.touches.length===0&&sc<1.05){reset();return;}
-    if(e.touches.length===1){
-      p1x=e.touches[0].clientX-tx;
-      p1y=e.touches[0].clientY-ty;
-    }
-  },{passive:true});
-  return {reset};
-}
-const _worldZoom=makePinchZoom(document.getElementById('world-image-area'),{
-  guard:()=>calibWorldMode||posMode
-});
-const _mapZoom=makePinchZoom(document.getElementById('map-image-area'));
-// Auf window exposen damit goBack() den Zoom resetten kann
-window._worldZoom=_worldZoom;
-window._mapZoom=_mapZoom;
-
-// Mobile bottom bar
-let _mobileDotUrl='';
-function showMobileDotBar(nr,name,url){
-  _mobileDotUrl=url;
-  const bar=document.getElementById('mobile-dot-bar');
-  document.getElementById('mobile-dot-nr').textContent=nr||name;
-  document.getElementById('mobile-dot-name').textContent=(nr&&name!==nr)?name:'';
-  bar.classList.add('visible');
-}
-function hideMobileDotBar(){document.getElementById('mobile-dot-bar').classList.remove('visible');_mobileDotUrl='';}
-function mobileDotOpen(){if(_mobileDotUrl)window.open(_mobileDotUrl,'_blank');}
-
-// Mobile: show bottom bar on tap, hide on tap elsewhere
-document.addEventListener('touchstart',e=>{
-  document.querySelectorAll('.tapped').forEach(el=>el.classList.remove('tapped'));
-  if(e.target.closest('#mobile-dot-bar'))return;
-  const dot=e.target.closest('.lot-dot,.cluster-dot,.world-dot');
-  if(dot){dot.classList.add('tapped');}
-  else{hideMobileDotBar();}
-},{passive:true});
-
 // ═══════════════════════════════════════════
 // CHARAKTER-VIEW
 // ═══════════════════════════════════════════
@@ -3124,67 +2907,6 @@ window.addEventListener('load',function(){
   setTimeout(_prioritizeInitialImages, 800); // 2. Pass falls Sidebars später rendern
 });
 
-
-
-// Reposition tooltips that go off-screen
-function repositionTooltips(){
-  document.querySelectorAll('.lot-dot, .cluster-dot').forEach(function(dot){
-    var tt = dot.querySelector('.lot-tooltip, .cluster-hover');
-    if(!tt) return;
-    dot.addEventListener('mouseenter', function(){
-      // Reset first
-      tt.style.bottom = '';
-      tt.style.top = '';
-      tt.style.transform = '';
-      // Check after display
-      requestAnimationFrame(function(){
-        var r = tt.getBoundingClientRect();
-        var dotR = dot.getBoundingClientRect();
-        // Off top
-        if(r.top < 60){
-          tt.style.bottom = 'auto';
-          tt.style.top = '18px';
-          tt.style.transform = 'translateX(-50%)';
-        }
-        // Off right
-        if(r.right > window.innerWidth - 10){
-          tt.style.left = 'auto';
-          tt.style.right = '0';
-          tt.style.transform = 'none';
-        }
-        // Off left
-        if(r.left < 10){
-          tt.style.left = '0';
-          tt.style.transform = 'none';
-        }
-      });
-    });
-    dot.addEventListener('mouseleave', function(){
-      tt.style.bottom = '';
-      tt.style.top = '';
-      tt.style.transform = '';
-      tt.style.left = '';
-      tt.style.right = '';
-    });
-  });
-}
-setTimeout(repositionTooltips, 1000);
-
-document.querySelectorAll('.sheet').forEach(sheet=>{
-  let sy=0, startedOnHandle=false;
-  sheet.addEventListener('touchstart', e=>{
-    sy = e.touches[0].clientY;
-    // Schliessen nur wenn Touch am Handle (Grip oben) startet.
-    // Sonst: User scrollt im Sheet — kein Schliess-Trigger, sonst frisst es scroll-up gestures.
-    startedOnHandle = !!e.target.closest('.sheet-handle');
-  }, {passive:true});
-  sheet.addEventListener('touchend', e=>{
-    if(!startedOnHandle) return;
-    const dy = e.changedTouches[0].clientY - sy;
-    if(dy > 60) closeSheet();
-  }, {passive:true});
-});
-
 // ═══════════════════════════════════════════════════════════════════════
 //   ATLAS HIGHLIGHT (von Eve-Onboarding im Forum-Header gesteuert)
 // ═══════════════════════════════════════════════════════════════════════
@@ -3303,43 +3025,6 @@ document.querySelectorAll('.sheet').forEach(sheet=>{
     }
   });
 })();
-
-
-// Calib-Panels draggable machen (h4 ist der Header zum Greifen)
-(function(){
-  function makeDraggable(panel) {
-    var header = panel.querySelector('h4');
-    if (!header) return;
-    var dragging = false, sx = 0, sy = 0, px = 0, py = 0;
-    function onDown(e) {
-      dragging = true;
-      var t = e.touches ? e.touches[0] : e;
-      sx = t.clientX; sy = t.clientY;
-      var rect = panel.getBoundingClientRect();
-      px = rect.left; py = rect.top;
-      panel.style.left = px + 'px';
-      panel.style.top = py + 'px';
-      panel.style.right = 'auto';
-      panel.style.bottom = 'auto';
-      e.preventDefault();
-    }
-    function onMove(e) {
-      if (!dragging) return;
-      var t = e.touches ? e.touches[0] : e;
-      panel.style.left = (px + t.clientX - sx) + 'px';
-      panel.style.top = (py + t.clientY - sy) + 'px';
-    }
-    function onUp(){ dragging = false; }
-    header.addEventListener('mousedown', onDown);
-    header.addEventListener('touchstart', onDown, {passive:false});
-    document.addEventListener('mousemove', onMove);
-    document.addEventListener('touchmove', onMove, {passive:false});
-    document.addEventListener('mouseup', onUp);
-    document.addEventListener('touchend', onUp);
-  }
-  document.querySelectorAll('.calib-panel').forEach(makeDraggable);
-})();
-
 /* ── ROUTEN-ADMIN CSS ── */
 
 // ═══════════════════════════════════════════
