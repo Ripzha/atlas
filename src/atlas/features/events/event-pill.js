@@ -133,6 +133,10 @@
     set('bottom', 'auto');
     set('transform', 'none');
     set('margin', '0');
+    // Inside <body> the pill needs its own layer: above the page layout
+    // (#topnav 100, mobile bar 200, views up to 300), below the admin panel
+    // (400) and overlays. With the default 50 it vanished behind the layout.
+    set('z-index', '350');
   }
 
   function restorePillPosition(pill) {
@@ -152,6 +156,8 @@
       const r = pill.getBoundingClientRect();
       start = { x: e.clientX, y: e.clientY, dx: e.clientX - r.left, dy: e.clientY - r.top, id: e.pointerId };
       moved = false;
+      // Capture right away, so fast movements that leave the pill still arrive
+      try { pill.setPointerCapture(e.pointerId); } catch (_) {}
     });
     pill.addEventListener('pointermove', function(e) {
       if (!start) return;
@@ -161,6 +167,7 @@
         moved = true;
         pill.style.cursor = 'grabbing';
         placePill(pill, e.clientX - start.dx, e.clientY - start.dy);
+        // Moving the pill into <body> can drop the capture: take it again
         try { pill.setPointerCapture(start.id); } catch (_) {}
       }
       placePill(pill, e.clientX - start.dx, e.clientY - start.dy);

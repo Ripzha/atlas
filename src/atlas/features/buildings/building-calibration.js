@@ -3,8 +3,8 @@
    from inline handlers: toggleBuildingCalib(), clearBuildingCalib(),
    copyBuildingCalib(). */
 
-import { BUILDINGS } from '../../data/buildings.js?v=202609181807';
-import { buildingFloorIdx, currentBuildingKey } from './building-view.js?v=202609181807';
+import { BUILDINGS } from '../../data/buildings.js?v=202609181817';
+import { buildingFloorIdx, currentBuildingKey } from './building-view.js?v=202609181817';
 
 let calibBuildingMode=false,calibBuildingData=[];
 
