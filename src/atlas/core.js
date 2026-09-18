@@ -2825,7 +2825,7 @@ window._adminAssignSave = function(world){
   var nr = window._adminAssignNr;
   var msg = document.getElementById('assign-msg');
   var t = window._adminAssignTypeVal;
-  if(!nr||!t){ msg.style.color='#ff6b6b'; msg.textContent='Bitte Art waehlen.'; return; }
+  if(!nr||!t){ msg.style.color='#ff6b6b'; msg.textContent='Bitte Art wählen.'; return; }
   msg.style.color='rgba(255,255,255,0.4)'; msg.textContent='Speichern...';
 
   function doSave(saveNr, threadUrl, imgUrl, name){
@@ -4136,7 +4136,7 @@ document.querySelectorAll('.sheet').forEach(sheet=>{
     totalMins=Math.max(1,Math.round(totalMins));
     const h=Math.floor(totalMins/60),m=totalMins%60;
     const timeStr=(h>0?h+'h ':'')+(m>0?m+' min':'');
-    const modeLabels={car:'mit dem Auto',transit:'mit dem OEV',walk:'zu Fuss'};
+    const modeLabels={car:'mit dem Auto',transit:'mit dem ÖV',walk:'zu Fuss'};
 
     document.getElementById('navi-time').innerHTML=timeStr+' <span>'+(modeLabels[naviTransport]||'')+'</span>';
     document.getElementById('navi-calc-info').textContent='Route folgt dem Strassennetz ('+(pathNames.length)+' Orte)'+(hasBoat?' · Boot-Abschnitt':hasPlane?' · Flug-Abschnitt':'');
@@ -4154,7 +4154,7 @@ document.querySelectorAll('.sheet').forEach(sheet=>{
     if(hasBoat||hasPlane){
       const badge=document.createElement('li');
       badge.style.cssText='padding-top:6px;font-size:10px;color:'+(hasBoat?'#5a9fd4':'#b07add');
-      badge.textContent=hasBoat?'~ Wasserueberquerung per Boot':'Flug-Abschnitt';
+      badge.textContent=hasBoat?'~ Wasserüberquerung per Boot':'Flug-Abschnitt';
       list.appendChild(badge);
     }
     document.getElementById('navi-result').style.display='block';
@@ -4428,7 +4428,7 @@ function initRoutenAdmin(root){
     <div class="ra-row">
       <button class="ra-tb car on" id="ra-tm-car" onclick="raTM('car')">Auto</button>
       <button class="ra-tb walk" id="ra-tm-walk" onclick="raTM('walk')">Fuss</button>
-      <button class="ra-tb transit" id="ra-tm-transit" onclick="raTM('transit')">OEV</button>
+      <button class="ra-tb transit" id="ra-tm-transit" onclick="raTM('transit')">ÖV</button>
     </div>
     <div class="ra-label">Abschnittstyp</div>
     <div class="ra-row">
@@ -4462,7 +4462,7 @@ function initRoutenAdmin(root){
       <button class="ra-btn ok" onclick="raImportPrompt()">JSON importieren</button>
     </div>
     <div class="ra-btns" style="margin-top:5px">
-      <button class="ra-btn del" onclick="raClearAll()">Alle loeschen</button>
+      <button class="ra-btn del" onclick="raClearAll()">Alle löschen</button>
     </div>
     <div class="ra-export-box" id="ra-export-box">Noch keine Routen gespeichert.</div>
     </div>
