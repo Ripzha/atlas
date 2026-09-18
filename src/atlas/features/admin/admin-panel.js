@@ -5,10 +5,10 @@
    Classic script, loaded before core.js. */
 
 document.getElementById('logo-icon').addEventListener('click',()=>{
-  logoClicks++;clearTimeout(logoTimer);logoTimer=setTimeout(()=>logoClicks=0,5000);
-  if(logoClicks>=5){
-    logoClicks=0;
-    if(adminMode){adminMode=false;closeAdmin();return;}
+  state.logoClicks++;clearTimeout(state.logoTimer);state.logoTimer=setTimeout(()=>state.logoClicks=0,5000);
+  if(state.logoClicks>=5){
+    state.logoClicks=0;
+    if(state.adminMode){state.adminMode=false;closeAdmin();return;}
     // Own modal instead of prompt() — some mobile browsers (Samsung Internet,
     // iOS Safari with popup blocker) do not show prompt() reliably.
     showAdminLogin();
@@ -28,7 +28,7 @@ function showAdminLogin(){
     const pw=(input.value||'').trim().toLowerCase();
     if(pw===ADMIN_PASS){
       ov.remove();
-      adminMode=true;
+      state.adminMode=true;
       openAdmin();
     } else {
       input.style.borderColor='#e05555';
@@ -41,7 +41,7 @@ function showAdminLogin(){
   document.getElementById('admin-login-cancel').onclick=()=>ov.remove();
   input.addEventListener('keydown',e=>{if(e.key==='Enter')submit();else if(e.key==='Escape')ov.remove();});
 }
-function openAdmin(){document.body.classList.add('admin-mode');document.getElementById('admin-panel').classList.add('open');document.getElementById('logo-icon').classList.add('admin-active');adminTab='assign';setAdminTab('assign');}
-function closeAdmin(){document.body.classList.remove('admin-mode');document.getElementById('admin-panel').classList.remove('open');document.getElementById('logo-icon').classList.remove('admin-active');adminMode=false;}
-function setAdminTab(t){adminTab=t;['assign','routen'].forEach(id=>document.getElementById('atab-'+id).classList.toggle('active',id===t));renderAdminContent();}
-function renderAdminContent(){const c=document.getElementById('admin-content');if(adminTab==='assign')renderAssignTab(c);else if(adminTab==='routen')renderRoutenTab(c);}
+function openAdmin(){document.body.classList.add('admin-mode');document.getElementById('admin-panel').classList.add('open');document.getElementById('logo-icon').classList.add('admin-active');state.adminTab='assign';setAdminTab('assign');}
+function closeAdmin(){document.body.classList.remove('admin-mode');document.getElementById('admin-panel').classList.remove('open');document.getElementById('logo-icon').classList.remove('admin-active');state.adminMode=false;}
+function setAdminTab(t){state.adminTab=t;['assign','routen'].forEach(id=>document.getElementById('atab-'+id).classList.toggle('active',id===t));renderAdminContent();}
+function renderAdminContent(){const c=document.getElementById('admin-content');if(state.adminTab==='assign')renderAssignTab(c);else if(state.adminTab==='routen')renderRoutenTab(c);}

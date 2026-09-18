@@ -29,7 +29,7 @@ worlds.forEach(w=>{
   el.innerHTML=`<div class="dot-pulse" style="width:34px;height:34px;border-color:${w.color}"></div><div class="dot-inner" style="width:11px;height:11px;background:${w.color};box-shadow:0 0 5px ${w.color}"></div><div class="dot-label">${w.name}</div><div class="dot-char-tokens" data-world-name="${w.name}"></div><div class="hover-card" style="border:1px solid ${w.color}88;box-shadow:0 6px 28px ${w.color}44"><div style="position:relative">${w.img?`<img class="hover-img" src="${w.img}" loading="lazy" decoding="async" onerror="this.style.display='none'">`:''}<div class="hover-gradient"></div><div class="hover-name">${w.name}</div></div><div class="hover-footer"><span class="hover-type">${w.type}</span><span class="hover-action" style="color:${w.color}">Öffnen →</span></div></div>`;
   el.addEventListener('click',e=>{
     e.stopPropagation();
-    if(calibMapMode)return;
+    if(state.calibMapMode)return;
     // Navigator mode: a click fills the dropdown instead of entering the world
     if(window.naviDotClick && naviDotClick(w.name)) return;
     // On mobile: first tap = preview (tokens + focus), second tap = enter the world
@@ -87,14 +87,14 @@ if(window.matchMedia('(pointer:coarse)').matches){
 setTimeout(updateAllTokens, 500);
 
 mapC.addEventListener('click',e=>{
-  if(!calibMapMode)return;
+  if(!state.calibMapMode)return;
   if(e.target.closest('.calib-panel')||e.target.closest('.calib-btn'))return;
   const r=mapIA.getBoundingClientRect();
   const x=+((e.clientX-r.left)/r.width*100).toFixed(1);
   const y=+((e.clientY-r.top)/r.height*100).toFixed(1);
-  const w=worlds[calibMapIdx];
+  const w=worlds[state.calibMapIdx];
   if(!w){alert('Alle kalibriert!');return;}
-  calibMapData.push({name:w.name,x,y});calibMapIdx++;
+  state.calibMapData.push({name:w.name,x,y});state.calibMapIdx++;
   updateCalibLog('map');
-  document.getElementById('calib-next').textContent=worlds[calibMapIdx]?.name||'✓ Fertig';
+  document.getElementById('calib-next').textContent=worlds[state.calibMapIdx]?.name||'✓ Fertig';
 },true);

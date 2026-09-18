@@ -16,7 +16,7 @@ function enterBuilding(buildingKey,lots){
   (function(){
     var box=document.getElementById('building-rent-info');
     if(!box)return;
-    var rent=currentWorld ? (sheetWorldMeta[currentWorld.name]||{}).rent : '';
+    var rent=state.currentWorld ? (sheetWorldMeta[state.currentWorld.name]||{}).rent : '';
     if(rent){
       box.innerHTML='<div class="rent-label">💰 Mietpreise</div>'+rent.replace(/\|/g,'<br>');
       box.classList.add('visible');

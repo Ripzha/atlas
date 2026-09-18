@@ -99,7 +99,7 @@ function makePinchZoom(el,opts={}){
   return {reset};
 }
 const _worldZoom=makePinchZoom(document.getElementById('world-image-area'),{
-  guard:()=>calibWorldMode
+  guard:()=>state.calibWorldMode
 });
 const _mapZoom=makePinchZoom(document.getElementById('map-image-area'));
 // Expose on window so goBack() can reset the zoom

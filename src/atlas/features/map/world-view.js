@@ -6,7 +6,7 @@
 
 function enterWorld(w){
   try{sessionStorage.setItem('atlas_world',w.name);}catch(e){}
-  currentWorld=w;
+  state.currentWorld=w;
   mapC.classList.remove('active');
   const wc=document.getElementById('world-container');
   wc.classList.add('active');
@@ -43,7 +43,7 @@ function enterWorld(w){
   document.getElementById('world-subtitle').textContent='/ '+w.name;
   document.getElementById('btn-back').style.display='inline-block';
   document.getElementById('mob-back').style.display='flex';
-  calibWorldData=[];updateCalibLog('world');
+  state.calibWorldData=[];updateCalibLog('world');
   var _cl0=getLots(w.name)[0];document.getElementById('calib-world-next').textContent=(_cl0?.nr||_cl0?.name||'—');
   document.getElementById('calib-world-count').textContent='0';
   exitBuilding();
@@ -59,7 +59,7 @@ function enterWorld(w){
       if(rent){box.innerHTML='<div class="rent-label">💰 Mietpreise</div>'+rent.replace(/\|/g,'<br>');box.classList.add('visible');}
       else {box.classList.remove('visible');box.innerHTML='';}
     }
-    renderLots(w); if(adminMode)renderAdminContent(); setTimeout(updateAllTokens,100); setTimeout(repositionTooltips,200);
+    renderLots(w); if(state.adminMode)renderAdminContent(); setTimeout(updateAllTokens,100); setTimeout(repositionTooltips,200);
     if(_showLoader && typeof window.hideAtlasLoading === 'function') window.hideAtlasLoading();
   });
 }
@@ -72,7 +72,7 @@ function goBack(){
   document.getElementById('world-subtitle').textContent='';
   document.getElementById('btn-back').style.display='none';
   document.getElementById('mob-back').style.display='none';
-  calibWorldMode=false;
+  state.calibWorldMode=false;
   document.getElementById('calib-world-panel').style.display='none';
   document.getElementById('world-container').style.cursor='default';
   // Reset the world zoom so the next entry is not zoomed in
@@ -82,7 +82,7 @@ function goBack(){
   mapIA.classList.remove('focus-mode');
   mapIA.querySelectorAll('.world-dot.focused').forEach(d=>d.classList.remove('focused'));
   try{sessionStorage.removeItem('atlas_world');sessionStorage.removeItem('atlas_building');}catch(e){}
-  currentWorld=null;
+  state.currentWorld=null;
 }
 
 function renderLots(w){
@@ -117,7 +117,7 @@ function renderLots(w){
       ld.innerHTML=(lot.info?`<div class="lot-inner" style="width:11px;height:11px;background:${_dotBg};box-shadow:${_dotShadow};transform:rotate(45deg);border-radius:2px"></div>`:`<div class="lot-pulse"></div><div class="lot-inner" style="width:12px;height:12px;background:${_dotBg};box-shadow:${_dotShadow}"></div>`)+`<div class="lot-label">${(()=>{const p=parseLotLabel(lot);return p.sub?`${p.num}<span class="lot-sublabel">${p.sub}</span>`:p.num;})()}</div><div class="dot-char-tokens" data-lot-url="${lot.url||''}"></div>${_tt}`;
       if(!lot.info){ld.addEventListener('click',e=>{
         e.stopPropagation();
-        if(calibWorldMode)return;
+        if(state.calibWorldMode)return;
         if(!lot.url)return; // complex anchor etc. without URL: no about:blank click
         // Touch devices (any screen size): tap-to-preview, tap-to-enter pattern
         if(window.matchMedia('(pointer:coarse)').matches){
@@ -144,7 +144,7 @@ function renderLots(w){
       const cd=document.createElement('div');
       cd.className='cluster-dot'+(isBuilding?' building-dot':'');
       cd.style.cssText=`left:${group.x}%;top:${group.y}%`;
-      const lblParts=isBuilding?(()=>{const base=buildings[0].split('-')[0].trim();const range=getBuildingNrRange(buildings[0],currentWorld?.name);return{main:range||base,sub:range?base:''};})():(()=>{
+      const lblParts=isBuilding?(()=>{const base=buildings[0].split('-')[0].trim();const range=getBuildingNrRange(buildings[0],state.currentWorld?.name);return{main:range||base,sub:range?base:''};})():(()=>{
         // Non-building cluster: find the main nr (without letter suffix) = apartment complex anchor
         // Fallback: use parseLotLabel on first lot to strip ZZ/ZY suffix → "Nr. 6ZZ" → "Nr. 6"
         const mainLot=group.lots.find(l=>l.nr&&/^Nr\.\s*\d+$/.test(l.nr))||group.lots[0];
@@ -160,8 +160,8 @@ function renderLots(w){
       // Apartment complex anchor image: if no lot has its own image, look in the
       // sheet for an anchor (row with the same dotGroup, without threadUrl, with imgUrl)
       let anchorImg=null;
-      if(!isBuilding && !lotsWithImg.length && currentWorld){
-        const ws=sheetLots[currentWorld.name]||{};
+      if(!isBuilding && !lotsWithImg.length && state.currentWorld){
+        const ws=sheetLots[state.currentWorld.name]||{};
         // Find the main number of the group (e.g. "11" from "Nr. 11A", "Nr. 11B")
         const mainLot=group.lots.find(l=>l.nr&&/^Nr\.\s*\d+$/.test(l.nr))||group.lots[0];
         const mainNum=mainLot&&mainLot.nr?mainLot.nr.replace(/^Nr\.\s*/,'').trim():'';
@@ -202,7 +202,7 @@ function renderLots(w){
         });
       });
       cd.addEventListener('click',e=>{
-        e.stopPropagation();if(calibWorldMode)return;
+        e.stopPropagation();if(state.calibWorldMode)return;
         if(isBuilding){enterBuilding(buildings[0],group.lots);return;}
         wc.querySelectorAll('.cluster-dot.open').forEach(c=>{if(c!==cd)c.classList.remove('open');});
         cd.classList.toggle('open');
@@ -235,16 +235,16 @@ window.addEventListener('resize',sizeWorldImageArea);
 const worldC=document.getElementById('world-container');
 worldC.addEventListener('click',e=>{
   if(!e.target.closest('.cluster-dot'))worldC.querySelectorAll('.cluster-dot.open').forEach(c=>c.classList.remove('open'));
-  if(!calibWorldMode)return;
+  if(!state.calibWorldMode)return;
   if(e.target.closest('.lot-dot')||e.target.closest('.cluster-dot')||e.target.closest('.calib-panel')||e.target.closest('.calib-btn')||e.target.closest('#world-lots-bar'))return;
   const wia2=document.getElementById('world-image-area');
   const r=wia2.getBoundingClientRect();
   const x=+((e.clientX-r.left)/r.width*100).toFixed(1);
   const y=+((e.clientY-r.top)/r.height*100).toFixed(1);
-  const allLots=getLots(currentWorld?.name||'');
-  const idx=calibWorldData.length;
-  calibWorldData.push({name:allLots[idx]?.name||'Ort '+idx,x,y});
+  const allLots=getLots(state.currentWorld?.name||'');
+  const idx=state.calibWorldData.length;
+  state.calibWorldData.push({name:allLots[idx]?.name||'Ort '+idx,x,y});
   updateCalibLog('world');
   var _cln=allLots[idx+1];document.getElementById('calib-world-next').textContent=(_cln?.nr||_cln?.name||'✅ Fertig! Jetzt kopieren');
-  document.getElementById('calib-world-count').textContent=calibWorldData.length;
+  document.getElementById('calib-world-count').textContent=state.calibWorldData.length;
 });
