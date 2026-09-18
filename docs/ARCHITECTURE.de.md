@@ -59,19 +59,19 @@ Die Reihenfolge ist bindend:
 1. `styles/atlas/atlas.css`
 2. `src/atlas/ui/viewport.js` — **klassisches Script, kein Modul**
 3. Markup
-4. `src/atlas/config.js` — `BASE`, `IMG`, `ADMIN_PASS`
-5. `src/atlas/data/buildings.js`, `worlds.js`, `world-lots.js`, `routes.js` — feste Daten
-6. `src/atlas/core.js`
-7. UI-Bausteine: `src/atlas/ui/tooltips.js`, `mobile-sheets.js`,
-   `pinch-zoom.js`, `mobile-dot-bar.js`, `draggable.js`
-8. Features: `src/atlas/features/forum-bridge/forum-bridge.js`,
-   `features/routing/navigator.js`, `features/routing/route-editor.js`
-9. `src/atlas/features/events/event-pill.js`
-10. Loading-Screen-Markup, danach `src/atlas/ui/loading.js`
+4. `src/atlas/config.js` und `src/atlas/data/*.js` — Konfiguration und feste Daten
+5. `src/atlas/ui/*.js` — UI-Bausteine
+6. `src/atlas/features/*/*.js` — Features
+7. `src/atlas/core.js` — **immer als letztes** der ATLAS-Scripts
+8. `src/atlas/features/events/event-pill.js`
+9. Loading-Screen-Markup, danach `src/atlas/ui/loading.js`
 
 Bis Etappe 3b sind alle ATLAS-Scripts klassische Scripts, die sich den globalen
-Raum teilen. Jede Datei muss nach den Dateien laden, deren Werte sie beim Laden
-braucht.
+Raum teilen. Die Regel, die das sicher macht: **Dateien definieren beim Laden
+nur; `core.js` kommt zuletzt und startet die Seite.** Eine Datei darf beim
+Laden Ereignis-Listener anmelden, aber nichts aus später geladenen Dateien
+aufrufen. Dadurch kann auch kein Timer und kein früher Klick eine Funktion
+treffen, die noch nicht geladen ist.
 
 ### Warum `viewport.js` kein Modul sein darf
 
@@ -85,22 +85,39 @@ bis das vorangehende Stylesheet geladen ist. Genau das brauchen wir.
 
 ## Zustand von `core.js`
 
-`core.js` ist noch die Kern-Logik aus dem früheren Single-File (rund 2900
-Zeilen, Funktionen im globalen Namensraum, Kommentare noch deutsch).
-In Etappe 3a bereits ausgelagert: Konfiguration und feste Daten (Schnitt 1),
-die UI-Bausteine in `src/atlas/ui/` (Schnitt 2) sowie Forum-Brücke,
-Routenplaner, Routen-Editor und Strassennetz (Schnitt 3).
-Die Aufteilung des Rests in `features/`-Ordner läuft in Etappe 3a weiter, die
-Umstellung auf ES-Module ist Etappe 3b.
+`core.js` enthält noch rund 1000 Zeilen: gemeinsamer Zustand, Laden der
+Sheet-Daten (`fetchSheetLots`, `getLots`), Kontinentkarte, Welt-Ansicht mit
+Grundstücken und Clustern, Welten-Suche und Start. Kommentare noch deutsch.
+Karte und Welt-Ansicht nach `features/map/` und den Rest nach `core/` zu
+verschieben ist der letzte Schnitt von Etappe 3a; die Umstellung auf
+ES-Module ist Etappe 3b.
 
-Zwei Dinge sind dabei zu beachten:
+Zwei Dinge sind für Etappe 3b zu beachten:
 
 - **96 Inline-Handler** im Markup (`onclick="goBack()"` und ähnlich) rufen
-  52 verschiedene Funktionen auf. Module haben einen eigenen Gültigkeitsbereich,
+  rund 55 Funktionen auf. Module haben einen eigenen Gültigkeitsbereich,
   also müssen diese Funktionen ausdrücklich an `window` gehängt werden —
   sonst greifen die Handler ins Leere.
-- Die Funktionen rufen sich quer durcheinander auf. Jeder Schnitt braucht
+- Die Funktionen rufen sich quer durcheinander auf. Jede Datei braucht
   passende `import`-Zeilen.
+
+---
+
+## Aufräum-Kandidaten
+
+Beim Aufteilen gefunden und bewusst nicht angefasst (Verschieben und Ändern
+sind getrennte Commits):
+
+- `core.js` enthält `ENTRY_MODE` und `_prioritizeInitialImages()` doppelt,
+  dazu zwei Start-Routinen auf `load`, die beide laufen
+  (`updateSidebarStats()` läuft beim Start zweimal).
+- `enterWorld()`: Der Ersatz bei einem nicht ladenden Weltbild baut einen
+  fehlerhaften `onerror`-Handler — JS-Fehler statt Farbverlauf.
+- Im Admin-Panel nicht erreichbar: `renderLotsTab()`, `renderExportTab()`
+  (`features/admin/lot-editor.js`) und `renderCharsTab()`
+  (`features/admin/character-admin.js`).
+- Nie aufgerufen: `getCharsAtLot()` (`features/characters/tokens.js`),
+  `getAgeGroup()` (`features/characters/character-view.js`).
 
 ---
 

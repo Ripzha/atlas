@@ -57,18 +57,19 @@ The order is binding:
 1. `styles/atlas/atlas.css`
 2. `src/atlas/ui/viewport.js` — **classic script, not a module**
 3. Markup
-4. `src/atlas/config.js` — `BASE`, `IMG`, `ADMIN_PASS`
-5. `src/atlas/data/buildings.js`, `worlds.js`, `world-lots.js`, `routes.js` — static data
-6. `src/atlas/core.js`
-7. UI building blocks: `src/atlas/ui/tooltips.js`, `mobile-sheets.js`,
-   `pinch-zoom.js`, `mobile-dot-bar.js`, `draggable.js`
-8. Features: `src/atlas/features/forum-bridge/forum-bridge.js`,
-   `features/routing/navigator.js`, `features/routing/route-editor.js`
-9. `src/atlas/features/events/event-pill.js`
-10. Loading screen markup, then `src/atlas/ui/loading.js`
+4. `src/atlas/config.js` and `src/atlas/data/*.js` — configuration and static data
+5. `src/atlas/ui/*.js` — UI building blocks
+6. `src/atlas/features/*/*.js` — features
+7. `src/atlas/core.js` — **always last** of the ATLAS scripts
+8. `src/atlas/features/events/event-pill.js`
+9. Loading screen markup, then `src/atlas/ui/loading.js`
 
 Until stage 3b, all ATLAS scripts are classic scripts that share the global
-scope. Each file must load after the files whose values it uses at load time.
+scope. The rule that keeps this safe: **files only define things when they
+load; `core.js` comes last and starts the page.** A file may register event
+listeners at load time, but must not call into files loaded after it. This
+also means that no timer or early click can hit a function that is not
+loaded yet.
 
 ### Why `viewport.js` must not be a module
 
@@ -82,21 +83,37 @@ which is exactly what we need.
 
 ## State of `core.js`
 
-`core.js` is still the core logic from the former single file (about 2900
-lines, functions in the global scope, comments still in German).
-Already moved out in stage 3a: configuration and static data (cut 1), the
-UI building blocks in `src/atlas/ui/` (cut 2), and the forum bridge, route
-planner, route editor and road network (cut 3).
-Splitting the rest into `features/` folders continues in stage 3a; converting
-to ES modules is stage 3b.
+`core.js` now holds about 1000 lines: shared state, loading the sheet data
+(`fetchSheetLots`, `getLots`), the continent map, the world view with lots and
+clusters, the world search, and start-up. Comments are still German.
+Moving the map and world view into `features/map/` and the rest into
+`core/` is the last cut of stage 3a; converting to ES modules is stage 3b.
 
-Two things to watch:
+Two things to watch for stage 3b:
 
 - **96 inline handlers** in the markup (`onclick="goBack()"` etc.) call
-  52 different functions. Modules have their own scope, so these functions
-  must be attached to `window` explicitly — otherwise the handlers break.
-- The functions call each other across areas. Every cut needs matching
+  about 55 functions. Modules have their own scope, so these functions must
+  be attached to `window` explicitly — otherwise the handlers break.
+- The functions call each other across areas. Every file needs matching
   `import` lines.
+
+---
+
+## Cleanup candidates
+
+Found while splitting; left untouched on purpose (moving and changing are
+separate commits):
+
+- `core.js` contains `ENTRY_MODE` and `_prioritizeInitialImages()` twice, and
+  two start-up handlers on `load` that both run (`updateSidebarStats()` runs
+  twice at start).
+- `enterWorld()`: the fallback when a world image fails to load builds a broken
+  inline `onerror` handler — a JS error instead of the gradient.
+- Not reachable from the admin panel: `renderLotsTab()`, `renderExportTab()`
+  (`features/admin/lot-editor.js`) and `renderCharsTab()`
+  (`features/admin/character-admin.js`).
+- Never called: `getCharsAtLot()` (`features/characters/tokens.js`),
+  `getAgeGroup()` (`features/characters/character-view.js`).
 
 ---
 

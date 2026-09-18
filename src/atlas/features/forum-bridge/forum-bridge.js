@@ -4,7 +4,7 @@
      'auth-status'     show login/register buttons for guests only
      'atlas-highlight' highlight an element (used by the Eve guide)
      'open-charview'   open the character view (used by the Eve guide)
-   Classic script, loaded after core.js. */
+   Classic script, loaded before core.js. */
 
 // Eve lives in the Xobor header (different origin) and cannot reach into our DOM.
 // She sends postMessage({action:'atlas-highlight', selector:'...'})

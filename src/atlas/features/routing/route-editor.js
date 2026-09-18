@@ -2,7 +2,7 @@
    Fullscreen editor to draw routes between worlds, analyze the network and
    export/import it as JSON. Saves to localStorage ('atlas_custom_routes').
    The exported JSON is what src/atlas/data/routes.js contains.
-   Classic script, loaded after core.js and navigator.js. Called from inline
+   Classic script, loaded before core.js, after navigator.js. Called from inline
    handlers: closeRoutenEditor(), raTM(), raST(), raClear(), raSave(),
    raAnalyzeNet(), raCopyExport(), raImportPrompt(), raClearAll(), raIgnoreWorld(). */
 

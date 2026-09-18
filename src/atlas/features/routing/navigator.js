@@ -2,7 +2,7 @@
    Dijkstra on the defined road network (window.ATLAS_ROUTES, or the routes
    saved in the editor via localStorage). Offers an alternative without flight
    if the fastest route contains one.
-   Classic script, loaded after core.js. Called from inline handlers:
+   Classic script, loaded before core.js. Called from inline handlers:
    toggleNavi(), setNaviMode(), calcNavi(), _naviShowAlt(). */
 
 (function(){

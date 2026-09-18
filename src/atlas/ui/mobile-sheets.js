@@ -1,7 +1,7 @@
 /* PROJECT ATLAS - Mobile sheets.
    Bottom sheets on phones (navigation, activity), syncing the activity sheet
    with the desktop sidebar, and swipe-down to close.
-   Classic script, loaded after core.js. Called from inline handlers:
+   Classic script, loaded before core.js. Called from inline handlers:
    openSheet(), closeSheet(). */
 
 function openSheet(id){

@@ -1,6 +1,6 @@
 /* PROJECT ATLAS - Mobile dot bar.
    Bottom bar on touch devices that shows the tapped lot and opens its thread.
-   Classic script, loaded after core.js. Called from inline handlers:
+   Classic script, loaded before core.js. Called from inline handlers:
    mobileDotOpen(). */
 
 // Show the bar on tap, hide it on tap elsewhere

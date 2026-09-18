@@ -1,6 +1,6 @@
 /* PROJECT ATLAS - Pinch zoom and pan.
    Touch zoom/pan for the continent map and the world view.
-   Classic script, loaded after core.js. The world zoom is paused while
+   Classic script, loaded before core.js. The world zoom is paused while
    calibration or position mode is active (calibWorldMode, posMode from core.js). */
 
 function makePinchZoom(el,opts={}){

@@ -1,7 +1,7 @@
 /* PROJECT ATLAS - Tooltips.
    Sidebar nav tooltips (items with a data-tip attribute) and repositioning of
    lot/cluster tooltips that would leave the screen.
-   Classic script, loaded after core.js. */
+   Classic script, loaded before core.js. */
 
 // Hover tooltip for sidebar items with a data-tip attribute.
 // Same style as .activity-preview, but without fetch/async.
