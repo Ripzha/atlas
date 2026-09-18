@@ -105,19 +105,6 @@ function buildCharTokensHtml(chars){
     (extra>0?'<div class="dot-char-token-wrap dot-char-token-extra"><div class="dot-char-token-ph">+'+extra+'</div></div>':'')+
   '</div>';
 }
-function getCharsAtLot(lot){
-  if(!lot||!lot.url) return [];
-  var lotThreadId = getThreadIdFromUrl(lot.url);
-  return CHARS.filter(function(c){
-    if(!c.lastSeenUrl) return false;
-    // Match by thread ID in URL
-    if(lotThreadId){
-      var charThreadId = getThreadIdFromUrl(c.lastSeenUrl);
-      if(charThreadId === lotThreadId) return true;
-    }
-    return false;
-  });
-}
 
 function getCharsAtWorld(worldName){
   if(!worldName) return [];

@@ -42,7 +42,7 @@ src/
       otherworlds/   "Andere Welten" portal and view
       buildings/     floor plans, building calibration
       routing/       route planner, route editor
-      admin/         admin panel, calibration, lot assignment, legacy tabs
+      admin/         admin panel, calibration, lot assignment
       forum-bridge/  messages from/to the forum header
       events/        event pill
   news/        Kiosk
@@ -103,30 +103,31 @@ never changed.
 Stage 3b converts the files to ES modules (`import`/`export`). Two things to
 watch:
 
-- **96 inline handlers** in the markup (`onclick="goBack()"` etc.) call
-  about 55 functions. Modules have their own scope, so these functions must
+- **76 inline handlers** in the markup and in generated HTML
+  (`onclick="goBack()"` etc.) call about 48 functions. Modules have their own scope, so these functions must
   be attached to `window` explicitly — otherwise the handlers break.
 - The functions call each other across files. Every file needs matching
   `import` lines.
 
 ---
 
-## Cleanup candidates
+## Cleanup after stage 3a
 
-Found while splitting; left untouched on purpose (moving and changing are
-separate commits):
+Done, each as its own commit:
 
-- `core/boot.js` contains `ENTRY_MODE` and `_prioritizeInitialImages()` twice,
-  and two start-up handlers on `load` that both run (`updateSidebarStats()`
-  runs twice at start).
-- `enterWorld()` (`features/map/world-view.js`): the fallback when a world
-  image fails to load builds a broken inline `onerror` handler — a JS error
-  instead of the gradient.
-- Not reachable from the admin panel: `renderLotsTab()`, `renderExportTab()`
-  (`features/admin/lot-editor.js`) and `renderCharsTab()`
-  (`features/admin/character-admin.js`).
-- Never called: `getCharsAtLot()` (`features/characters/tokens.js`),
-  `getAgeGroup()` (`features/characters/character-view.js`).
+- **Start-up:** the two `load` handlers in `core/boot.js` are merged into one,
+  the duplicated `ENTRY_MODE` and `_prioritizeInitialImages()` removed. At
+  start, forum stats and the sheet CSV are now fetched once instead of twice,
+  and the character view opens once instead of twice.
+- **World image fallback:** `enterWorld()` shows the gradient again when a
+  world image fails to load (the inline `onerror` handler was broken).
+- **Unreachable admin tools removed:** lots tab, export tab, characters tab,
+  the position mode, and the unused functions `getCharsAtLot()` and
+  `getAgeGroup()`.
+
+Still applied, but no longer editable: lot overrides in `localStorage`
+(`sw_custom_lots`, `sw_hidden_lots`, `sw_renamed_lots`), read by `getLots()`.
+They only exist in browsers where the former lot editor was used.
 
 ---
 

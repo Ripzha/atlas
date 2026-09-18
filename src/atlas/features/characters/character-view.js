@@ -324,11 +324,6 @@ function toggleAgeGroup(btn){
   charRenderFiltered();
 }
 
-function getAgeGroup(ageStr){
-  var a=parseInt(ageStr);
-  if(isNaN(a))return null;
-  return a;
-}
 
 function makeCard(c){
   var card=document.createElement('div');

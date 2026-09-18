@@ -1,6 +1,6 @@
 /* PROJECT ATLAS - World view.
    Entering a world (image, rent info, lots), rendering lots and clusters,
-   going back, and clicks in the world view (position and calibration mode).
+   going back, and clicks in the world view (calibration mode).
    Called from inline handlers: goBack().
    Classic script, must load BEFORE world-search.js (which wraps enterWorld). */
 
@@ -117,7 +117,7 @@ function renderLots(w){
       ld.innerHTML=(lot.info?`<div class="lot-inner" style="width:11px;height:11px;background:${_dotBg};box-shadow:${_dotShadow};transform:rotate(45deg);border-radius:2px"></div>`:`<div class="lot-pulse"></div><div class="lot-inner" style="width:12px;height:12px;background:${_dotBg};box-shadow:${_dotShadow}"></div>`)+`<div class="lot-label">${(()=>{const p=parseLotLabel(lot);return p.sub?`${p.num}<span class="lot-sublabel">${p.sub}</span>`:p.num;})()}</div><div class="dot-char-tokens" data-lot-url="${lot.url||''}"></div>${_tt}`;
       if(!lot.info){ld.addEventListener('click',e=>{
         e.stopPropagation();
-        if(calibWorldMode||posMode)return;
+        if(calibWorldMode)return;
         if(!lot.url)return; // complex anchor etc. without URL: no about:blank click
         // Touch devices (any screen size): tap-to-preview, tap-to-enter pattern
         if(window.matchMedia('(pointer:coarse)').matches){
@@ -202,7 +202,7 @@ function renderLots(w){
         });
       });
       cd.addEventListener('click',e=>{
-        e.stopPropagation();if(calibWorldMode||posMode)return;
+        e.stopPropagation();if(calibWorldMode)return;
         if(isBuilding){enterBuilding(buildings[0],group.lots);return;}
         wc.querySelectorAll('.cluster-dot.open').forEach(c=>{if(c!==cd)c.classList.remove('open');});
         cd.classList.toggle('open');
@@ -235,14 +235,6 @@ window.addEventListener('resize',sizeWorldImageArea);
 const worldC=document.getElementById('world-container');
 worldC.addEventListener('click',e=>{
   if(!e.target.closest('.cluster-dot'))worldC.querySelectorAll('.cluster-dot.open').forEach(c=>c.classList.remove('open'));
-  if(posMode){
-    if(e.target.closest('#world-lots-bar')||e.target.closest('.calib-panel')||e.target.closest('.calib-btn'))return;
-    const wia=document.getElementById('world-image-area');
-    const r=wia.getBoundingClientRect();
-    const x=+((e.clientX-r.left)/r.width*100).toFixed(1);
-    const y=+((e.clientY-r.top)/r.height*100).toFixed(1);
-    if(posModeCallback)posModeCallback(x,y);cancelPosMode();return;
-  }
   if(!calibWorldMode)return;
   if(e.target.closest('.lot-dot')||e.target.closest('.cluster-dot')||e.target.closest('.calib-panel')||e.target.closest('.calib-btn')||e.target.closest('#world-lots-bar'))return;
   const wia2=document.getElementById('world-image-area');

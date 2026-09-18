@@ -1,7 +1,7 @@
 /* PROJECT ATLAS - Pinch zoom and pan.
    Touch zoom/pan for the continent map and the world view.
    Classic script, loaded before core.js. The world zoom is paused while
-   calibration or position mode is active (calibWorldMode, posMode from core.js). */
+   calibration mode is active (calibWorldMode from core/state.js). */
 
 function makePinchZoom(el,opts={}){
   let tx=0,ty=0,sc=1;
@@ -99,7 +99,7 @@ function makePinchZoom(el,opts={}){
   return {reset};
 }
 const _worldZoom=makePinchZoom(document.getElementById('world-image-area'),{
-  guard:()=>calibWorldMode||posMode
+  guard:()=>calibWorldMode
 });
 const _mapZoom=makePinchZoom(document.getElementById('map-image-area'));
 // Expose on window so goBack() can reset the zoom

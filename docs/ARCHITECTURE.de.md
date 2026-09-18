@@ -43,7 +43,7 @@ src/
       otherworlds/   Portal und Ansicht „Andere Welten"
       buildings/     Etagenpläne, Gebäude-Kalibrierung
       routing/       Routenplaner, Routen-Editor
-      admin/         Admin-Panel, Kalibrierung, Zuweisung, Alt-Tabs
+      admin/         Admin-Panel, Kalibrierung, Zuweisung
       forum-bridge/  Nachrichten von/zur Forum-Kopfzeile
       events/        Event-Pille
   news/        Kiosk
@@ -105,8 +105,8 @@ wurde nur verschoben, nie verändert.
 Etappe 3b stellt die Dateien auf ES-Module um (`import`/`export`). Zwei Dinge
 sind dabei zu beachten:
 
-- **96 Inline-Handler** im Markup (`onclick="goBack()"` und ähnlich) rufen
-  rund 55 Funktionen auf. Module haben einen eigenen Gültigkeitsbereich,
+- **76 Inline-Handler** im Markup und im erzeugten HTML
+  (`onclick="goBack()"` und ähnlich) rufen rund 48 Funktionen auf. Module haben einen eigenen Gültigkeitsbereich,
   also müssen diese Funktionen ausdrücklich an `window` gehängt werden —
   sonst greifen die Handler ins Leere.
 - Die Funktionen rufen sich quer über Dateien auf. Jede Datei braucht
@@ -114,22 +114,24 @@ sind dabei zu beachten:
 
 ---
 
-## Aufräum-Kandidaten
+## Aufräumen nach Etappe 3a
 
-Beim Aufteilen gefunden und bewusst nicht angefasst (Verschieben und Ändern
-sind getrennte Commits):
+Erledigt, jeweils als eigener Commit:
 
-- `core/boot.js` enthält `ENTRY_MODE` und `_prioritizeInitialImages()` doppelt,
-  dazu zwei Start-Routinen auf `load`, die beide laufen
-  (`updateSidebarStats()` läuft beim Start zweimal).
-- `enterWorld()` (`features/map/world-view.js`): Der Ersatz bei einem nicht
-  ladenden Weltbild baut einen fehlerhaften `onerror`-Handler — JS-Fehler statt
-  Farbverlauf.
-- Im Admin-Panel nicht erreichbar: `renderLotsTab()`, `renderExportTab()`
-  (`features/admin/lot-editor.js`) und `renderCharsTab()`
-  (`features/admin/character-admin.js`).
-- Nie aufgerufen: `getCharsAtLot()` (`features/characters/tokens.js`),
-  `getAgeGroup()` (`features/characters/character-view.js`).
+- **Start:** Die zwei `load`-Routinen in `core/boot.js` sind zu einer
+  zusammengeführt, die doppelten `ENTRY_MODE` und `_prioritizeInitialImages()`
+  entfernt. Beim Start werden Forum-Statistik und Sheet-CSV jetzt einmal statt
+  zweimal geladen, und die Charakter-Ansicht öffnet einmal statt zweimal.
+- **Ersatz für Weltbilder:** `enterWorld()` zeigt wieder den Farbverlauf, wenn
+  ein Weltbild nicht lädt (der `onerror`-Handler war fehlerhaft).
+- **Nicht erreichbare Admin-Werkzeuge entfernt:** Tabs Lots, Export und
+  Charaktere, der Positionsmodus sowie die unbenutzten Funktionen
+  `getCharsAtLot()` und `getAgeGroup()`.
+
+Weiterhin wirksam, aber nicht mehr bearbeitbar: Grundstücks-Anpassungen im
+`localStorage` (`sw_custom_lots`, `sw_hidden_lots`, `sw_renamed_lots`), die
+`getLots()` liest. Sie existieren nur in Browsern, in denen der frühere
+Grundstücks-Editor benutzt wurde.
 
 ---
 
