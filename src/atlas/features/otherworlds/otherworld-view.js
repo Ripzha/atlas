@@ -3,10 +3,10 @@
    Bloodmoon Valley. Falls back to OTHERWORLDS_DATA while the sheet loads.
    Called from inline handlers: openOtherWorld(), closeOtherWorlds(). */
 
-import { OTHERWORLDS_DATA, otherworlds } from '../../data/worlds.js?v=202609181617';
-import { sheetWorldMeta } from '../../core/sheet-data.js?v=202609181617';
-import { buildCharTokensHtml, getCharsAtWorld } from '../characters/tokens.js?v=202609181617';
-import { enterWorld } from '../map/world-view.js?v=202609181617';
+import { OTHERWORLDS_DATA, otherworlds } from '../../data/worlds.js?v=202609181426';
+import { sheetWorldMeta } from '../../core/sheet-data.js?v=202609181426';
+import { buildCharTokensHtml, getCharsAtWorld } from '../characters/tokens.js?v=202609181426';
+import { enterWorld } from '../map/world-view.js?v=202609181426';
 
 export function openOtherWorld(){
   // Collect data from sheetWorldMeta: worlds with hasAtlas=FALSE → into the modal

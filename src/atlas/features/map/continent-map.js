@@ -3,11 +3,11 @@
    containers, handles tap-to-preview on touch devices and the map calibration
    click. */
 
-import { worlds } from '../../data/worlds.js?v=202609181617';
-import { state } from '../../core/state.js?v=202609181617';
-import { updateAllTokens } from '../characters/tokens.js?v=202609181617';
-import { updateCalibLog } from '../admin/calibration.js?v=202609181617';
-import { enterWorld } from './world-view.js?v=202609181617';
+import { worlds } from '../../data/worlds.js?v=202609181426';
+import { state } from '../../core/state.js?v=202609181426';
+import { updateAllTokens } from '../characters/tokens.js?v=202609181426';
+import { updateCalibLog } from '../admin/calibration.js?v=202609181426';
+import { enterWorld } from './world-view.js?v=202609181426';
 
 export const mapC=document.getElementById('map-container');
 export const mapIA=document.getElementById('map-image-area');

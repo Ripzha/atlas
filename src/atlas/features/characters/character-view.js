@@ -1,12 +1,13 @@
 /* PROJECT ATLAS - Character view.
    Grid of all characters with tabs, search, filters (player, gender, age), A–Z
    sorting and hover card. Loads characters from the Apps Script and caches
-   them in sessionStorage. CHARS starts with a small fallback list. */
+   them in localStorage (core/cache.js). CHARS starts with a small fallback list. */
 
-import { SCRIPT_URL } from '../../config.js?v=202609181617';
-import { updateAllTokens } from './tokens.js?v=202609181617';
-import { updateSidebarActivity } from '../activity/last-seen.js?v=202609181617';
-import { updateSidebarNewChars } from '../activity/sidebar-feeds.js?v=202609181617';
+import { readCache, writeCache } from '../../core/cache.js?v=202609181426';
+import { SCRIPT_URL } from '../../config.js?v=202609181426';
+import { updateAllTokens } from './tokens.js?v=202609181426';
+import { updateSidebarActivity } from '../activity/last-seen.js?v=202609181426';
+import { updateSidebarNewChars } from '../activity/sidebar-feeds.js?v=202609181426';
 
 export var CHARS=[
   {n:"Sullivan 'Blaze' Blaisdell",p:"Ripzha",type:"haupt",u:"https://www.simsforumrpg.de/t78f51849-Sullivan-Blaze-Blaisdell.html",h:"Newcrest",img:"",age:"18",job:""},
@@ -107,11 +108,11 @@ export function reloadChars(){
 }
 
 export async function fetchCharsFromScript(){
-  // Cache: show immediately from sessionStorage
+  // Cache: show the last known characters immediately (localStorage, survives
+  // closing the tab), then refresh in the background
   try{
-    var cached=sessionStorage.getItem('atlas_chars_cache');
-    if(cached){
-      var cachedData=JSON.parse(cached);
+    var cachedData=readCache('chars');
+    if(cachedData){
       if(cachedData.length>0){
         CHARS.length=0;
         cachedData.forEach(function(c){CHARS.push(c);});
@@ -145,7 +146,7 @@ export async function fetchCharsFromScript(){
       fresh.forEach(function(c){CHARS.push(c);});
       charFetched=true;
       // Update cache
-      try{sessionStorage.setItem('atlas_chars_cache',JSON.stringify(fresh));}catch(e){}
+      writeCache('chars',fresh);
     }
   }catch(e){}
   // Only render char grid if view is open

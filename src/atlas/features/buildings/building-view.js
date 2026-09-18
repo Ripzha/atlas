@@ -2,15 +2,16 @@
    Floor plans with apartment dots; floor switching. Data: BUILDINGS. Called
    from inline handlers: changeBuildingFloor(). */
 
-import { BUILDINGS } from '../../data/buildings.js?v=202609181617';
-import { worldLots } from '../../data/world-lots.js?v=202609181617';
-import { state } from '../../core/state.js?v=202609181617';
+import { on } from '../../core/events.js?v=202609181426';
+import { BUILDINGS } from '../../data/buildings.js?v=202609181426';
+import { worldLots } from '../../data/world-lots.js?v=202609181426';
+import { state } from '../../core/state.js?v=202609181426';
 import {
   applySheetData,
   sheetLotsLoaded,
   sheetWorldMeta,
-} from '../../core/sheet-data.js?v=202609181617';
-import { parseLotLabel } from '../map/lot-helpers.js?v=202609181617';
+} from '../../core/sheet-data.js?v=202609181426';
+import { parseLotLabel } from '../map/lot-helpers.js?v=202609181426';
 
 export let buildingFloorIdx=0,currentBuildingKey=null;
 
@@ -116,3 +117,9 @@ function updateFloorNav(imgs){
   document.getElementById('floor-down-btn').style.opacity=buildingFloorIdx<imgs.length-1?'1':'0.3';
 }
 export function exitBuilding(){const bc=document.getElementById('building-container');if(bc)bc.style.display='none';try{sessionStorage.removeItem('atlas_building');}catch(e){}}
+
+// Fresh sheet data arrived in the background: update an open building.
+on('sheet-lots-updated', function(){
+  var bc=document.getElementById('building-container');
+  if(currentBuildingKey && bc && bc.style.display!=='none') renderBuildingLots();
+});

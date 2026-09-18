@@ -1,24 +1,26 @@
 /* PROJECT ATLAS - Start-up.
-   Loads characters, sheet lots, stats and forum activity when the page has
-   loaded, restores the last view, prioritizes images of the entry view, and
-   pauses periodic updates while the tab is hidden.
-   Imported last by main.js. */
+   Loads characters, sheet lots, stats and forum activity as soon as the page
+   is parsed (from the cache first, then fresh in the background), restores the
+   last view, prioritizes images of the entry view, and pauses periodic updates
+   while the tab is hidden. Imported last by main.js. */
 
-import { otherworlds, worlds } from '../data/worlds.js?v=202609181617';
-import { worldLots } from '../data/world-lots.js?v=202609181617';
-import { fetchSheetLots, sheetWorldMeta } from './sheet-data.js?v=202609181617';
-import { repositionTooltips } from '../ui/tooltips.js?v=202609181617';
+import { on } from './events.js?v=202609181426';
+import { readCache } from './cache.js?v=202609181426';
+import { otherworlds, worlds } from '../data/worlds.js?v=202609181426';
+import { worldLots } from '../data/world-lots.js?v=202609181426';
+import { fetchSheetLots, sheetWorldMeta } from './sheet-data.js?v=202609181426';
+import { repositionTooltips } from '../ui/tooltips.js?v=202609181426';
 import {
   updateSidebarForum,
   updateSidebarStats,
-} from '../features/activity/sidebar-feeds.js?v=202609181617';
-import { openOtherWorld } from '../features/otherworlds/otherworld-view.js?v=202609181617';
-import { enterBuilding } from '../features/buildings/building-view.js?v=202609181617';
+} from '../features/activity/sidebar-feeds.js?v=202609181426';
+import { openOtherWorld } from '../features/otherworlds/otherworld-view.js?v=202609181426';
+import { enterBuilding } from '../features/buildings/building-view.js?v=202609181426';
 import {
   fetchCharsFromScript,
   openCharView,
-} from '../features/characters/character-view.js?v=202609181617';
-import { enterWorld } from '../features/map/world-view.js?v=202609181617';
+} from '../features/characters/character-view.js?v=202609181426';
+import { enterWorld } from '../features/map/world-view.js?v=202609181426';
 
 // Detection runs BEFORE load so other functions can read it
 var ENTRY_MODE = (function(){
@@ -81,12 +83,17 @@ function _smartInterval(fn, ms){
   }, ms);
 }
 
-// Start-up: runs once when the page has loaded.
-window.addEventListener('load',function(){
-  // ATLAS loading screen on initial load — hide once the characters fetch AND the lots fetch are done
+// Start-up: runs once the document is parsed (DOMContentLoaded), not on
+// window "load" — that would also wait for every image, including the large
+// continent map, before any data is shown.
+document.addEventListener('DOMContentLoaded',function(){
+  // The loading screen is only needed on the very first visit: with cached
+  // characters and lots, everything is shown immediately and refreshed in the
+  // background. Hide it once the characters fetch AND the lots fetch are done.
   var _initLoaderActive = false;
   var _initPending = 2; // Chars + Lots
-  if(typeof window.showAtlasLoading === 'function'){
+  var _hasCache = !!(readCache('chars') && readCache('sheet-lots'));
+  if(!_hasCache && typeof window.showAtlasLoading === 'function'){
     _initLoaderActive = true;
     window.showAtlasLoading('ATLAS wird geladen…');
   }
@@ -113,28 +120,9 @@ window.addEventListener('load',function(){
   // continent map show the sheet image (not only after entering a world)
   fetchSheetLots(function(){
     _initStepDone();
-    // Update all hover images in case the sheet overrides a world image
-    document.querySelectorAll('.world-dot').forEach(function(dot){
-      var wname=dot.dataset.worldKey;
-      var sheetImg=(sheetWorldMeta[wname]||{}).img;
-      if(!sheetImg)return;
-      var img=dot.querySelector('.hover-img');
-      if(img){
-        img.src=sheetImg;
-        img.style.display='block';
-      } else {
-        // If there was no image before (w.img empty): insert one
-        var card=dot.querySelector('.hover-card > div');
-        if(card){
-          var newImg=document.createElement('img');
-          newImg.className='hover-img';
-          newImg.src=sheetImg;
-          newImg.onerror=function(){this.style.display='none';};
-          card.insertBefore(newImg,card.firstChild);
-        }
-      }
-    });
+    updateHoverImages();
   });
+  on('sheet-lots-updated', updateHoverImages);
   // Periodic updates pause while the tab is hidden
   _smartInterval(updateSidebarForum, 5*60*1000);
   _smartInterval(updateSidebarStats, 2*60*1000);
@@ -175,3 +163,28 @@ window.addEventListener('load',function(){
   setTimeout(_prioritizeInitialImages, 100);
   setTimeout(_prioritizeInitialImages, 800); // second pass in case the sidebars render later
 });
+
+// Update all hover images on the continent map in case the sheet overrides a
+// world image.
+function updateHoverImages(){
+  document.querySelectorAll('.world-dot').forEach(function(dot){
+    var wname=dot.dataset.worldKey;
+    var sheetImg=(sheetWorldMeta[wname]||{}).img;
+    if(!sheetImg)return;
+    var img=dot.querySelector('.hover-img');
+    if(img){
+      if(img.getAttribute('src')!==sheetImg) img.src=sheetImg;
+      img.style.display='block';
+    } else {
+      // If there was no image before (w.img empty): insert one
+      var card=dot.querySelector('.hover-card > div');
+      if(card){
+        var newImg=document.createElement('img');
+        newImg.className='hover-img';
+        newImg.src=sheetImg;
+        newImg.onerror=function(){this.style.display='none';};
+        card.insertBefore(newImg,card.firstChild);
+      }
+    }
+  });
+}

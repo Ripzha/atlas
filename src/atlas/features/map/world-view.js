@@ -2,33 +2,30 @@
    Entering a world (image, rent info, lots), rendering lots and clusters,
    going back, and clicks in the world view (calibration mode).
    Called from inline handlers: goBack().
-   Other files can react to entering a world via onEnterWorld(fn) instead of
-   replacing enterWorld() (the world search uses it for "Zuletzt besucht"). */
+   Other files can react to entering a world via on('enter-world', fn) from
+   core/events.js (the world search uses it for "Zuletzt besucht"). */
 
-import { worldLots } from '../../data/world-lots.js?v=202609181617';
-import { customLots, state } from '../../core/state.js?v=202609181617';
+import { emit, on } from '../../core/events.js?v=202609181426';
+import { worldLots } from '../../data/world-lots.js?v=202609181426';
+import { customLots, state } from '../../core/state.js?v=202609181426';
 import {
   fetchSheetLots,
   getLots,
   sheetLots,
   sheetLotsLoaded,
   sheetWorldMeta,
-} from '../../core/sheet-data.js?v=202609181617';
-import { repositionTooltips } from '../../ui/tooltips.js?v=202609181617';
-import { showMobileDotBar } from '../../ui/mobile-dot-bar.js?v=202609181617';
-import { updateAllTokens } from '../characters/tokens.js?v=202609181617';
-import { enterBuilding, exitBuilding } from '../buildings/building-view.js?v=202609181617';
-import { updateCalibLog } from '../admin/calibration.js?v=202609181617';
-import { renderAdminContent } from '../admin/admin-panel.js?v=202609181617';
-import { getBuildingNrRange, groupLots, parseLotLabel } from './lot-helpers.js?v=202609181617';
-import { mapC, mapIA } from './continent-map.js?v=202609181617';
-
-// Callbacks that run whenever a world is entered, before it is rendered.
-const enterWorldHooks=[];
-export function onEnterWorld(fn){ enterWorldHooks.push(fn); }
+} from '../../core/sheet-data.js?v=202609181426';
+import { repositionTooltips } from '../../ui/tooltips.js?v=202609181426';
+import { showMobileDotBar } from '../../ui/mobile-dot-bar.js?v=202609181426';
+import { updateAllTokens } from '../characters/tokens.js?v=202609181426';
+import { enterBuilding, exitBuilding } from '../buildings/building-view.js?v=202609181426';
+import { updateCalibLog } from '../admin/calibration.js?v=202609181426';
+import { renderAdminContent } from '../admin/admin-panel.js?v=202609181426';
+import { getBuildingNrRange, groupLots, parseLotLabel } from './lot-helpers.js?v=202609181426';
+import { mapC, mapIA } from './continent-map.js?v=202609181426';
 
 export function enterWorld(w){
-  enterWorldHooks.forEach(function(fn){ fn(w); });
+  emit('enter-world', w);
   try{sessionStorage.setItem('atlas_world',w.name);}catch(e){}
   state.currentWorld=w;
   mapC.classList.remove('active');
@@ -37,33 +34,8 @@ export function enterWorld(w){
   sizeWorldImageArea();
   document.getElementById('world-name-display').textContent=w.name;
   document.getElementById('world-type-display').textContent=w.type;
-  // Rent info from sheet meta (row with welt=... but without nr)
-  (function(){
-    var box=document.getElementById('world-rent-info');
-    if(!box)return;
-    var rent=(sheetWorldMeta[w.name]||{}).rent;
-    if(rent){
-      box.innerHTML='<div class="rent-label">💰 Mietpreise</div>'+rent.replace(/\|/g,'<br>');
-      box.classList.add('visible');
-    } else {
-      box.classList.remove('visible');
-      box.innerHTML='';
-    }
-  })();
-  const _grad=`<div style="position:absolute;inset:0;background:linear-gradient(135deg,${w.color}33,#0a1420)"></div>`;
-  // World image: sheet meta wins over the hardcoded w.img.
-  // If the image fails to load, the gradient is shown instead. _grad contains
-  // double quotes, so they are escaped as &quot; inside the onerror attribute.
-  // setWorldBg() runs twice (before and after the sheet fetch); an image replaced
-  // in the meantime has no parent any more, hence the parentElement check.
-  function setWorldBg(){
-    var sheetImg=(sheetWorldMeta[w.name]||{}).img;
-    var imgUrl=sheetImg||w.img;
-    document.getElementById('world-bg').innerHTML=imgUrl
-      ?`<img src="${imgUrl}" alt="${w.name}" decoding="async" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.65) saturate(0.9);display:block" onerror="if(this.parentElement)this.parentElement.innerHTML='${_grad.replace(/'/g,"\\'").replace(/"/g,'&quot;')}'">`
-      :_grad;
-  }
-  setWorldBg();
+  renderWorldRent(w);
+  setWorldBg(w);
   document.getElementById('world-subtitle').textContent='/ '+w.name;
   document.getElementById('btn-back').style.display='inline-block';
   document.getElementById('mob-back').style.display='flex';
@@ -75,18 +47,57 @@ export function enterWorld(w){
   var _showLoader = (typeof sheetLotsLoaded !== 'undefined' && !sheetLotsLoaded && typeof window.showAtlasLoading === 'function');
   if(_showLoader) window.showAtlasLoading('Welt wird geladen…');
   fetchSheetLots(()=>{
-    // After the sheet fetch: set image + rent again in case the sheet data only arrived now
-    setWorldBg();
-    var box=document.getElementById('world-rent-info');
-    if(box){
-      var rent=(sheetWorldMeta[w.name]||{}).rent;
-      if(rent){box.innerHTML='<div class="rent-label">💰 Mietpreise</div>'+rent.replace(/\|/g,'<br>');box.classList.add('visible');}
-      else {box.classList.remove('visible');box.innerHTML='';}
-    }
-    renderLots(w); if(state.adminMode)renderAdminContent(); setTimeout(updateAllTokens,100); setTimeout(repositionTooltips,200);
+    // After the sheet fetch: image, rent and lots again in case the data only arrived now
+    renderWorldSheetData(w);
     if(_showLoader && typeof window.hideAtlasLoading === 'function') window.hideAtlasLoading();
   });
 }
+
+// Rent info from sheet meta (row with welt=... but without nr)
+function renderWorldRent(w){
+  var box=document.getElementById('world-rent-info');
+  if(!box)return;
+  var rent=(sheetWorldMeta[w.name]||{}).rent;
+  if(rent){
+    box.innerHTML='<div class="rent-label">💰 Mietpreise</div>'+rent.replace(/\|/g,'<br>');
+    box.classList.add('visible');
+  } else {
+    box.classList.remove('visible');
+    box.innerHTML='';
+  }
+}
+
+// World image: sheet meta wins over the hardcoded w.img. Skipped if the same
+// image is already shown (no reload, no flicker).
+// If the image fails to load, the gradient is shown instead. The gradient markup
+// contains double quotes, so they are escaped as &quot; inside the onerror
+// attribute. An image replaced in the meantime has no parent any more, hence
+// the parentElement check.
+function setWorldBg(w){
+  var bg=document.getElementById('world-bg');
+  var sheetImg=(sheetWorldMeta[w.name]||{}).img;
+  var imgUrl=sheetImg||w.img;
+  var current=bg.querySelector('img');
+  if(imgUrl && current && current.getAttribute('src')===imgUrl) return;
+  const _grad=`<div style="position:absolute;inset:0;background:linear-gradient(135deg,${w.color}33,#0a1420)"></div>`;
+  bg.innerHTML=imgUrl
+    ?`<img src="${imgUrl}" alt="${w.name}" decoding="async" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.65) saturate(0.9);display:block" onerror="if(this.parentElement)this.parentElement.innerHTML='${_grad.replace(/'/g,"\\'").replace(/"/g,'&quot;')}'">`
+    :_grad;
+}
+
+// Everything in the world view that depends on the sheet data.
+function renderWorldSheetData(w){
+  setWorldBg(w);
+  renderWorldRent(w);
+  renderLots(w); if(state.adminMode)renderAdminContent(); setTimeout(updateAllTokens,100); setTimeout(repositionTooltips,200);
+}
+
+// Fresh sheet data arrived in the background: update the open world.
+on('sheet-lots-updated', function(){
+  if(state.currentWorld && document.getElementById('world-container').classList.contains('active')){
+    renderWorldSheetData(state.currentWorld);
+  }
+});
 
 export function goBack(){
   const bc=document.getElementById('building-container');

@@ -3,89 +3,132 @@
    and merges it with the hardcoded coordinates (getLots). The sheet is the
    source of truth for names, links and images. */
 
-import { BASE } from '../config.js?v=202609181617';
-import { worlds } from '../data/worlds.js?v=202609181617';
-import { worldLots } from '../data/world-lots.js?v=202609181617';
-import { customLots, hiddenLots, renamedLots } from './state.js?v=202609181617';
-import { updateOtherworldPortalTokens } from '../features/otherworlds/portal.js?v=202609181617';
+import { emit } from './events.js?v=202609181426';
+import { readCache, writeCache } from './cache.js?v=202609181426';
+import { BASE } from '../config.js?v=202609181426';
+import { worlds } from '../data/worlds.js?v=202609181426';
+import { worldLots } from '../data/world-lots.js?v=202609181426';
+import { customLots, hiddenLots, renamedLots } from './state.js?v=202609181426';
+import { updateOtherworldPortalTokens } from '../features/otherworlds/portal.js?v=202609181426';
 
 // Sheet data for lots (from Google Sheets)
 export var sheetLots = {}; // {worldName: {nr: {name, threadUrl, imgUrl}}}
 export var sheetWorldMeta = {}; // {worldName: {rent: '...'}} — rows without nr
 export var sheetLotsLoaded = false;
 
+const SHEET_LOTS_CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vRRllRkwaCacdM0WZZT0cVQflhxJ9Fw5mgId-v615_kE2GdKdbwHMUYCG03HC8gUXfg7lucTs1Mqhg1/pub?output=csv&gid=306313316&single=true';
+
+// Parses the lots CSV into sheetLots / sheetWorldMeta.
+function applyLotsCsv(csv){
+  const rows = csv.split('\n');
+  const headers = rows[0].split(',').map(h=>h.replace(/"/g,'').trim().toLowerCase());
+  const wIdx = headers.indexOf('welt');
+  const nIdx = headers.indexOf('nr.');
+  const nameIdx = headers.indexOf('name');
+  const urlIdx = headers.indexOf('thread url');
+  const imgIdx = headers.indexOf('bild url');
+  const groupIdx = headers.indexOf('dot-gruppe');
+  const rentIdx = headers.indexOf('mietinfo');
+  const catIdx = headers.indexOf('category');
+  const hasAtlasIdx = headers.indexOf('has_atlas');
+  const extUrlIdx = headers.indexOf('external_url');
+  sheetLots = {};
+  sheetWorldMeta = {};
+  rows.slice(1).filter(r=>r.trim()).forEach(r=>{
+    const cols = r.split(',');
+    const get = i => i<0 ? '' : (cols[i]||'').replace(/"/g,'').trim();
+    const world = get(wIdx);
+    const nr = get(nIdx);
+    if(!world) return;
+    // World meta row: only welt set, no nr — contains e.g. rent info + image
+    if(!nr){
+      if(!sheetWorldMeta[world]) sheetWorldMeta[world] = {};
+      const rent = get(rentIdx);
+      const img = get(imgIdx);
+      const cat = get(catIdx);
+      const hasAtlasStr = get(hasAtlasIdx).toUpperCase();
+      const extUrl = get(extUrlIdx);
+      if(rent) sheetWorldMeta[world].rent = rent;
+      if(img) sheetWorldMeta[world].img = img;
+      if(cat) sheetWorldMeta[world].category = cat;
+      // hasAtlas: FALSE (English) or FALSCH (Swiss/German sheet) = external world;
+      // anything else (TRUE/WAHR/empty) = RPG world with an ATLAS map
+      sheetWorldMeta[world].hasAtlas = !(hasAtlasStr === 'FALSE' || hasAtlasStr === 'FALSCH');
+      if(extUrl) sheetWorldMeta[world].externalUrl = extUrl;
+      return;
+    }
+    if(!sheetLots[world]) sheetLots[world] = {};
+    const dotGroup = get(groupIdx).replace(/\.0$/, '');
+    // Handle # placeholder: strip # and mark as placeholder
+    const isPlaceholder = nr.endsWith('#');
+    const cleanNr = isPlaceholder ? nr.slice(0,-1).trim() : nr;
+    const entry = {
+      name: get(nameIdx),
+      threadUrl: get(urlIdx),
+      imgUrl: get(imgIdx),
+      dotGroup: dotGroup,
+      isPlaceholder: isPlaceholder,
+    };
+    if(dotGroup){
+      const key = dotGroup+'|'+cleanNr;
+      if(!sheetLots[world][key]) sheetLots[world][key] = [];
+      sheetLots[world][key].push(entry);
+      if(!sheetLots[world][cleanNr]) sheetLots[world][cleanNr] = entry;
+    } else {
+      if(!sheetLots[world][cleanNr]) sheetLots[world][cleanNr] = entry;
+      else if(!Array.isArray(sheetLots[world][cleanNr])) sheetLots[world][cleanNr] = [sheetLots[world][cleanNr], entry];
+      else sheetLots[world][cleanNr].push(entry);
+    }
+  });
+  sheetLotsLoaded = true;
+  // Update portal tokens now — sheetWorldMeta is filled,
+  // so characters in Toronto/Kanada/etc. (hasAtlas=false) become visible
+  if(typeof updateOtherworldPortalTokens === 'function') updateOtherworldPortalTokens();
+}
+
+let sheetRefreshStarted=false;
+
+// Loads the sheet lots once. With cached data the callback runs immediately
+// and fresh data is fetched in the background; only the first visit waits for
+// the network.
 export function fetchSheetLots(cb){
   if(sheetLotsLoaded){ if(cb) cb(); return; }
-  fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vRRllRkwaCacdM0WZZT0cVQflhxJ9Fw5mgId-v615_kE2GdKdbwHMUYCG03HC8gUXfg7lucTs1Mqhg1/pub?output=csv&gid=306313316&single=true')
+  var cached=readCache('sheet-lots');
+  if(cached){
+    applyLotsCsv(cached);
+    if(cb) cb();
+    refreshSheetLots(cached);
+    return;
+  }
+  fetch(SHEET_LOTS_CSV_URL)
     .then(r=>r.text())
     .then(csv=>{
-      const rows = csv.split('\n');
-      const headers = rows[0].split(',').map(h=>h.replace(/"/g,'').trim().toLowerCase());
-      const wIdx = headers.indexOf('welt');
-      const nIdx = headers.indexOf('nr.');
-      const nameIdx = headers.indexOf('name');
-      const urlIdx = headers.indexOf('thread url');
-      const imgIdx = headers.indexOf('bild url');
-      const groupIdx = headers.indexOf('dot-gruppe');
-      const rentIdx = headers.indexOf('mietinfo');
-      const catIdx = headers.indexOf('category');
-      const hasAtlasIdx = headers.indexOf('has_atlas');
-      const extUrlIdx = headers.indexOf('external_url');
-      sheetLots = {};
-      sheetWorldMeta = {};
-      rows.slice(1).filter(r=>r.trim()).forEach(r=>{
-        const cols = r.split(',');
-        const get = i => i<0 ? '' : (cols[i]||'').replace(/"/g,'').trim();
-        const world = get(wIdx);
-        const nr = get(nIdx);
-        if(!world) return;
-        // World meta row: only welt set, no nr — contains e.g. rent info + image
-        if(!nr){
-          if(!sheetWorldMeta[world]) sheetWorldMeta[world] = {};
-          const rent = get(rentIdx);
-          const img = get(imgIdx);
-          const cat = get(catIdx);
-          const hasAtlasStr = get(hasAtlasIdx).toUpperCase();
-          const extUrl = get(extUrlIdx);
-          if(rent) sheetWorldMeta[world].rent = rent;
-          if(img) sheetWorldMeta[world].img = img;
-          if(cat) sheetWorldMeta[world].category = cat;
-          // hasAtlas: FALSE (English) or FALSCH (Swiss/German sheet) = external world;
-          // anything else (TRUE/WAHR/empty) = RPG world with an ATLAS map
-          sheetWorldMeta[world].hasAtlas = !(hasAtlasStr === 'FALSE' || hasAtlasStr === 'FALSCH');
-          if(extUrl) sheetWorldMeta[world].externalUrl = extUrl;
-          return;
-        }
-        if(!sheetLots[world]) sheetLots[world] = {};
-        const dotGroup = get(groupIdx).replace(/\.0$/, '');
-        // Handle # placeholder: strip # and mark as placeholder
-        const isPlaceholder = nr.endsWith('#');
-        const cleanNr = isPlaceholder ? nr.slice(0,-1).trim() : nr;
-        const entry = {
-          name: get(nameIdx),
-          threadUrl: get(urlIdx),
-          imgUrl: get(imgIdx),
-          dotGroup: dotGroup,
-          isPlaceholder: isPlaceholder,
-        };
-        if(dotGroup){
-          const key = dotGroup+'|'+cleanNr;
-          if(!sheetLots[world][key]) sheetLots[world][key] = [];
-          sheetLots[world][key].push(entry);
-          if(!sheetLots[world][cleanNr]) sheetLots[world][cleanNr] = entry;
-        } else {
-          if(!sheetLots[world][cleanNr]) sheetLots[world][cleanNr] = entry;
-          else if(!Array.isArray(sheetLots[world][cleanNr])) sheetLots[world][cleanNr] = [sheetLots[world][cleanNr], entry];
-          else sheetLots[world][cleanNr].push(entry);
-        }
-      });
-      sheetLotsLoaded = true;
-      // Update portal tokens now — sheetWorldMeta is filled,
-      // so characters in Toronto/Kanada/etc. (hasAtlas=false) become visible
-      if(typeof updateOtherworldPortalTokens === 'function') updateOtherworldPortalTokens();
+      applyLotsCsv(csv);
+      if(isLotsCsv(csv)) writeCache('sheet-lots',csv);
       if(cb) cb();
     })
     .catch(()=>{ sheetLotsLoaded = true; if(cb) cb(); });
+}
+
+// Background refresh after starting from the cache. If the data changed, the
+// event 'sheet-lots-updated' tells the open views to re-render.
+function refreshSheetLots(cachedCsv){
+  if(sheetRefreshStarted) return;
+  sheetRefreshStarted=true;
+  fetch(SHEET_LOTS_CSV_URL)
+    .then(r=>r.text())
+    .then(csv=>{
+      if(!isLotsCsv(csv) || csv===cachedCsv) return;
+      writeCache('sheet-lots',csv);
+      applyLotsCsv(csv);
+      emit('sheet-lots-updated');
+    })
+    .catch(function(){});
+}
+
+// Only real lots data is cached (not an error page).
+function isLotsCsv(csv){
+  return typeof csv==='string' && /(^|,)"?welt"?(,|$)/i.test(csv.split('\n')[0]);
 }
 
 export function applySheetData(lot, wname){

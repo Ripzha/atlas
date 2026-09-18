@@ -1,10 +1,10 @@
 /* PROJECT ATLAS - World search.
    Search box with favorites and recently visited worlds. Records recent
-   worlds through onEnterWorld() from world-view.js. */
+   worlds through the 'enter-world' event (core/events.js). */
 
-import { worlds } from '../../data/worlds.js?v=202609181617';
-import { mapIA } from './continent-map.js?v=202609181617';
-import { onEnterWorld } from './world-view.js?v=202609181617';
+import { on } from '../../core/events.js?v=202609181426';
+import { worlds } from '../../data/worlds.js?v=202609181426';
+import { mapIA } from './continent-map.js?v=202609181426';
 
 (function(){
   const searchInput=document.getElementById('world-search-input');
@@ -18,7 +18,7 @@ import { onEnterWorld } from './world-view.js?v=202609181617';
   function saveRecents(r){try{localStorage.setItem('atlas_recents',JSON.stringify(r));}catch(e){}}
 
   // Record recent when entering world
-  onEnterWorld(function(w){
+  on('enter-world', function(w){
     if(w&&w.name){
       let r=loadRecents().filter(n=>n!==w.name);
       r.unshift(w.name);

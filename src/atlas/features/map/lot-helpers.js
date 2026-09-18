@@ -2,7 +2,7 @@
    Label parsing ("Nr. 5ZZ" → "Nr. 5"), nr ranges for building clusters, and
    grouping of lots that share one position. */
 
-import { sheetLots, sheetLotsLoaded } from '../../core/sheet-data.js?v=202609181617';
+import { sheetLots, sheetLotsLoaded } from '../../core/sheet-data.js?v=202609181426';
 
 export function parseLotLabel(lot){
   const name=lot.name||'';
