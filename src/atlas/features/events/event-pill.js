@@ -1,4 +1,5 @@
-/* PROJECT ATLAS - Event pill and event panel. */
+/* PROJECT ATLAS - Event pill and event panel.
+   The pill can be dragged to any place; the position is remembered per browser. */
 
 (function() {
   // === CONFIGURATION ===========================================================
@@ -104,7 +105,85 @@
       document.body.appendChild(hint);
     }
 
-    pill.addEventListener('click', openPanel);
+    makePillDraggable(pill);
+    // A click opens the panel — unless the pill was just dragged
+    pill.addEventListener('click', function(){
+      if (pill.__dragged) return;
+      openPanel();
+    });
+  }
+
+  // === DRAGGING ===
+  // The pill can be dragged anywhere, e.g. away from something it covers.
+  // The position is stored per browser as a fraction of the window size and
+  // wins over the default positions in the CSS.
+  const PILL_POS_KEY = 'atlas_event_pill_pos';
+
+  function placePill(pill, left, top) {
+    const w = pill.offsetWidth, h = pill.offsetHeight;
+    left = Math.max(4, Math.min(window.innerWidth - w - 4, left));
+    top = Math.max(4, Math.min(window.innerHeight - h - 4, top));
+    // Fixed to the window: move it out of the header anchor first
+    if (pill.parentNode !== document.body) document.body.appendChild(pill);
+    const set = function(prop, value) { pill.style.setProperty(prop, value, 'important'); };
+    set('position', 'fixed');
+    set('left', left + 'px');
+    set('top', top + 'px');
+    set('right', 'auto');
+    set('bottom', 'auto');
+    set('transform', 'none');
+    set('margin', '0');
+  }
+
+  function restorePillPosition(pill) {
+    try {
+      const saved = JSON.parse(localStorage.getItem(PILL_POS_KEY) || 'null');
+      if (saved && typeof saved.x === 'number' && typeof saved.y === 'number') {
+        placePill(pill, saved.x * window.innerWidth, saved.y * window.innerHeight);
+      }
+    } catch (e) {}
+  }
+
+  function makePillDraggable(pill) {
+    pill.style.setProperty('touch-action', 'none', 'important');
+    pill.style.cursor = 'grab';
+    let start = null, moved = false;
+    pill.addEventListener('pointerdown', function(e) {
+      const r = pill.getBoundingClientRect();
+      start = { x: e.clientX, y: e.clientY, dx: e.clientX - r.left, dy: e.clientY - r.top, id: e.pointerId };
+      moved = false;
+    });
+    pill.addEventListener('pointermove', function(e) {
+      if (!start) return;
+      // Small movements still count as a click
+      if (!moved && Math.abs(e.clientX - start.x) < 5 && Math.abs(e.clientY - start.y) < 5) return;
+      if (!moved) {
+        moved = true;
+        pill.style.cursor = 'grabbing';
+        placePill(pill, e.clientX - start.dx, e.clientY - start.dy);
+        try { pill.setPointerCapture(start.id); } catch (_) {}
+      }
+      placePill(pill, e.clientX - start.dx, e.clientY - start.dy);
+    });
+    function endDrag() {
+      if (!start) return;
+      if (moved) {
+        // Swallow the click the browser fires right after a drag (same task);
+        // reset afterwards so the next real click opens the panel.
+        pill.__dragged = true;
+        setTimeout(function() { pill.__dragged = false; }, 0);
+        pill.style.cursor = 'grab';
+        const r = pill.getBoundingClientRect();
+        try {
+          localStorage.setItem(PILL_POS_KEY, JSON.stringify({ x: r.left / window.innerWidth, y: r.top / window.innerHeight }));
+        } catch (_) {}
+      }
+      start = null;
+    }
+    pill.addEventListener('pointerup', endDrag);
+    pill.addEventListener('pointercancel', endDrag);
+    window.addEventListener('resize', function() { restorePillPosition(pill); });
+    restorePillPosition(pill);
   }
 
   function openPanel() {
