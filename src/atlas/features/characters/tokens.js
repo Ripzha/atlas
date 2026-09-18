@@ -2,8 +2,9 @@
    Small portraits on world dots, lot dots and clusters showing where
    characters were last seen (matched by forum thread ID). */
 
-import { updateOtherworldArrowTokens } from '../otherworlds/portal.js?v=202609181426';
-import { CHARS } from './character-view.js?v=202609181426';
+import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609181456';
+import { updateOtherworldArrowTokens } from '../otherworlds/portal.js?v=202609181456';
+import { CHARS } from './character-view.js?v=202609181456';
 
 function getThreadIdFromUrl(url){
   if(!url) return null;
@@ -25,7 +26,7 @@ export function updateAllTokens(){
     // Update innerHTML only, keep the container with its data attribute
     var inner = chars.map(function(c,i){
       var name=c.n||'';
-      var inner2=c.img?'<img class="dot-char-token" src="'+c.img+'" alt="'+name+'" loading="lazy" decoding="async">':'<div class="dot-char-token-ph">'+name.charAt(0)+'</div>';
+      var inner2=c.img?'<img class="dot-char-token" src="'+imageUrl(c.img,IMG_THUMB)+'" alt="'+name+'" loading="lazy" decoding="async">':'<div class="dot-char-token-ph">'+name.charAt(0)+'</div>';
       var hidden=i>=5?'dot-char-token-hidden':'';
       return '<div class="dot-char-token-wrap '+hidden+'">'+inner2+'<div class="dot-char-token-name">'+name+'</div></div>';
     }).join('')+(chars.length>5?'<div class="dot-char-token-wrap dot-char-token-extra"><div class="dot-char-token-ph">+'+(chars.length-5)+'</div></div>':'');
@@ -37,7 +38,7 @@ export function updateAllTokens(){
     var chars = getCharsAtWorld(worldName);
     var inner = chars.map(function(c,i){
       var name=c.n||'';
-      var inner2=c.img?'<img class="dot-char-token" src="'+c.img+'" alt="'+name+'" loading="lazy" decoding="async">':'<div class="dot-char-token-ph">'+name.charAt(0)+'</div>';
+      var inner2=c.img?'<img class="dot-char-token" src="'+imageUrl(c.img,IMG_THUMB)+'" alt="'+name+'" loading="lazy" decoding="async">':'<div class="dot-char-token-ph">'+name.charAt(0)+'</div>';
       var hidden=i>=5?'dot-char-token-hidden':'';
       return '<div class="dot-char-token-wrap '+hidden+'">'+inner2+'<div class="dot-char-token-name">'+name+'</div></div>';
     }).join('')+(chars.length>5?'<div class="dot-char-token-wrap dot-char-token-extra"><div class="dot-char-token-ph">+'+(chars.length-5)+'</div></div>':'');
@@ -61,7 +62,7 @@ export function updateAllTokens(){
     });
     var inner = chars.map(function(c,i){
       var name=c.n||'';
-      var inner2=c.img?'<img class="dot-char-token" src="'+c.img+'" alt="'+name+'" loading="lazy" decoding="async">':'<div class="dot-char-token-ph">'+name.charAt(0)+'</div>';
+      var inner2=c.img?'<img class="dot-char-token" src="'+imageUrl(c.img,IMG_THUMB)+'" alt="'+name+'" loading="lazy" decoding="async">':'<div class="dot-char-token-ph">'+name.charAt(0)+'</div>';
       var hidden=i>=5?'dot-char-token-hidden':'';
       return '<div class="dot-char-token-wrap '+hidden+'">'+inner2+'<div class="dot-char-token-name">'+name+'</div></div>';
     }).join('')+(chars.length>5?'<div class="dot-char-token-wrap dot-char-token-extra"><div class="dot-char-token-ph">+'+(chars.length-5)+'</div></div>':'');
@@ -79,7 +80,7 @@ export function updateAllTokens(){
     var html = chars.slice(0,3).map(function(c){
       var name=(c.n||'').replace(/"/g,'&quot;');
       return c.img
-        ? '<img src="'+c.img+'" title="'+name+'" loading="lazy" decoding="async" style="width:18px;height:18px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(74,170,106,0.8);margin-left:-4px;box-shadow:0 0 4px rgba(74,170,106,0.5)">'
+        ? '<img src="'+imageUrl(c.img,IMG_THUMB)+'" title="'+name+'" loading="lazy" decoding="async" style="width:18px;height:18px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(74,170,106,0.8);margin-left:-4px;box-shadow:0 0 4px rgba(74,170,106,0.5)">'
         : '<div title="'+name+'" style="width:18px;height:18px;border-radius:50%;background:rgba(74,170,106,0.3);border:1.5px solid rgba(74,170,106,0.6);display:flex;align-items:center;justify-content:center;font-size:9px;color:#4aaa6a;margin-left:-4px">'+(c.n.charAt(0)||'?')+'</div>';
     }).join('');
     if(chars.length>3) html += '<span style="font-size:9px;color:#4aaa6a;margin-left:4px;font-weight:500">+'+(chars.length-3)+'</span>';
@@ -98,7 +99,7 @@ export function buildCharTokensHtml(chars){
     chars.map(function(c,i){
       var name=c.n||'';
       var inner=c.img
-        ?'<img class="dot-char-token" src="'+c.img+'" alt="'+name+'" loading="lazy" decoding="async">'
+        ?'<img class="dot-char-token" src="'+imageUrl(c.img,IMG_THUMB)+'" alt="'+name+'" loading="lazy" decoding="async">'
         :'<div class="dot-char-token-ph">'+name.charAt(0)+'</div>';
       // tokens beyond MAX are hidden when stacked, shown when expanded
       var hidden=i>=MAX?'dot-char-token-hidden':'';

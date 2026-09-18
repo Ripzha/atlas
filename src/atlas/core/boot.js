@@ -4,23 +4,24 @@
    last view, prioritizes images of the entry view, and pauses periodic updates
    while the tab is hidden. Imported last by main.js. */
 
-import { on } from './events.js?v=202609181426';
-import { readCache } from './cache.js?v=202609181426';
-import { otherworlds, worlds } from '../data/worlds.js?v=202609181426';
-import { worldLots } from '../data/world-lots.js?v=202609181426';
-import { fetchSheetLots, sheetWorldMeta } from './sheet-data.js?v=202609181426';
-import { repositionTooltips } from '../ui/tooltips.js?v=202609181426';
+import { IMG_CARD, imageUrl } from './images.js?v=202609181456';
+import { on } from './events.js?v=202609181456';
+import { readCache } from './cache.js?v=202609181456';
+import { otherworlds, worlds } from '../data/worlds.js?v=202609181456';
+import { worldLots } from '../data/world-lots.js?v=202609181456';
+import { fetchSheetLots, sheetWorldMeta } from './sheet-data.js?v=202609181456';
+import { repositionTooltips } from '../ui/tooltips.js?v=202609181456';
 import {
   updateSidebarForum,
   updateSidebarStats,
-} from '../features/activity/sidebar-feeds.js?v=202609181426';
-import { openOtherWorld } from '../features/otherworlds/otherworld-view.js?v=202609181426';
-import { enterBuilding } from '../features/buildings/building-view.js?v=202609181426';
+} from '../features/activity/sidebar-feeds.js?v=202609181456';
+import { openOtherWorld } from '../features/otherworlds/otherworld-view.js?v=202609181456';
+import { enterBuilding } from '../features/buildings/building-view.js?v=202609181456';
 import {
   fetchCharsFromScript,
   openCharView,
-} from '../features/characters/character-view.js?v=202609181426';
-import { enterWorld } from '../features/map/world-view.js?v=202609181426';
+} from '../features/characters/character-view.js?v=202609181456';
+import { enterWorld } from '../features/map/world-view.js?v=202609181456';
 
 // Detection runs BEFORE load so other functions can read it
 var ENTRY_MODE = (function(){
@@ -169,7 +170,7 @@ document.addEventListener('DOMContentLoaded',function(){
 function updateHoverImages(){
   document.querySelectorAll('.world-dot').forEach(function(dot){
     var wname=dot.dataset.worldKey;
-    var sheetImg=(sheetWorldMeta[wname]||{}).img;
+    var sheetImg=imageUrl((sheetWorldMeta[wname]||{}).img,IMG_CARD);
     if(!sheetImg)return;
     var img=dot.querySelector('.hover-img');
     if(img){

@@ -2,9 +2,10 @@
    Draggable portal on the continent map with particles and tokens of
    characters currently in outer worlds. Opens the "Andere Welten" view. */
 
-import { sheetWorldMeta } from '../../core/sheet-data.js?v=202609181426';
-import { openOtherWorld } from './otherworld-view.js?v=202609181426';
-import { CHARS } from '../characters/character-view.js?v=202609181426';
+import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609181456';
+import { sheetWorldMeta } from '../../core/sheet-data.js?v=202609181456';
+import { openOtherWorld } from './otherworld-view.js?v=202609181456';
+import { CHARS } from '../characters/character-view.js?v=202609181456';
 
 // "Andere Welten" portal: mini map with particles, drag + tokens
 // Outer world characters = characters whose lastSeenName is a "hasAtlas=false" world
@@ -33,7 +34,7 @@ export function updateOtherworldPortalTokens(){
   // → becomes visible on hover (same as the world dot tokens)
   var html = chars.map(function(c, i){
     var inner = c.img
-      ? '<img class="ow-portal-token" src="' + c.img + '" alt="' + (c.n||'') + '" loading="lazy">'
+      ? '<img class="ow-portal-token" src="' + imageUrl(c.img,IMG_THUMB) + '" alt="' + (c.n||'') + '" loading="lazy">'
       : '<div class="ow-portal-token-ph">' + ((c.n||'?').charAt(0)) + '</div>';
     var name = (c.n||'').replace(/"/g,'&quot;');
     var hiddenClass = i >= MAX ? ' ow-portal-token-hidden' : '';

@@ -2,16 +2,17 @@
    Floor plans with apartment dots; floor switching. Data: BUILDINGS. Called
    from inline handlers: changeBuildingFloor(). */
 
-import { on } from '../../core/events.js?v=202609181426';
-import { BUILDINGS } from '../../data/buildings.js?v=202609181426';
-import { worldLots } from '../../data/world-lots.js?v=202609181426';
-import { state } from '../../core/state.js?v=202609181426';
+import { IMG_CARD, imageUrl } from '../../core/images.js?v=202609181456';
+import { on } from '../../core/events.js?v=202609181456';
+import { BUILDINGS } from '../../data/buildings.js?v=202609181456';
+import { worldLots } from '../../data/world-lots.js?v=202609181456';
+import { state } from '../../core/state.js?v=202609181456';
 import {
   applySheetData,
   sheetLotsLoaded,
   sheetWorldMeta,
-} from '../../core/sheet-data.js?v=202609181426';
-import { parseLotLabel } from '../map/lot-helpers.js?v=202609181426';
+} from '../../core/sheet-data.js?v=202609181456';
+import { parseLotLabel } from '../map/lot-helpers.js?v=202609181456';
 
 export let buildingFloorIdx=0,currentBuildingKey=null;
 
@@ -68,7 +69,7 @@ function renderBuildingLots(){
     const _statusColor=isFree?'rgba(255,255,255,0.3)':apt.outdoor?'rgba(80,190,170,0.9)':apt.active?'#4aaa6a':'rgba(255,255,255,0.4)';
     const _textInner=`<div style="font-size:9px;letter-spacing:1px;color:rgba(255,255,255,0.35);margin-bottom:1px">${_lbl.num}</div><div style="font-weight:600;margin-bottom:3px">${_lbl.sub||_lbl.num}</div><div style="font-size:10px;color:${_statusColor}">${_statusText}</div>`;
     const _tooltipInner=apt.img
-      ?`<div style="padding:0;overflow:hidden;min-width:160px"><img src="${apt.img}" loading="lazy" decoding="async" style="width:100%;height:90px;object-fit:cover;display:block"><div style="padding:7px 10px">${_textInner}</div></div>`
+      ?`<div style="padding:0;overflow:hidden;min-width:160px"><img src="${imageUrl(apt.img,IMG_CARD)}" loading="lazy" decoding="async" style="width:100%;height:90px;object-fit:cover;display:block"><div style="padding:7px 10px">${_textInner}</div></div>`
       :`<div style="padding:6px 10px">${_textInner}</div>`;
     const _ttStyle=apt.img?'padding:0;overflow:hidden;min-width:160px;border:0.5px solid rgba(255,255,255,0.2)':'padding:6px 10px;border:0.5px solid rgba(255,255,255,0.2)';
     d.innerHTML=`<div class="lot-pulse"></div><div class="lot-inner" style="width:11px;height:11px;background:${_dotBg};box-shadow:${_shadow}"></div><div class="lot-label">${_labelHtml}</div><div class="lot-tooltip" style="${_ttStyle}">${_tooltipInner}</div>`;

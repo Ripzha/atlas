@@ -2,11 +2,12 @@
    Characters active in the last 14 days, grouped by forum post (merged cards
    with unfolding tokens), plus the hover preview of the latest post. */
 
-import { SCRIPT_URL } from '../../config.js?v=202609181426';
-import { WORLD_COLORS } from '../../data/worlds.js?v=202609181426';
-import { syncMobileActivitySheet } from '../../ui/mobile-sheets.js?v=202609181426';
-import { CHARS } from '../characters/character-view.js?v=202609181426';
-import { _hasInteracted, _isVisible } from '../../core/boot.js?v=202609181426';
+import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609181456';
+import { SCRIPT_URL } from '../../config.js?v=202609181456';
+import { WORLD_COLORS } from '../../data/worlds.js?v=202609181456';
+import { syncMobileActivitySheet } from '../../ui/mobile-sheets.js?v=202609181456';
+import { CHARS } from '../characters/character-view.js?v=202609181456';
+import { _hasInteracted, _isVisible } from '../../core/boot.js?v=202609181456';
 
 export function updateSidebarActivity(){
   var el=document.getElementById('sidebar-activity');
@@ -83,7 +84,7 @@ export function updateSidebarActivity(){
   function _portraitHtml(c, color){
     var nameShort = c.n.split(' ')[0];
     return c.img
-      ? '<img src="'+c.img+'" loading="lazy" decoding="async" style="width:26px;height:26px;border-radius:50%;object-fit:cover;object-position:50% 30%;flex-shrink:0;border:1.5px solid '+color+';box-shadow:0 0 4px '+color+'88">'
+      ? '<img src="'+imageUrl(c.img,IMG_THUMB)+'" loading="lazy" decoding="async" style="width:26px;height:26px;border-radius:50%;object-fit:cover;object-position:50% 30%;flex-shrink:0;border:1.5px solid '+color+';box-shadow:0 0 4px '+color+'88">'
       : '<div style="width:26px;height:26px;border-radius:50%;background:'+color+';display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:600;flex-shrink:0;box-shadow:0 0 4px '+color+'88">'+nameShort.charAt(0)+'</div>';
   }
 

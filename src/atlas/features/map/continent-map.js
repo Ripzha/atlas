@@ -3,11 +3,12 @@
    containers, handles tap-to-preview on touch devices and the map calibration
    click. */
 
-import { worlds } from '../../data/worlds.js?v=202609181426';
-import { state } from '../../core/state.js?v=202609181426';
-import { updateAllTokens } from '../characters/tokens.js?v=202609181426';
-import { updateCalibLog } from '../admin/calibration.js?v=202609181426';
-import { enterWorld } from './world-view.js?v=202609181426';
+import { IMG_CARD, imageUrl } from '../../core/images.js?v=202609181456';
+import { worlds } from '../../data/worlds.js?v=202609181456';
+import { state } from '../../core/state.js?v=202609181456';
+import { updateAllTokens } from '../characters/tokens.js?v=202609181456';
+import { updateCalibLog } from '../admin/calibration.js?v=202609181456';
+import { enterWorld } from './world-view.js?v=202609181456';
 
 export const mapC=document.getElementById('map-container');
 export const mapIA=document.getElementById('map-image-area');
@@ -32,7 +33,7 @@ worlds.forEach(w=>{
   el.className='world-dot';
   el.dataset.worldKey=w.name;
   el.style.cssText=`left:${w.x}%;top:${w.y}%`;
-  el.innerHTML=`<div class="dot-pulse" style="width:34px;height:34px;border-color:${w.color}"></div><div class="dot-inner" style="width:11px;height:11px;background:${w.color};box-shadow:0 0 5px ${w.color}"></div><div class="dot-label">${w.name}</div><div class="dot-char-tokens" data-world-name="${w.name}"></div><div class="hover-card" style="border:1px solid ${w.color}88;box-shadow:0 6px 28px ${w.color}44"><div style="position:relative">${w.img?`<img class="hover-img" src="${w.img}" loading="lazy" decoding="async" onerror="this.style.display='none'">`:''}<div class="hover-gradient"></div><div class="hover-name">${w.name}</div></div><div class="hover-footer"><span class="hover-type">${w.type}</span><span class="hover-action" style="color:${w.color}">Öffnen →</span></div></div>`;
+  el.innerHTML=`<div class="dot-pulse" style="width:34px;height:34px;border-color:${w.color}"></div><div class="dot-inner" style="width:11px;height:11px;background:${w.color};box-shadow:0 0 5px ${w.color}"></div><div class="dot-label">${w.name}</div><div class="dot-char-tokens" data-world-name="${w.name}"></div><div class="hover-card" style="border:1px solid ${w.color}88;box-shadow:0 6px 28px ${w.color}44"><div style="position:relative">${w.img?`<img class="hover-img" src="${imageUrl(w.img,IMG_CARD)}" loading="lazy" decoding="async" onerror="this.style.display='none'">`:''}<div class="hover-gradient"></div><div class="hover-name">${w.name}</div></div><div class="hover-footer"><span class="hover-type">${w.type}</span><span class="hover-action" style="color:${w.color}">Öffnen →</span></div></div>`;
   el.addEventListener('click',e=>{
     e.stopPropagation();
     if(state.calibMapMode)return;

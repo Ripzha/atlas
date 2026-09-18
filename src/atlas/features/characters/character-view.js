@@ -3,11 +3,12 @@
    sorting and hover card. Loads characters from the Apps Script and caches
    them in localStorage (core/cache.js). CHARS starts with a small fallback list. */
 
-import { readCache, writeCache } from '../../core/cache.js?v=202609181426';
-import { SCRIPT_URL } from '../../config.js?v=202609181426';
-import { updateAllTokens } from './tokens.js?v=202609181426';
-import { updateSidebarActivity } from '../activity/last-seen.js?v=202609181426';
-import { updateSidebarNewChars } from '../activity/sidebar-feeds.js?v=202609181426';
+import { IMG_CARD, imageUrl } from '../../core/images.js?v=202609181456';
+import { readCache, writeCache } from '../../core/cache.js?v=202609181456';
+import { SCRIPT_URL } from '../../config.js?v=202609181456';
+import { updateAllTokens } from './tokens.js?v=202609181456';
+import { updateSidebarActivity } from '../activity/last-seen.js?v=202609181456';
+import { updateSidebarNewChars } from '../activity/sidebar-feeds.js?v=202609181456';
 
 export var CHARS=[
   {n:"Sullivan 'Blaze' Blaisdell",p:"Ripzha",type:"haupt",u:"https://www.simsforumrpg.de/t78f51849-Sullivan-Blaze-Blaisdell.html",h:"Newcrest",img:"",age:"18",job:""},
@@ -336,7 +337,7 @@ function makeCard(c){
   card.setAttribute('data-url',c.u);
   card.onclick=function(){window.open(this.getAttribute('data-url'),'_blank');};
   var portrait=c.img
-    ?'<img class="char-portrait" src="'+c.img+'" alt="'+c.n+'" loading="lazy" decoding="async">'
+    ?'<img class="char-portrait" src="'+imageUrl(c.img,IMG_CARD)+'" alt="'+c.n+'" loading="lazy" decoding="async">'
     :'<div class="char-portrait-ph">&#128100;</div>';
   card.innerHTML='<div class="char-portrait-wrap">'+portrait
     +'<div class="char-name-overlay"><span class="char-name-overlay-name">'+c.n+'</span>'

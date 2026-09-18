@@ -5,24 +5,25 @@
    Other files can react to entering a world via on('enter-world', fn) from
    core/events.js (the world search uses it for "Zuletzt besucht"). */
 
-import { emit, on } from '../../core/events.js?v=202609181426';
-import { worldLots } from '../../data/world-lots.js?v=202609181426';
-import { customLots, state } from '../../core/state.js?v=202609181426';
+import { IMG_CARD, imageUrl } from '../../core/images.js?v=202609181456';
+import { emit, on } from '../../core/events.js?v=202609181456';
+import { worldLots } from '../../data/world-lots.js?v=202609181456';
+import { customLots, state } from '../../core/state.js?v=202609181456';
 import {
   fetchSheetLots,
   getLots,
   sheetLots,
   sheetLotsLoaded,
   sheetWorldMeta,
-} from '../../core/sheet-data.js?v=202609181426';
-import { repositionTooltips } from '../../ui/tooltips.js?v=202609181426';
-import { showMobileDotBar } from '../../ui/mobile-dot-bar.js?v=202609181426';
-import { updateAllTokens } from '../characters/tokens.js?v=202609181426';
-import { enterBuilding, exitBuilding } from '../buildings/building-view.js?v=202609181426';
-import { updateCalibLog } from '../admin/calibration.js?v=202609181426';
-import { renderAdminContent } from '../admin/admin-panel.js?v=202609181426';
-import { getBuildingNrRange, groupLots, parseLotLabel } from './lot-helpers.js?v=202609181426';
-import { mapC, mapIA } from './continent-map.js?v=202609181426';
+} from '../../core/sheet-data.js?v=202609181456';
+import { repositionTooltips } from '../../ui/tooltips.js?v=202609181456';
+import { showMobileDotBar } from '../../ui/mobile-dot-bar.js?v=202609181456';
+import { updateAllTokens } from '../characters/tokens.js?v=202609181456';
+import { enterBuilding, exitBuilding } from '../buildings/building-view.js?v=202609181456';
+import { updateCalibLog } from '../admin/calibration.js?v=202609181456';
+import { renderAdminContent } from '../admin/admin-panel.js?v=202609181456';
+import { getBuildingNrRange, groupLots, parseLotLabel } from './lot-helpers.js?v=202609181456';
+import { mapC, mapIA } from './continent-map.js?v=202609181456';
 
 export function enterWorld(w){
   emit('enter-world', w);
@@ -147,7 +148,7 @@ function renderLots(w){
       const _dotBg=lot.info?'rgba(200,160,80,0.9)':lot.outdoor?'rgba(80,190,170,0.75)':lot.active?'#4aaa6a':'rgba(255,255,255,0.5)';
       const _dotShadow=lot.info?'0 0 8px rgba(200,160,80,0.7)':lot.outdoor?'0 0 8px rgba(80,190,170,0.6)':lot.active?'0 0 10px #4aaa6a':'none';
       const _tt=lot.img
-        ?`<div class="lot-tooltip" style="${_tb};padding:0;overflow:hidden;min-width:160px"><img src="${lot.img}" loading="lazy" decoding="async" style="width:100%;height:90px;object-fit:cover;display:block"><div style="padding:7px 10px">${_ti}</div></div>`
+        ?`<div class="lot-tooltip" style="${_tb};padding:0;overflow:hidden;min-width:160px"><img src="${imageUrl(lot.img,IMG_CARD)}" loading="lazy" decoding="async" style="width:100%;height:90px;object-fit:cover;display:block"><div style="padding:7px 10px">${_ti}</div></div>`
         :`<div class="lot-tooltip" style="${_tb};padding:6px 10px">${_ti}</div>`;
       ld.innerHTML=(lot.info?`<div class="lot-inner" style="width:11px;height:11px;background:${_dotBg};box-shadow:${_dotShadow};transform:rotate(45deg);border-radius:2px"></div>`:`<div class="lot-pulse"></div><div class="lot-inner" style="width:12px;height:12px;background:${_dotBg};box-shadow:${_dotShadow}"></div>`)+`<div class="lot-label">${(()=>{const p=parseLotLabel(lot);return p.sub?`${p.num}<span class="lot-sublabel">${p.sub}</span>`:p.num;})()}</div><div class="dot-char-tokens" data-lot-url="${lot.url||''}"></div>${_tt}`;
       if(!lot.info){ld.addEventListener('click',e=>{
@@ -188,7 +189,7 @@ function renderLots(w){
       })();
       const lbl=lblParts.sub?`${lblParts.main}<span class="lot-sublabel">${lblParts.sub}</span>`:lblParts.main;
       const lblPlain=lblParts.sub?`${lblParts.main} · ${lblParts.sub}`:lblParts.main;
-      const itemsHtml=group.lots.map(l=>`<div class="cluster-item" data-url="${l.url}">${l.img?`<img class="cluster-item-preview" src="${l.img}" loading="lazy" decoding="async">`:''}<div class="cluster-pip" style="background:${l.active?'#4aaa6a':'rgba(255,255,255,0.4)'}"></div>${parseLotLabel(l).num}${parseLotLabel(l).sub?` <span style="color:rgba(255,255,255,0.45);font-size:10px">– ${parseLotLabel(l).sub}</span>`:''}<div class="cluster-item-chars" data-lot-url="${l.url||''}"></div></div>`).join('');
+      const itemsHtml=group.lots.map(l=>`<div class="cluster-item" data-url="${l.url}">${l.img?`<img class="cluster-item-preview" src="${imageUrl(l.img,IMG_CARD)}" loading="lazy" decoding="async">`:''}<div class="cluster-pip" style="background:${l.active?'#4aaa6a':'rgba(255,255,255,0.4)'}"></div>${parseLotLabel(l).num}${parseLotLabel(l).sub?` <span style="color:rgba(255,255,255,0.45);font-size:10px">– ${parseLotLabel(l).sub}</span>`:''}<div class="cluster-item-chars" data-lot-url="${l.url||''}"></div></div>`).join('');
       // All lot URLs of the group as a pipe string — updateAllTokens aggregates characters from it
       const clusterUrls=group.lots.map(l=>l.url||'').filter(Boolean).join('|');
       const lotsWithImg=group.lots.filter(l=>l.img);
@@ -214,9 +215,9 @@ function renderLots(w){
       }
       const buildingImg=isBuilding?group.lots.find(l=>l.img)?.img:null;
       const clusterHoverHtml=isBuilding&&buildingImg
-        ?`<div class="cluster-hover" style="border:1px solid ${color}88;box-shadow:0 6px 28px ${color}44;min-width:180px"><img src="${buildingImg}" loading="lazy" decoding="async" style="width:100%;height:110px;object-fit:cover;display:block"><div class="hover-footer"><span class="hover-type">${lblPlain}</span><span class="hover-action" style="color:${color}">Betreten →</span></div></div>`
-        :(!isBuilding&&lotsWithImg.length>0)?`<div class="cluster-hover" style="border:1px solid ${color}88;box-shadow:0 6px 28px ${color}44"><div style="display:flex;gap:1px">${lotsWithImg.map(l=>`<div style="position:relative;flex:1;min-width:0"><img src="${l.img}" loading="lazy" decoding="async" style="width:100%;height:75px;object-fit:cover;display:block"><div style="position:absolute;bottom:3px;left:5px;font-size:8px;font-weight:600;text-shadow:0 1px 3px #000;color:#fff">${parseLotLabel(l).num}</div></div>`).join('')}</div><div class="hover-footer"><span class="hover-type">${group.lots.length} Orte</span><span class="hover-action" style="color:${color}">Klicken →</span></div></div>`
-        :(!isBuilding&&anchorImg)?`<div class="cluster-hover" style="border:1px solid ${color}88;box-shadow:0 6px 28px ${color}44;min-width:180px"><img src="${anchorImg}" loading="lazy" decoding="async" style="width:100%;height:110px;object-fit:cover;display:block"><div class="hover-footer"><span class="hover-type">${group.lots.length} Orte</span><span class="hover-action" style="color:${color}">Klicken →</span></div></div>`:'';
+        ?`<div class="cluster-hover" style="border:1px solid ${color}88;box-shadow:0 6px 28px ${color}44;min-width:180px"><img src="${imageUrl(buildingImg,IMG_CARD)}" loading="lazy" decoding="async" style="width:100%;height:110px;object-fit:cover;display:block"><div class="hover-footer"><span class="hover-type">${lblPlain}</span><span class="hover-action" style="color:${color}">Betreten →</span></div></div>`
+        :(!isBuilding&&lotsWithImg.length>0)?`<div class="cluster-hover" style="border:1px solid ${color}88;box-shadow:0 6px 28px ${color}44"><div style="display:flex;gap:1px">${lotsWithImg.map(l=>`<div style="position:relative;flex:1;min-width:0"><img src="${imageUrl(l.img,IMG_CARD)}" loading="lazy" decoding="async" style="width:100%;height:75px;object-fit:cover;display:block"><div style="position:absolute;bottom:3px;left:5px;font-size:8px;font-weight:600;text-shadow:0 1px 3px #000;color:#fff">${parseLotLabel(l).num}</div></div>`).join('')}</div><div class="hover-footer"><span class="hover-type">${group.lots.length} Orte</span><span class="hover-action" style="color:${color}">Klicken →</span></div></div>`
+        :(!isBuilding&&anchorImg)?`<div class="cluster-hover" style="border:1px solid ${color}88;box-shadow:0 6px 28px ${color}44;min-width:180px"><img src="${imageUrl(anchorImg,IMG_CARD)}" loading="lazy" decoding="async" style="width:100%;height:110px;object-fit:cover;display:block"><div class="hover-footer"><span class="hover-type">${group.lots.length} Orte</span><span class="hover-action" style="color:${color}">Klicken →</span></div></div>`:'';
       cd.innerHTML=`<div class="cluster-inner" style="color:${color};border-color:${color};box-shadow:0 0 8px ${color}44">${isBuilding?'🏢':group.lots.length}</div><div class="cluster-label">${lbl}</div><div class="dot-char-tokens" data-cluster-urls="${clusterUrls}"></div>${clusterHoverHtml}${isBuilding?'':` <div class="cluster-popup"><div style="font-size:10px;color:rgba(255,165,0,0.7);margin-bottom:6px;padding:0 4px">📦 ${group.lots.length} Orte</div>${itemsHtml}</div>`}`;
       // Cluster items: two-tap behavior on mobile, open directly on desktop
       cd.querySelectorAll('.cluster-item').forEach(item=>{

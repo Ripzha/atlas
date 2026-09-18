@@ -3,10 +3,11 @@
    activity outside the RPG worlds. Data comes from the Apps Script
    (SCRIPT_URL); the last known data is shown immediately from the cache. */
 
-import { readCache, writeCache } from '../../core/cache.js?v=202609181426';
-import { SCRIPT_URL } from '../../config.js?v=202609181426';
-import { syncMobileActivitySheet } from '../../ui/mobile-sheets.js?v=202609181426';
-import { CHARS } from '../characters/character-view.js?v=202609181426';
+import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609181456';
+import { readCache, writeCache } from '../../core/cache.js?v=202609181456';
+import { SCRIPT_URL } from '../../config.js?v=202609181456';
+import { syncMobileActivitySheet } from '../../ui/mobile-sheets.js?v=202609181456';
+import { CHARS } from '../characters/character-view.js?v=202609181456';
 
 let statsShown=false;
 
@@ -73,7 +74,7 @@ export function updateSidebarNewChars(){
     var nameShort=c.n.length>22?c.n.substr(0,20)+'…':c.n;
     var typeLabel=TYPE_LABELS[c.type]||c.type||'';
     var portrait=c.img
-      ?'<img src="'+c.img+'" loading="lazy" decoding="async" style="width:26px;height:26px;border-radius:50%;object-fit:cover;object-position:50% 30%;flex-shrink:0;border:0.5px solid rgba(255,255,255,0.15)">'
+      ?'<img src="'+imageUrl(c.img,IMG_THUMB)+'" loading="lazy" decoding="async" style="width:26px;height:26px;border-radius:50%;object-fit:cover;object-position:50% 30%;flex-shrink:0;border:0.5px solid rgba(255,255,255,0.15)">'
       :'<div style="width:26px;height:26px;border-radius:50%;background:rgba(74,170,106,0.25);display:flex;align-items:center;justify-content:center;font-size:12px;color:#4aaa6a;flex-shrink:0;border:0.5px solid rgba(74,170,106,0.4)">'+(c.n.charAt(0)||'?')+'</div>';
     return '<div class="activity-item" style="cursor:pointer" data-url="'+c.u+'" title="'+c.n+(c.p?' (gespielt von '+c.p+')':'')+'">'
       +portrait
@@ -158,7 +159,7 @@ function renderForumEvents(el, events){
     var tipAttr = tipText ? ' data-tip="' + tipText.replace(/"/g,'&quot;') + '"' : '';
     // Avatar with a type icon badge at the bottom right
     var avatar=ev.avatar
-      ?'<img src="'+ev.avatar+'" loading="lazy" decoding="async" style="width:26px;height:26px;border-radius:50%;object-fit:cover;display:block;border:0.5px solid rgba(255,255,255,0.15)">'
+      ?'<img src="'+imageUrl(ev.avatar,IMG_THUMB)+'" loading="lazy" decoding="async" style="width:26px;height:26px;border-radius:50%;object-fit:cover;display:block;border:0.5px solid rgba(255,255,255,0.15)">'
       :'<div style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:13px;color:rgba(255,255,255,0.5)">'+(user.charAt(0)||'?')+'</div>';
     var badge='<div style="position:absolute;bottom:-2px;right:-2px;width:13px;height:13px;border-radius:50%;background:#0a1420;display:flex;align-items:center;justify-content:center;font-size:9px;border:1px solid rgba(255,255,255,0.1)">'+typeIcon(ev.type)+'</div>';
     return '<div class="activity-item" style="cursor:pointer" data-url="'+ev.url+'"'+tipAttr+'>'

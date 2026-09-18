@@ -3,11 +3,11 @@
    (world view) and copy them for src/atlas/data/. Called from inline handlers:
    toggleCalib(), copyCalib(), clearCalib(). */
 
-import { worlds } from '../../data/worlds.js?v=202609181426';
-import { state } from '../../core/state.js?v=202609181426';
-import { getLots } from '../../core/sheet-data.js?v=202609181426';
-import { mapC } from '../map/continent-map.js?v=202609181426';
-import { worldC } from '../map/world-view.js?v=202609181426';
+import { worlds } from '../../data/worlds.js?v=202609181456';
+import { state } from '../../core/state.js?v=202609181456';
+import { getLots } from '../../core/sheet-data.js?v=202609181456';
+import { mapC } from '../map/continent-map.js?v=202609181456';
+import { worldC } from '../map/world-view.js?v=202609181456';
 
 export function toggleCalib(mode){
   if(mode==='map'){state.calibMapMode=!state.calibMapMode;document.getElementById('calib-map-panel').style.display=state.calibMapMode?'block':'none';mapC.style.cursor=state.calibMapMode?'crosshair':'default';if(state.calibMapMode)document.getElementById('calib-next').textContent=worlds[state.calibMapIdx]?.name||'—';}
