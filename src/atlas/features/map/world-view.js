@@ -5,25 +5,29 @@
    Other files can react to entering a world via on('enter-world', fn) from
    core/events.js (the world search uses it for "Zuletzt besucht"). */
 
-import { IMG_CARD, imageUrl } from '../../core/images.js?v=202609182205';
-import { emit, on } from '../../core/events.js?v=202609182205';
-import { worldLots } from '../../data/world-lots.js?v=202609182205';
-import { customLots, state } from '../../core/state.js?v=202609182205';
+import { IMG_CARD, imageUrl } from '../../core/images.js?v=202609182214';
+import { emit, on } from '../../core/events.js?v=202609182214';
+import { worldLots } from '../../data/world-lots.js?v=202609182214';
+import { customLots, state } from '../../core/state.js?v=202609182214';
 import {
   fetchSheetLots,
   getLots,
   sheetLots,
   sheetLotsLoaded,
   sheetWorldMeta,
-} from '../../core/sheet-data.js?v=202609182205';
-import { repositionTooltips } from '../../ui/tooltips.js?v=202609182205';
-import { showMobileDotBar } from '../../ui/mobile-dot-bar.js?v=202609182205';
-import { updateAllTokens } from '../characters/tokens.js?v=202609182205';
-import { enterBuilding, exitBuilding } from '../buildings/building-view.js?v=202609182205';
-import { updateCalibLog, updateCalibrating } from '../admin/calibration.js?v=202609182205';
-import { renderAdminContent } from '../admin/admin-panel.js?v=202609182205';
-import { getBuildingNrRange, groupLots, parseLotLabel } from './lot-helpers.js?v=202609182205';
-import { mapC, mapIA } from './continent-map.js?v=202609182205';
+} from '../../core/sheet-data.js?v=202609182214';
+import { repositionTooltips } from '../../ui/tooltips.js?v=202609182214';
+import { showMobileDotBar } from '../../ui/mobile-dot-bar.js?v=202609182214';
+import { updateAllTokens } from '../characters/tokens.js?v=202609182214';
+import { enterBuilding, exitBuilding } from '../buildings/building-view.js?v=202609182214';
+import {
+  calibWorldLots,
+  updateCalibLog,
+  updateCalibrating,
+} from '../admin/calibration.js?v=202609182214';
+import { renderAdminContent } from '../admin/admin-panel.js?v=202609182214';
+import { getBuildingNrRange, groupLots, parseLotLabel } from './lot-helpers.js?v=202609182214';
+import { mapC, mapIA } from './continent-map.js?v=202609182214';
 
 export function enterWorld(w){
   emit('enter-world', w);
@@ -41,7 +45,7 @@ export function enterWorld(w){
   document.getElementById('btn-back').style.display='inline-block';
   document.getElementById('mob-back').style.display='flex';
   state.calibWorldData=[];updateCalibLog('world');
-  var _cl0=getLots(w.name)[0];document.getElementById('calib-world-next').textContent=(_cl0?.nr||_cl0?.name||'—');
+  var _cl0=calibWorldLots(w.name)[0];document.getElementById('calib-world-next').textContent=(_cl0?_cl0.label:'—');
   document.getElementById('calib-world-count').textContent='0';
   exitBuilding();
   // Loading screen only on the FIRST world entry of the session (sheet lots not loaded yet)
@@ -278,10 +282,12 @@ worldC.addEventListener('click',e=>{
   const r=wia2.getBoundingClientRect();
   const x=+((e.clientX-r.left)/r.width*100).toFixed(1);
   const y=+((e.clientY-r.top)/r.height*100).toFixed(1);
-  const allLots=getLots(state.currentWorld?.name||'');
+  // Same order as data/world-lots.js, see calibWorldLots()
+  const allLots=calibWorldLots(state.currentWorld?.name||'');
   const idx=state.calibWorldData.length;
-  state.calibWorldData.push({name:allLots[idx]?.name||'Ort '+idx,x,y});
+  if(idx>=allLots.length){alert('Alle '+allLots.length+' Orte sind gesetzt — jetzt kopieren.');return;}
+  state.calibWorldData.push({nr:allLots[idx].nr,name:allLots[idx].name,x,y});
   updateCalibLog('world');
-  var _cln=allLots[idx+1];document.getElementById('calib-world-next').textContent=(_cln?.nr||_cln?.name||'✅ Fertig! Jetzt kopieren');
+  var _cln=allLots[idx+1];document.getElementById('calib-world-next').textContent=(_cln?_cln.label:'✅ Fertig! Jetzt kopieren');
   document.getElementById('calib-world-count').textContent=state.calibWorldData.length;
 });

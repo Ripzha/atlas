@@ -3,11 +3,12 @@
    (world view) and copy them for src/atlas/data/. Called from inline handlers:
    toggleCalib(), copyCalib(), clearCalib(). */
 
-import { worlds } from '../../data/worlds.js?v=202609182205';
-import { state } from '../../core/state.js?v=202609182205';
-import { getLots } from '../../core/sheet-data.js?v=202609182205';
-import { mapC } from '../map/continent-map.js?v=202609182205';
-import { worldC } from '../map/world-view.js?v=202609182205';
+import { worldLots } from '../../data/world-lots.js?v=202609182214';
+import { worlds } from '../../data/worlds.js?v=202609182214';
+import { state } from '../../core/state.js?v=202609182214';
+import { applySheetData, sheetLotsLoaded } from '../../core/sheet-data.js?v=202609182214';
+import { mapC } from '../map/continent-map.js?v=202609182214';
+import { worldC } from '../map/world-view.js?v=202609182214';
 
 // While a calibration mode is on, the admin panel is hidden (body.calibrating),
 // so the whole map can be clicked. It comes back when calibration ends.
@@ -15,12 +16,33 @@ export function updateCalibrating(){
   document.body.classList.toggle('calibrating', !!(state.calibMapMode || state.calibWorldMode || state.calibBuildingMode));
 }
 
+// The lots of a world in the order they are stored in data/world-lots.js —
+// exactly the order the copied list must have. The label shows the number and,
+// if the sheet has one, the name ("Nr. 12 · Luigi's Pizza"). Units that the
+// sheet adds to an apartment complex share the complex's dot and are not
+// calibrated separately; lots created in the old lot editor are not either.
+export function calibWorldLots(worldName){
+  return (worldLots[worldName]||[]).map(function(l){
+    var merged = sheetLotsLoaded ? applySheetData({...l}, worldName) : l;
+    var nr = l.nr || l.name || '';
+    var name = merged.name && merged.name !== nr ? merged.name : '';
+    return { nr: nr, name: name, label: nr + (name ? ' · ' + name : '') };
+  });
+}
+
+// Label of the next lot to click, or the hint that all are done.
+function nextWorldLabel(){
+  var lots = calibWorldLots(state.currentWorld?.name || '');
+  var next = lots[state.calibWorldData.length];
+  return next ? next.label : (lots.length ? '✅ Fertig! Jetzt kopieren' : '—');
+}
+
 export function toggleCalib(mode){
   if(mode==='map'){state.calibMapMode=!state.calibMapMode;document.getElementById('calib-map-panel').style.display=state.calibMapMode?'block':'none';mapC.style.cursor=state.calibMapMode?'crosshair':'default';if(state.calibMapMode)document.getElementById('calib-next').textContent=worlds[state.calibMapIdx]?.name||'—';}
-  else{state.calibWorldMode=!state.calibWorldMode;document.getElementById('calib-world-panel').style.display=state.calibWorldMode?'block':'none';worldC.style.cursor=state.calibWorldMode?'crosshair':'default';if(state.calibWorldMode)document.getElementById('calib-world-next').textContent=getLots(state.currentWorld?.name||'')[state.calibWorldData.length]?.name||'—';}
+  else{state.calibWorldMode=!state.calibWorldMode;document.getElementById('calib-world-panel').style.display=state.calibWorldMode?'block':'none';worldC.style.cursor=state.calibWorldMode?'crosshair':'default';if(state.calibWorldMode)document.getElementById('calib-world-next').textContent=nextWorldLabel();}
   updateCalibrating();
 }
-export function updateCalibLog(mode){const data=mode==='map'?state.calibMapData:state.calibWorldData;const log=document.getElementById(mode==='map'?'calib-map-log':'calib-world-log');log.innerHTML=data.length===0?'Noch keine Klicks...':data.map(d=>`<div style="color:#ffcc44">${d.name}</div><div style="color:#777">x:${d.x}, y:${d.y}</div>`).join('');log.scrollTop=log.scrollHeight;}
+export function updateCalibLog(mode){const data=mode==='map'?state.calibMapData:state.calibWorldData;const log=document.getElementById(mode==='map'?'calib-map-log':'calib-world-log');log.innerHTML=data.length===0?'Noch keine Klicks...':data.map(d=>`<div style="color:#ffcc44">${d.nr!==undefined?(d.nr+(d.name?' · '+d.name:'')):d.name}</div><div style="color:#777">x:${d.x}, y:${d.y}</div>`).join('');log.scrollTop=log.scrollHeight;}
 export function copyCalib(mode){
   const data = mode==='map'?state.calibMapData:state.calibWorldData;
   console.log('[copyCalib]', mode, 'data:', data);
@@ -28,7 +50,11 @@ export function copyCalib(mode){
     alert('Noch nichts zum Kopieren — erst Orte anklicken.');
     return;
   }
-  const txt = data.map(d=>`{name:"${d.name}",x:${d.x},y:${d.y}}`).join(',\n');
+  // World lots carry their number, so the list maps to data/world-lots.js
+  // without guessing. JSON.stringify quotes names safely.
+  const txt = data.map(d=> d.nr!==undefined
+    ? `{nr:${JSON.stringify(d.nr)},name:${JSON.stringify(d.name)},x:${d.x},y:${d.y}}`
+    : `{name:${JSON.stringify(d.name)},x:${d.x},y:${d.y}}`).join(',\n');
   console.log('[copyCalib] txt:', txt.substring(0,200));
   // Primary: Clipboard API
   if(navigator.clipboard && navigator.clipboard.writeText){
@@ -60,4 +86,4 @@ function copyCalibFallback(txt){
     console.log('[copyCalib] MANUAL COPY:\n'+txt);
   }
 }
-export function clearCalib(mode){if(mode==='map'){state.calibMapData=[];state.calibMapIdx=0;document.getElementById('calib-next').textContent=worlds[0]?.name||'—';}else{state.calibWorldData=[];var _clc=getLots(state.currentWorld?.name||'')[0];document.getElementById('calib-world-next').textContent=(_clc?.nr||_clc?.name||'—');document.getElementById('calib-world-count').textContent='0';}updateCalibLog(mode);}
+export function clearCalib(mode){if(mode==='map'){state.calibMapData=[];state.calibMapIdx=0;document.getElementById('calib-next').textContent=worlds[0]?.name||'—';}else{state.calibWorldData=[];document.getElementById('calib-world-next').textContent=nextWorldLabel();document.getElementById('calib-world-count').textContent='0';}updateCalibLog(mode);}
