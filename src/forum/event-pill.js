@@ -8,8 +8,8 @@
    ATLAS has its own copy in src/atlas/features/events/event-pill.js; the two
    are to be merged later. */
 
-import { callAppsScript } from '../shared/backend.js?v=202609182310';
-import { escapeHtml } from './page.js?v=202609182310';
+import { callAppsScript } from '../shared/backend.js?v=202609182324';
+import { escapeHtml } from './page.js?v=202609182324';
 
 const ANCHOR_SELECTOR = '#particleoverlay';
 const PAGES = ['/', '/index.php', '/portal.php'];

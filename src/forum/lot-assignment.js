@@ -12,13 +12,16 @@
 
    Lot numbers in the sheet: "Nr. 4#" is an empty placeholder, "Nr. 4A"/"4B"
    are units of an apartment complex on dot 4, "Nr. 4ZZ"/"4ZY" are further
-   single lots sharing dot 4. The functions called from the popup's inline
+   single lots sharing dot 4. An assignment on a dot that already has rows
+   NEVER overwrites those rows: it is always written as a new row with the
+   next free ZZ/ZY/… suffix (a chosen unit "Nr. 7B" is saved as "Nr. 7BZZ"),
+   so the curated unit and anchor rows in the sheet stay untouched. The functions called from the popup's inline
    handlers are attached to window (window._alot…). */
 
-import { LOTS_CSV_URL, callAppsScript } from '../shared/backend.js?v=202609182310';
-import { fetchCsvObjects } from '../shared/csv.js?v=202609182310';
-import { worldFromUrl, OUTER_WORLDS_FORUM } from './worlds.js?v=202609182310';
-import { forumId, threadId, postNumbersOnPage, hasFreshPostTime, firstPostImages, cleanPageUrl, escapeHtml } from './page.js?v=202609182310';
+import { LOTS_CSV_URL, callAppsScript } from '../shared/backend.js?v=202609182324';
+import { fetchCsvObjects } from '../shared/csv.js?v=202609182324';
+import { worldFromUrl, OUTER_WORLDS_FORUM } from './worlds.js?v=202609182324';
+import { forumId, threadId, postNumbersOnPage, hasFreshPostTime, firstPostImages, cleanPageUrl, escapeHtml } from './page.js?v=202609182324';
 
 const EDIT_FLAG_MAX_AGE = 5 * 60 * 1000;
 const FRESH_THREAD = /vor einer Minute|gerade eben|vor \d+ Minuten/i;
@@ -296,7 +299,6 @@ function exposeHandlers(allLots){
     document.querySelectorAll('.alot-btn').forEach(b => b.classList.toggle('selected', b.dataset.group === group));
     state.nr = nr;
     state.dotGroup = group;
-    state.unit = null;
     const grpLots = allLots.filter(l => (l.dotGroup || l.nr) === group);
     const units = [...new Set(grpLots.map(l => l.nr).filter(n => !isSingleLotSuffix(n)))];
     const occupied = grpLots.filter(l => l.threadUrl);
@@ -310,7 +312,6 @@ function exposeHandlers(allLots){
     document.querySelectorAll('#alot-step2 .alot-btn').forEach(b => b.classList.toggle('selected', b.textContent.trim() === unitNr));
     state.nr = unitNr;
     const lot = state.dotLots.find(l => l.nr === unitNr);
-    state.unit = { nr: unitNr, taken: !!(lot && lot.threadUrl) };
     document.getElementById('alot-unit-detail').innerHTML = (lot && lot.threadUrl)
       ? `<div class="alot-warn">&#9888; Bereits vergeben: ${escapeHtml(lot.name || unitNr)}</div>
          <div class="alot-label">Einheit anhängen (A, B … – für neue Untereinheit):</div>
@@ -419,21 +420,15 @@ function save(world, postUrl, title, allLots){
   const base = nr => nr.replace(/#$/, '');   // "Nr. 4#" is a placeholder: "Nr. 4" + "A", not "Nr. 4#A"
 
   let nr = state.nr;
-  if(state.unit){
-    // Unit of a complex: a free unit is used as it is; a taken one gets a
-    // sub-unit appended ("Nr. 7A" + "1"), which must then be entered.
-    if(state.unit.taken && !unit){
-      msg.style.color = '#ff6b6b';
-      msg.textContent = 'Diese Einheit ist vergeben — bitte eine Untereinheit angeben.';
-      return;
-    }
-    nr = state.unit.taken ? base(state.unit.nr) + unit : state.unit.nr;
-  } else if(state.isNewOnDot === false && state.existing){
+  if(state.isNewOnDot === false && state.existing){
     nr = base(state.existing.nr) + unit;                      // extend an existing lot
   } else if(state.isComplex && unit){
-    nr = base(state.nr) + unit;                               // unit of a complex
+    nr = base(state.nr) + unit;                               // unit of a NEW complex
   } else if(!state.isComplex && state.isNewOnDot !== false){
-    // Another single lot on a dot that has lots: next free ZZ/ZY/… suffix
+    // Anything else on a dot that already has rows — including a chosen unit
+    // of an existing complex — becomes a NEW row: next free ZZ/ZY/… suffix on
+    // the chosen nr ("Nr. 7B" → "Nr. 7BZZ"). The unit/anchor rows stay as
+    // they are; ATLAS resolves the suffix back to the dot.
     const dotLots = allLots.filter(l => (l.dotGroup || l.nr) === (state.dotGroup || state.nr) || l.nr === state.nr);
     const used = dotLots.map(l => l.nr);
     const free = SINGLE_LOT_SUFFIXES.find(s => !used.includes(base(state.nr) + s));
