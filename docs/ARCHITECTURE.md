@@ -29,15 +29,25 @@ store empty directories.
 
 ```
 src/
-  shared/      Used by more than one page (config, API, helpers)
+  shared/      Used by more than one page (config, API, helpers) — empty so far
   atlas/       ATLAS application
-    core/      State, data access
-    data/      Static data (buildings, portal worlds, routes, colors)
-    features/  One folder per domain area
-    ui/        Cross-cutting UI building blocks
+    config.js  Global constants (BASE, IMG, SCRIPT_URL, ADMIN_PASS)
+    data/      Static data: buildings, worlds, lot coordinates, road network
+    core/      Shared state, sheet data access, start-up (boot.js)
+    ui/        Cross-cutting UI building blocks (tooltips, sheets, zoom …)
+    features/  One folder per domain area:
+      map/           continent map, world view, world search, lot helpers
+      characters/    character view, tokens on the map
+      activity/      "Zuletzt gesehen", sidebar feeds
+      otherworlds/   "Andere Welten" portal and view
+      buildings/     floor plans, building calibration
+      routing/       route planner, route editor
+      admin/         admin panel, calibration, lot assignment, legacy tabs
+      forum-bridge/  messages from/to the forum header
+      events/        event pill
   news/        Kiosk
-  simstagram/  Feed
-  metaverse/   Blog
+  simstagram/  Feed (still a single file in the root)
+  metaverse/   Blog (still a single file in the root)
 
 styles/        CSS, mirrors the src/ layout
 docs/          This documentation
@@ -58,17 +68,20 @@ The order is binding:
 2. `src/atlas/ui/viewport.js` — **classic script, not a module**
 3. Markup
 4. `src/atlas/config.js` and `src/atlas/data/*.js` — configuration and static data
-5. `src/atlas/ui/*.js` — UI building blocks
-6. `src/atlas/features/*/*.js` — features
-7. `src/atlas/core.js` — **always last** of the ATLAS scripts
-8. `src/atlas/features/events/event-pill.js`
-9. Loading screen markup, then `src/atlas/ui/loading.js`
+5. `src/atlas/core/state.js`, `core/sheet-data.js` — shared state, sheet access
+6. `src/atlas/ui/*.js` — UI building blocks
+7. `src/atlas/features/*/*.js` — features; within `map/`: `lot-helpers.js`,
+   `continent-map.js`, `world-view.js`, then `world-search.js` (it wraps
+   `enterWorld()` and must come after `world-view.js`)
+8. `src/atlas/core/boot.js` — **always last** of the ATLAS scripts
+9. `src/atlas/features/events/event-pill.js`
+10. Loading screen markup, then `src/atlas/ui/loading.js`
 
 Until stage 3b, all ATLAS scripts are classic scripts that share the global
 scope. The rule that keeps this safe: **files only define things when they
-load; `core.js` comes last and starts the page.** A file may register event
-listeners at load time, but must not call into files loaded after it. This
-also means that no timer or early click can hit a function that is not
+load; `core/boot.js` comes last and starts the page.** A file may register
+event listeners at load time, but must not call into files loaded after it.
+This also means that no timer or early click can hit a function that is not
 loaded yet.
 
 ### Why `viewport.js` must not be a module
@@ -81,20 +94,19 @@ which is exactly what we need.
 
 ---
 
-## State of `core.js`
+## Stage 3a is complete — next: stage 3b
 
-`core.js` now holds about 1000 lines: shared state, loading the sheet data
-(`fetchSheetLots`, `getLots`), the continent map, the world view with lots and
-clusters, the world search, and start-up. Comments are still German.
-Moving the map and world view into `features/map/` and the rest into
-`core/` is the last cut of stage 3a; converting to ES modules is stage 3b.
+The former `core.js` is fully split into `core/`, `ui/` and `features/`.
+All comments in these files are English. The code itself was only moved,
+never changed.
 
-Two things to watch for stage 3b:
+Stage 3b converts the files to ES modules (`import`/`export`). Two things to
+watch:
 
 - **96 inline handlers** in the markup (`onclick="goBack()"` etc.) call
   about 55 functions. Modules have their own scope, so these functions must
   be attached to `window` explicitly — otherwise the handlers break.
-- The functions call each other across areas. Every file needs matching
+- The functions call each other across files. Every file needs matching
   `import` lines.
 
 ---
@@ -104,11 +116,12 @@ Two things to watch for stage 3b:
 Found while splitting; left untouched on purpose (moving and changing are
 separate commits):
 
-- `core.js` contains `ENTRY_MODE` and `_prioritizeInitialImages()` twice, and
-  two start-up handlers on `load` that both run (`updateSidebarStats()` runs
-  twice at start).
-- `enterWorld()`: the fallback when a world image fails to load builds a broken
-  inline `onerror` handler — a JS error instead of the gradient.
+- `core/boot.js` contains `ENTRY_MODE` and `_prioritizeInitialImages()` twice,
+  and two start-up handlers on `load` that both run (`updateSidebarStats()`
+  runs twice at start).
+- `enterWorld()` (`features/map/world-view.js`): the fallback when a world
+  image fails to load builds a broken inline `onerror` handler — a JS error
+  instead of the gradient.
 - Not reachable from the admin panel: `renderLotsTab()`, `renderExportTab()`
   (`features/admin/lot-editor.js`) and `renderCharsTab()`
   (`features/admin/character-admin.js`).
@@ -161,4 +174,4 @@ Unchanged, on purpose:
 - **Images** are hosted by Xobor at `files.homepagemodules.de`.
 
 The sheet is the source of truth for names, addresses and images. The
-hardcoded data in `core.js` contains only coordinates and `nr:` fields.
+hardcoded data in `src/atlas/data/` contains only coordinates and `nr:` fields.

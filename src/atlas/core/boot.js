@@ -1,0 +1,208 @@
+/* PROJECT ATLAS - Start-up.
+   Loads characters, sheet lots, stats and forum activity when the page has
+   loaded, restores the last view, prioritizes images of the entry view, and
+   pauses periodic updates while the tab is hidden.
+   Classic script, ALWAYS loaded last of the ATLAS scripts. */
+
+// Detection runs BEFORE load so other functions can read it
+var ENTRY_MODE = (function(){
+  try {
+    if(location.hash && location.hash.match(/^#chars/)) return 'chars';
+    if(sessionStorage.getItem('atlas_world')) return 'world';
+  } catch(e){}
+  return 'continent'; // Default
+})();
+// After load: the first N images of the entry view get fetchpriority=high
+// so they render faster. The browser loads them in parallel to the lazy logic.
+// Mobile-aware: sidebars are display:none below 768px → not prioritized,
+// the character tokens on the world dots instead (those are visible).
+function _prioritizeInitialImages(){
+  try {
+    var isMobile = window.matchMedia('(max-width:768px)').matches;
+    var sel, limit;
+    if(ENTRY_MODE === 'chars'){
+      sel = '.char-portrait';
+      limit = isMobile ? 8 : 12;
+    } else if(ENTRY_MODE === 'world'){
+      // On mobile .cluster-hover is hidden — lot tooltip images only
+      sel = isMobile ? '.lot-tooltip img' : '.lot-tooltip img, .cluster-item-preview';
+      limit = isMobile ? 6 : 12;
+    } else {
+      // continent Default
+      if(isMobile){
+        // Sidebars and .hover-card are display:none — but the tokens on the dots are visible
+        sel = '.dot-char-token';
+        limit = 12;
+      } else {
+        sel = '#sidebar-activity img, #sidebar-forum img, #sidebar-newchars img';
+        limit = 8;
+      }
+    }
+    var imgs = document.querySelectorAll(sel);
+    for(var i = 0; i < Math.min(imgs.length, limit); i++){
+      imgs[i].setAttribute('fetchpriority', 'high');
+      imgs[i].removeAttribute('loading');
+    }
+  } catch(e){}
+}
+
+window.addEventListener('load',function(){
+  updateSidebarStats();
+  // Fetch the sheet lots on load so the hover preview images on the
+  // continent map show the sheet image (not only after entering a world)
+  fetchSheetLots(function(){
+    // Update all hover images in case the sheet overrides a world image
+    document.querySelectorAll('.world-dot').forEach(function(dot){
+      var wname=dot.dataset.worldKey;
+      var sheetImg=(sheetWorldMeta[wname]||{}).img;
+      if(!sheetImg)return;
+      var img=dot.querySelector('.hover-img');
+      if(img){
+        img.src=sheetImg;
+        img.style.display='block';
+      } else {
+        // If there was no image before (w.img empty): insert one
+        var card=dot.querySelector('.hover-card > div');
+        if(card){
+          var newImg=document.createElement('img');
+          newImg.className='hover-img';
+          newImg.src=sheetImg;
+          newImg.onerror=function(){this.style.display='none';};
+          card.insertBefore(newImg,card.firstChild);
+        }
+      }
+    });
+  });
+  try{
+    var saved=sessionStorage.getItem('atlas_world');
+    var savedBuilding=sessionStorage.getItem('atlas_building');
+    var savedView=sessionStorage.getItem('atlas_view'); // 'chars' | 'otherworlds' | null
+    if(saved){
+      var w=worlds.find(function(x){return x.name===saved;});
+      if(!w)w=otherworlds.find(function(x){return x.name===saved;});
+      if(w)setTimeout(function(){
+        enterWorld(w);
+        // After enterWorld (which triggers fetchSheetLots) restore the building too
+        if(savedBuilding){
+          setTimeout(function(){
+            // Find the building lots in the current world
+            var lots=(worldLots[w.name]||[]).filter(function(l){return l.building===savedBuilding;});
+            if(lots.length && typeof enterBuilding==='function') enterBuilding(savedBuilding,lots);
+          },600);
+        }
+      },100);
+    }
+    // Restore view state (character view, other worlds view)
+    // Hash-based restore for the character view
+    var hash = location.hash;
+    var charMatch = hash.match(/^#chars-(.+)$/);
+    if(charMatch && typeof openCharView === 'function'){
+      setTimeout(function(){ openCharView(charMatch[1]); }, 150);
+    } else if(savedView === 'chars' && typeof openCharView === 'function'){
+      setTimeout(function(){ openCharView('haupt'); }, 150);
+    } else if(savedView === 'otherworlds' && typeof openOtherWorld === 'function'){
+      setTimeout(function(){ openOtherWorld(); }, 150);
+    }
+  }catch(e){}
+});
+// Bot protection / quota saving: user interaction counts (mouse, scroll, touch, keyboard).
+// Avoidable Apps Script calls wait until a real user is present.
+var _hasInteracted = false;
+function _markInteracted(){ _hasInteracted = true; }
+['mousemove','scroll','keydown','touchstart','click'].forEach(function(ev){
+  window.addEventListener(ev, _markInteracted, {once:true, passive:true});
+});
+
+// Tab visibility: periodic updates only run while the tab is in the foreground
+function _isVisible(){ return document.visibilityState !== 'hidden'; }
+
+// setInterval wrapper that pauses while the tab is hidden
+function _smartInterval(fn, ms){
+  return setInterval(function(){
+    if(!_isVisible()) return;
+    fn();
+  }, ms);
+}
+
+// Always on load: fetch characters + stats (for tokens + sidebar)
+
+// Detection runs BEFORE load so other functions can read it
+var ENTRY_MODE = (function(){
+  try {
+    if(location.hash && location.hash.match(/^#chars/)) return 'chars';
+    if(sessionStorage.getItem('atlas_world')) return 'world';
+  } catch(e){}
+  return 'continent'; // Default
+})();
+// After load: the first N images of the entry view get fetchpriority=high
+// so they render faster. The browser loads them in parallel to the lazy logic.
+// Mobile-aware: sidebars are display:none below 768px → not prioritized,
+// the character tokens on the world dots instead (those are visible).
+function _prioritizeInitialImages(){
+  try {
+    var isMobile = window.matchMedia('(max-width:768px)').matches;
+    var sel, limit;
+    if(ENTRY_MODE === 'chars'){
+      sel = '.char-portrait';
+      limit = isMobile ? 8 : 12;
+    } else if(ENTRY_MODE === 'world'){
+      // On mobile .cluster-hover is hidden — lot tooltip images only
+      sel = isMobile ? '.lot-tooltip img' : '.lot-tooltip img, .cluster-item-preview';
+      limit = isMobile ? 6 : 12;
+    } else {
+      // continent Default
+      if(isMobile){
+        // Sidebars and .hover-card are display:none — but the tokens on the dots are visible
+        sel = '.dot-char-token';
+        limit = 12;
+      } else {
+        sel = '#sidebar-activity img, #sidebar-forum img, #sidebar-newchars img';
+        limit = 8;
+      }
+    }
+    var imgs = document.querySelectorAll(sel);
+    for(var i = 0; i < Math.min(imgs.length, limit); i++){
+      imgs[i].setAttribute('fetchpriority', 'high');
+      imgs[i].removeAttribute('loading');
+    }
+  } catch(e){}
+}
+
+window.addEventListener('load',function(){
+  // ATLAS loading screen on initial load — hide once the characters fetch AND the lots fetch are done
+  var _initLoaderActive = false;
+  var _initPending = 2; // Chars + Lots
+  if(typeof window.showAtlasLoading === 'function'){
+    _initLoaderActive = true;
+    window.showAtlasLoading('ATLAS wird geladen…');
+  }
+  function _initStepDone(){
+    _initPending--;
+    if(_initLoaderActive && _initPending <= 0){
+      _initLoaderActive = false;
+      if(typeof window.hideAtlasLoading === 'function') window.hideAtlasLoading();
+    }
+  }
+  // Safety timeout: hide the loader after 6s at the latest (in case the network is dead)
+  setTimeout(function(){
+    if(_initLoaderActive){
+      _initLoaderActive = false;
+      if(typeof window.hideAtlasLoading === 'function') window.hideAtlasLoading();
+    }
+  }, 6000);
+
+  updateSidebarStats();
+  fetchCharsFromScript().then(_initStepDone, _initStepDone);
+  updateSidebarForum();
+  repositionTooltips();
+  fetchSheetLots(_initStepDone);
+  // Periodic updates pause while the tab is hidden
+  _smartInterval(updateSidebarForum, 5*60*1000);
+  _smartInterval(updateSidebarStats, 2*60*1000);
+  if(location.hash.match(/^#chars-/)){
+    openCharView(location.hash.replace('#chars-',''));
+  }
+  // Prioritize images of the entry view — after the DOM is built
+  setTimeout(_prioritizeInitialImages, 100);
+  setTimeout(_prioritizeInitialImages, 800); // second pass in case the sidebars render later
+});

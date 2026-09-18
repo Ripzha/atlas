@@ -121,3 +121,16 @@
     }
   });
 })();
+
+// Close ATLAS: in the forum iframe the header closes the frame (atlas-close);
+// opened directly, go to the forum. Called from inline handlers: closeAtlas().
+function closeAtlas(){
+  localStorage.setItem('atlas_open','0');
+  // Embedded in the iframe (Xobor): notify the parent, which closes the ATLAS frame.
+  // Standalone (opened directly): navigate to the forum.
+  if(window.parent && window.parent !== window){
+    window.parent.postMessage({action:'atlas-close'},'*');
+  } else {
+    window.location.href = 'https://www.simsforumrpg.de/';
+  }
+}

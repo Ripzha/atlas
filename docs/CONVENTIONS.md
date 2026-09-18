@@ -96,7 +96,7 @@ explaining.
 
 Not yet following these rules, converted in their stage:
 
-- `src/atlas/core.js` — German comments, global functions (stage 3)
+- `src/atlas/` — global functions in classic scripts instead of ES modules (stage 3b)
 - `styles/atlas/atlas.css` — German comments, mixed topics (stage 4)
 - `simstagram.html`, `metaverse.html`, `character-sheet.html` — single files
   with inline CSS/JS and German comments (stage 5)

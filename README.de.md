@@ -26,7 +26,7 @@ Statische Seite auf GitHub Pages, per iframe ins Forum eingebettet.
 
 ```
 src/
-  atlas/      Weltkarte (config.js, data/, core.js, ui/, features/)
+  atlas/      Weltkarte (config.js, data/, core/, ui/, features/)
   news/       Kiosk
 styles/       CSS, gespiegelt zu src/
 docs/         Architektur, Regeln, Umstellung
@@ -69,7 +69,7 @@ sh tools/bump-version.sh
 GitHub Pages hält jede Datei rund zehn Minuten im Zwischenspeicher. Das
 Anhängsel `?v=` an jeder CSS-/JS-Einbindung sorgt dafür, dass Seite und Scripts
 immer als zusammengehöriger Satz ankommen. Ohne es kann eine neue `index.html`
-auf eine alte `core.js` treffen, und die Karte bleibt leer. Wirkt eine Seite
+auf ein altes Script treffen, und die Karte bleibt leer. Wirkt eine Seite
 trotzdem alt, mit Cmd+Shift+R neu laden.
 
 **Wichtig:** Nicht per Doppelklick öffnen. Externe Dateien und ES-Module

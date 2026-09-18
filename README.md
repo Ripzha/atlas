@@ -26,7 +26,7 @@ Static site on GitHub Pages, embedded into the forum via iframe.
 
 ```
 src/
-  atlas/      World map (config.js, data/, core.js, ui/, features/)
+  atlas/      World map (config.js, data/, core/, ui/, features/)
   news/       Kiosk
 styles/       CSS, mirrors src/
 docs/         Architecture, conventions, migration
@@ -68,7 +68,7 @@ sh tools/bump-version.sh
 
 GitHub Pages caches every file for about ten minutes. The `?v=` marker on each
 CSS/JS reference makes sure a page and its scripts always arrive as a matching
-set. Without it, a new `index.html` can meet an old `core.js` and the map
+set. Without it, a new `index.html` can meet an old script and the map
 stays empty. If a page still looks old, reload with Cmd+Shift+R.
 
 **Important:** Do not open files by double-clicking. External files and
