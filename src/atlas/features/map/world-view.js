@@ -27,12 +27,16 @@ function enterWorld(w){
     }
   })();
   const _grad=`<div style="position:absolute;inset:0;background:linear-gradient(135deg,${w.color}33,#0a1420)"></div>`;
-  // World image: sheet meta wins over the hardcoded w.img
+  // World image: sheet meta wins over the hardcoded w.img.
+  // If the image fails to load, the gradient is shown instead. _grad contains
+  // double quotes, so they are escaped as &quot; inside the onerror attribute.
+  // setWorldBg() runs twice (before and after the sheet fetch); an image replaced
+  // in the meantime has no parent any more, hence the parentElement check.
   function setWorldBg(){
     var sheetImg=(sheetWorldMeta[w.name]||{}).img;
     var imgUrl=sheetImg||w.img;
     document.getElementById('world-bg').innerHTML=imgUrl
-      ?`<img src="${imgUrl}" alt="${w.name}" decoding="async" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.65) saturate(0.9);display:block" onerror="this.parentElement.innerHTML='${_grad.replace(/'/g,"\\'")}'">`
+      ?`<img src="${imgUrl}" alt="${w.name}" decoding="async" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.65) saturate(0.9);display:block" onerror="if(this.parentElement)this.parentElement.innerHTML='${_grad.replace(/'/g,"\\'").replace(/"/g,'&quot;')}'">`
       :_grad;
   }
   setWorldBg();
