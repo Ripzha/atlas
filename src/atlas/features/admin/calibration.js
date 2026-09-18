@@ -3,12 +3,12 @@
    (world view) and copy them for src/atlas/data/. Called from inline handlers:
    toggleCalib(), copyCalib(), clearCalib(). */
 
-import { worldLots } from '../../data/world-lots.js?v=202609182219';
-import { worlds } from '../../data/worlds.js?v=202609182219';
-import { state } from '../../core/state.js?v=202609182219';
-import { applySheetData, sheetLotsLoaded } from '../../core/sheet-data.js?v=202609182219';
-import { mapC } from '../map/continent-map.js?v=202609182219';
-import { worldC } from '../map/world-view.js?v=202609182219';
+import { worldLots } from '../../data/world-lots.js?v=202609182225';
+import { worlds } from '../../data/worlds.js?v=202609182225';
+import { state } from '../../core/state.js?v=202609182225';
+import { getLots } from '../../core/sheet-data.js?v=202609182225';
+import { mapC } from '../map/continent-map.js?v=202609182225';
+import { worldC } from '../map/world-view.js?v=202609182225';
 
 // While a calibration mode is on, the admin panel is hidden (body.calibrating),
 // so the whole map can be clicked. It comes back when calibration ends.
@@ -22,10 +22,16 @@ export function updateCalibrating(){
 // sheet adds to an apartment complex share the complex's dot and are not
 // calibrated separately; lots created in the old lot editor are not either.
 export function calibWorldLots(worldName){
+  // Names exactly as shown on the map: getLots() also resolves the names of
+  // apartment complexes, which the sheet keeps on a separate anchor row.
+  var shown = {};
+  getLots(worldName).forEach(function(l){
+    if(l._src === 'hard' && l.nr && l.name && !(l.nr in shown)) shown[l.nr] = l.name;
+  });
   return (worldLots[worldName]||[]).map(function(l){
-    var merged = sheetLotsLoaded ? applySheetData({...l}, worldName) : l;
     var nr = l.nr || l.name || '';
-    var name = merged.name && merged.name !== nr ? merged.name : '';
+    var n = (l.nr && shown[l.nr]) || '';
+    var name = n && n !== nr ? n : '';
     return { nr: nr, name: name, label: nr + (name ? ' · ' + name : '') };
   });
 }
