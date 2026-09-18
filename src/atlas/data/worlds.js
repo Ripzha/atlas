@@ -6,7 +6,7 @@
    Requires BASE and IMG from src/atlas/config.js.
    Names, links and images from the Google Sheet take precedence at runtime. */
 
-import { BASE, IMG } from '../config.js?v=202609181456';
+import { BASE, IMG } from '../config.js?v=202609181741';
 
 export const worlds=[
   {name:"Innisgreen",x:58.7,y:66.5,color:"#4a8a5a",type:"Feen-Insel",url:BASE+"f59907-Innisgreen.html",img:IMG+"f51848t204p6439n2_JXoiSaHR.png"},
@@ -27,7 +27,7 @@ export const worlds=[
   {name:"Brindleton Bay",x:71.1,y:35.9,color:"#3a7a7a",type:"Küste",url:BASE+"f51785-Brindleton-Bay.html",img:IMG+"f51848t204p3067n2_lgSCqfRT.png"},
   {name:"San Myshuno",x:58.3,y:24.6,color:"#3a4a7a",type:"Grossstadt",url:BASE+"f51783-San-Myshuno.html",img:IMG+"f51848t204p3065n2_bDAZuVYK.png"},
   {name:"Magnolia Promenade",x:50.5,y:35.7,color:"#7a6a5a",type:"Promenade",url:BASE+"f51781-Magnolia-Promenade.html",img:IMG+"f51848t204p3063n2_adLzKDsI.png"},
-  {name:"Willow Creek",x:51,y:21.5,color:"#4a8a3a",type:"Südstaaten",url:BASE+"f51778-Willow-Creek.html",img:IMG+"f51848t204p3060n2_PxOvMDpj.png"},
+  {name:"Willow Creek",x:51,y:21.5,color:"#4a8a3a",type:"Südstaaten",url:BASE+"f51778-Willow-Creek.html",img:IMG+"f51848t204p3060n4_NyDxShWt.png"},
   {name:"Newcrest",x:40,y:26.4,color:"#7a8a5a",type:"Vorstadt",url:BASE+"f51780-Newcrest.html",img:IMG+"f51848t204p3062n2_otgEqnkR.png"},
   {name:"Windenburg",x:64.1,y:44.6,color:"#5a6a7a",type:"Altstadt",url:BASE+"f51782-Windenburg.html",img:IMG+"f51848t204p3064n2_psJRBMPY.png"},
   {name:"Del Sol Valley",x:13.9,y:73.9,color:"#c8a02a",type:"Hollywood",url:BASE+"f51786-Del-Sol-Valley.html",img:IMG+"f51848t204p3068n2_ubDiGjJP.png"},

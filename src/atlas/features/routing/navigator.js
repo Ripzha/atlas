@@ -4,7 +4,7 @@
    if the fastest route contains one. Called from inline handlers:
    toggleNavi(), setNaviMode(), calcNavi(), _naviShowAlt(). */
 
-import { worlds } from '../../data/worlds.js?v=202609181456';
+import { worlds } from '../../data/worlds.js?v=202609181741';
 
 (function(){
   let naviMode=false; // 'from' | 'to' | false

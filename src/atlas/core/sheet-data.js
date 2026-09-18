@@ -3,13 +3,13 @@
    and merges it with the hardcoded coordinates (getLots). The sheet is the
    source of truth for names, links and images. */
 
-import { emit } from './events.js?v=202609181456';
-import { readCache, writeCache } from './cache.js?v=202609181456';
-import { BASE } from '../config.js?v=202609181456';
-import { worlds } from '../data/worlds.js?v=202609181456';
-import { worldLots } from '../data/world-lots.js?v=202609181456';
-import { customLots, hiddenLots, renamedLots } from './state.js?v=202609181456';
-import { updateOtherworldPortalTokens } from '../features/otherworlds/portal.js?v=202609181456';
+import { emit } from './events.js?v=202609181741';
+import { readCache, writeCache } from './cache.js?v=202609181741';
+import { BASE } from '../config.js?v=202609181741';
+import { worlds } from '../data/worlds.js?v=202609181741';
+import { worldLots } from '../data/world-lots.js?v=202609181741';
+import { customLots, hiddenLots, renamedLots } from './state.js?v=202609181741';
+import { updateOtherworldPortalTokens } from '../features/otherworlds/portal.js?v=202609181741';
 
 // Sheet data for lots (from Google Sheets)
 export var sheetLots = {}; // {worldName: {nr: {name, threadUrl, imgUrl}}}
