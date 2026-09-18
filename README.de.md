@@ -30,6 +30,7 @@ src/
   news/       Kiosk
 styles/       CSS, gespiegelt zu src/
 docs/         Architektur, Regeln, Umstellung
+tools/        Hilfsskripte (kein Build-Schritt)
 ```
 
 Ausführlich: [docs/ARCHITECTURE.de.md](docs/ARCHITECTURE.de.md) ·
@@ -55,8 +56,17 @@ Grundstücke pro Welt in `src/atlas/data/world-lots.js`, Gebäude-Etagen in
 
 Kein Build-Schritt. Dateien ändern, committen, pushen — GitHub Pages übernimmt.
 
-GitHub Pages liefert mit rund zehn Minuten Zwischenspeicher aus. Wer sofort
-den neuen Stand sehen will: `?v=2` an die URL hängen oder Ctrl+Shift+R.
+**Vor jedem Commit, der CSS oder JS ändert**, eine neue Version setzen:
+
+```bash
+sh tools/bump-version.sh
+```
+
+GitHub Pages hält jede Datei rund zehn Minuten im Zwischenspeicher. Das
+Anhängsel `?v=` an jeder CSS-/JS-Einbindung sorgt dafür, dass Seite und Scripts
+immer als zusammengehöriger Satz ankommen. Ohne es kann eine neue `index.html`
+auf eine alte `core.js` treffen, und die Karte bleibt leer. Wirkt eine Seite
+trotzdem alt, mit Cmd+Shift+R neu laden.
 
 **Wichtig:** Nicht per Doppelklick öffnen. Externe Dateien und ES-Module
 funktionieren nicht über `file://`. Getestet wird auf GitHub Pages.

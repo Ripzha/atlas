@@ -42,6 +42,7 @@ src/
 
 styles/        CSS, gespiegelt zur src-Struktur
 docs/          Diese Unterlagen
+tools/         Hilfsskripte, z.B. bump-version.sh (kein Build-Schritt)
 assets/        Bilder und Statisches
 ```
 

@@ -79,6 +79,10 @@ explaining.
 ## 6. Working
 
 - One change per commit. Never change structure and address at the same time.
+- Every local CSS/JS reference carries a `?v=` marker. Before every commit
+  that changes CSS or JS, run `sh tools/bump-version.sh`. A new reference gets
+  its `?v=` marker by hand once; a new file that contains such references is
+  added to `FILES` in the script.
 - Commit messages: `<area>: <what changed>`, imperative —
   e.g. `news: add issue 36`, `atlas: move routing into features/routing`.
 - Test on GitHub Pages after every push, in this order:

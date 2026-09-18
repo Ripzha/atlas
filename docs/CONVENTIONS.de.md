@@ -80,6 +80,10 @@ erklären muss.
 ## 6. Arbeitsweise
 
 - Eine Änderung pro Commit. Nie Struktur und Adresse gleichzeitig ändern.
+- Jede lokale CSS-/JS-Einbindung trägt ein `?v=`-Anhängsel. Vor jedem Commit,
+  der CSS oder JS ändert, `sh tools/bump-version.sh` ausführen. Eine neue
+  Einbindung bekommt ihr `?v=` einmal von Hand; eine neue Datei mit solchen
+  Einbindungen wird im Script bei `FILES` ergänzt.
 - Commit-Nachrichten: `<bereich>: <was sich ändert>`, englisch, in Befehlsform —
   z.B. `news: add issue 36`, `atlas: move routing into features/routing`.
 - Nach jedem Push auf GitHub Pages testen, in dieser Reihenfolge:

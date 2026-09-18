@@ -30,6 +30,7 @@ src/
   news/       Kiosk
 styles/       CSS, mirrors src/
 docs/         Architecture, conventions, migration
+tools/        Helper scripts (no build step)
 ```
 
 Details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) ·
@@ -55,8 +56,16 @@ the values.
 
 No build step. Change files, commit, push — GitHub Pages does the rest.
 
-GitHub Pages caches for about ten minutes. To see the new version right away,
-append `?v=2` to the URL or press Ctrl+Shift+R.
+**Before every commit that changes CSS or JS**, stamp a new version:
+
+```bash
+sh tools/bump-version.sh
+```
+
+GitHub Pages caches every file for about ten minutes. The `?v=` marker on each
+CSS/JS reference makes sure a page and its scripts always arrive as a matching
+set. Without it, a new `index.html` can meet an old `core.js` and the map
+stays empty. If a page still looks old, reload with Cmd+Shift+R.
 
 **Important:** Do not open files by double-clicking. External files and
 ES modules do not work over `file://`. Test on GitHub Pages.

@@ -41,6 +41,7 @@ src/
 
 styles/        CSS, mirrors the src/ layout
 docs/          This documentation
+tools/         Helper scripts, e.g. bump-version.sh (no build step)
 assets/        Images and static files
 ```
 
