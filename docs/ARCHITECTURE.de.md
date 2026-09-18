@@ -36,7 +36,7 @@ src/
     window-bridge.js  Funktionen für Inline-Handler, an window gehängt
     config.js  Globale Konstanten (BASE, IMG, SCRIPT_URL, ADMIN_PASS)
     data/      Feste Daten: Gebäude, Welten, Grundstücks-Koordinaten, Strassennetz
-    core/      Gemeinsamer Zustand, Zugriff auf Sheet-Daten, Start (boot.js)
+    core/      Gemeinsamer Zustand, Sheet-Zugriff, Daten-Zwischenspeicher, Ereignisse, Start (boot.js)
     ui/        Übergreifende Oberflächen-Bausteine (Tooltips, Sheets, Zoom …)
     features/  Ein Ordner pro Fachbereich:
       map/           Kontinentkarte, Welt-Ansicht, Welten-Suche, Grundstücks-Hilfen
@@ -90,8 +90,28 @@ nach `src/atlas/features/routing/`, die Charakter-Ansicht nach
   Liste, leicht zu prüfen.
 - `main.js` führt alle Module auf; `core/boot.js` kommt zuletzt und startet
   die Seite bei `load`. Dateien definieren beim Laden nur und melden Listener an.
-- Haken statt Überschreiben: `onEnterWorld(fn)` in `features/map/world-view.js`
-  lässt andere Dateien auf das Betreten einer Welt reagieren (nutzt die Suche).
+- Ereignisse statt Überschreiben: `on(name, fn)` / `emit(name, arg)` aus
+  `core/events.js`. Im Einsatz: `'enter-world'` (die Suche merkt sich besuchte
+  Welten) und `'sheet-lots-updated'` (offene Ansichten zeichnen nach einer
+  Hintergrund-Aktualisierung neu). `core/events.js` importiert bewusst nichts:
+  Module, die sich im Kreis importieren, wertet der Browser in selbst gewählter
+  Reihenfolge aus — ein Modul ohne Importe ist immer zuerst bereit.
+
+### Schneller Start: Daten-Zwischenspeicher
+
+Die zuletzt geladenen Daten aus Google Sheet und Apps Script (Charaktere,
+Grundstücke, Forum-Statistik, Forum-Aktivität) liegen im `localStorage`
+(`core/cache.js`, Schlüssel `atlas_cache_v1:*`). Ab dem zweiten Besuch zeigt
+ATLAS diese Daten sofort und lädt im Hintergrund frische nach
+(„stale-while-revalidate"); Ansichten aktualisieren sich, wenn sich etwas
+geändert hat. Der Ladebildschirm erscheint nur noch beim allerersten Besuch.
+
+Der Start läuft bei `DOMContentLoaded`, nicht bei `load` — `load` würde auch auf
+jedes Bild warten, auch auf die grosse Kontinentkarte.
+
+Gemessen mit 1,5 s Verzögerung bei Apps Script und Sheet (zweiter Besuch):
+Charakter-Portraits und „Zuletzt gesehen" erscheinen nach rund 0,4 s statt
+4,9 s, die Forum-Aktivität nach 0,4 s statt 6,4 s, ohne Ladebildschirm.
 
 ### Warum `viewport.js` kein Modul sein darf
 

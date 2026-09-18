@@ -35,7 +35,7 @@ src/
     window-bridge.js  Functions called from inline handlers, attached to window
     config.js  Global constants (BASE, IMG, SCRIPT_URL, ADMIN_PASS)
     data/      Static data: buildings, worlds, lot coordinates, road network
-    core/      Shared state, sheet data access, start-up (boot.js)
+    core/      Shared state, sheet data access, data cache, events, start-up (boot.js)
     ui/        Cross-cutting UI building blocks (tooltips, sheets, zoom …)
     features/  One folder per domain area:
       map/           continent map, world view, world search, lot helpers
@@ -88,8 +88,29 @@ A feature folder answers "where is X". Dijkstra routing goes to
   list, easy to check.
 - `main.js` lists all modules; `core/boot.js` is last and starts the page on
   `load`. Files only define things and register listeners while loading.
-- Hooks instead of overriding: `onEnterWorld(fn)` in `features/map/world-view.js`
-  lets other files react to entering a world (used by the world search).
+- Events instead of overriding: `on(name, fn)` / `emit(name, arg)` from
+  `core/events.js`. In use: `'enter-world'` (the world search records recent
+  worlds) and `'sheet-lots-updated'` (open views re-render after a background
+  refresh). `core/events.js` has no imports on purpose: modules that import
+  each other in a circle are evaluated in an order the browser decides, and a
+  module without imports is always ready first.
+
+### Fast start: data cache
+
+The last data from the Google Sheet and the Apps Script (characters, lots,
+forum stats, forum activity) is kept in `localStorage` (`core/cache.js`,
+keys `atlas_cache_v1:*`). On every visit after the first, ATLAS shows that
+data immediately and refreshes it in the background ("stale-while-revalidate");
+views update when fresh data differs. The loading screen only appears on the
+very first visit, when there is no cache yet.
+
+Start-up runs on `DOMContentLoaded`, not on `load` — `load` would also wait
+for every image, including the large continent map.
+
+Measured with the Apps Script and the sheet answering 1.5 s late (second
+visit): character tokens and "Zuletzt gesehen" appear after about 0.4 s
+instead of 4.9 s, forum activity after 0.4 s instead of 6.4 s, no loading
+screen.
 
 ### Why `viewport.js` must not be a module
 

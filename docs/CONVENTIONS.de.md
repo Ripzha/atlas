@@ -67,8 +67,11 @@ erklären muss.
   neu zuweisen müssten.
 - Funktionen für Inline-Handler (`onclick="…"`) stehen in
   `src/atlas/window-bridge.js`. Neuer Code nutzt stattdessen `addEventListener`.
-- Auf andere Features über Haken reagieren (z.B. `onEnterWorld`), nie deren
-  Funktionen überschreiben.
+- Auf andere Features über Ereignisse reagieren (`on`/`emit` aus
+  `core/events.js`), nie deren Funktionen überschreiben. Anmeldungen beim
+  Laden nutzen ausschliesslich `core/events.js`.
+- Daten aus Sheet oder Apps Script laufen über `core/cache.js`: zuerst den
+  gespeicherten Wert zeigen, dann im Hintergrund auffrischen.
 - Ab Etappe 3 liegen die deutschen Anzeige-Texte eines Features in dessen
   `texts.js`, nicht verstreut in der Logik.
 - Kein Build-Schritt, kein npm, kein Framework. Neue externe Bibliotheken

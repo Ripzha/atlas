@@ -65,8 +65,11 @@ explaining.
   into exported `let` variables that other files would need to reassign.
 - Functions called from inline handlers (`onclick="…"`) are listed in
   `src/atlas/window-bridge.js`. New code uses `addEventListener` instead.
-- React to other features through hooks (e.g. `onEnterWorld`), never by
-  overwriting their functions.
+- React to other features through events (`on`/`emit` from
+  `core/events.js`), never by overwriting their functions. Event registrations
+  at load time must only use `core/events.js`.
+- Data from the Sheet or the Apps Script goes through `core/cache.js`: show
+  the cached value first, then refresh in the background.
 - From stage 3 on, German UI text for a feature lives in that feature's
   `texts.js`, not scattered through the logic.
 - No build step, no npm, no framework. New external libraries only after an
