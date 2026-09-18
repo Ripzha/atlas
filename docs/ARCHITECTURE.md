@@ -29,7 +29,8 @@ store empty directories.
 
 ```
 src/
-  shared/      Used by more than one page (config, API, helpers) — empty so far
+  shared/      Used by more than one part: backend addresses, CSV reader
+  forum/       Scripts that run inside the Xobor forum (see FORUM.md)
   atlas/       ATLAS application (ES modules)
     main.js    Entry point: imports all modules
     window-bridge.js  Functions called from inline handlers, attached to window

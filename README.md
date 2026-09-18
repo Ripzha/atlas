@@ -36,6 +36,7 @@ tools/        Helper scripts (no build step)
 Details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) ·
 Rules for all code: [docs/CONVENTIONS.md](docs/CONVENTIONS.md) ·
 Switching the forum over: [docs/MIGRATION.md](docs/MIGRATION.md)
+Scripts inside the forum: [docs/FORUM.md](docs/FORUM.md)
 
 ---
 

@@ -36,6 +36,7 @@ tools/        Hilfsskripte (kein Build-Schritt)
 Ausführlich: [docs/ARCHITECTURE.de.md](docs/ARCHITECTURE.de.md) ·
 Regeln für allen Code: [docs/CONVENTIONS.de.md](docs/CONVENTIONS.de.md) ·
 Forum umstellen: [docs/MIGRATION.de.md](docs/MIGRATION.de.md)
+Scripts im Forum: [docs/FORUM.de.md](docs/FORUM.de.md)
 
 ---
 

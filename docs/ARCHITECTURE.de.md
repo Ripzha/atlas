@@ -30,7 +30,8 @@ keine leeren Verzeichnisse.
 
 ```
 src/
-  shared/      Von mehreren Seiten genutzt (Konfiguration, API, Hilfen) — noch leer
+  shared/      Von mehreren Teilen genutzt: Backend-Adressen, CSV-Leser
+  forum/       Scripts, die im Xobor-Forum laufen (siehe FORUM.de.md)
   atlas/       ATLAS-Anwendung (ES-Module)
     main.js    Einstieg: bindet alle Module ein
     window-bridge.js  Funktionen für Inline-Handler, an window gehängt
