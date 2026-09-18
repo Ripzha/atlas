@@ -2,12 +2,12 @@
    Characters active in the last 14 days, grouped by forum post (merged cards
    with unfolding tokens), plus the hover preview of the latest post. */
 
-import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609182225';
-import { SCRIPT_URL } from '../../config.js?v=202609182225';
-import { WORLD_COLORS } from '../../data/worlds.js?v=202609182225';
-import { syncMobileActivitySheet } from '../../ui/mobile-sheets.js?v=202609182225';
-import { CHARS } from '../characters/character-view.js?v=202609182225';
-import { _hasInteracted, _isVisible } from '../../core/boot.js?v=202609182225';
+import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609182234';
+import { SCRIPT_URL } from '../../config.js?v=202609182234';
+import { WORLD_COLORS } from '../../data/worlds.js?v=202609182234';
+import { syncMobileActivitySheet } from '../../ui/mobile-sheets.js?v=202609182234';
+import { CHARS } from '../characters/character-view.js?v=202609182234';
+import { _hasInteracted, _isVisible } from '../../core/boot.js?v=202609182234';
 
 export function updateSidebarActivity(){
   var el=document.getElementById('sidebar-activity');
