@@ -56,12 +56,17 @@ explaining.
 
 ## 4. JavaScript
 
-- ES modules (`<script type="module">`, `import` / `export`).
+- ES modules (`import` / `export`). A file imports everything it uses and
+  exports only what other files use. New modules are added to `main.js` and
+  get a `<link rel="modulepreload">` in `index.html`.
 - **Exception:** `src/atlas/ui/viewport.js` stays a classic script
   (see [ARCHITECTURE.md](ARCHITECTURE.md)).
-- Functions called from inline handlers in the markup (`onclick="…"`) are
-  attached to `window` explicitly, in one place per feature module, until the
-  inline handlers are replaced.
+- Shared mutable state goes into the `state` object (`core/state.js`), never
+  into exported `let` variables that other files would need to reassign.
+- Functions called from inline handlers (`onclick="…"`) are listed in
+  `src/atlas/window-bridge.js`. New code uses `addEventListener` instead.
+- React to other features through hooks (e.g. `onEnterWorld`), never by
+  overwriting their functions.
 - From stage 3 on, German UI text for a feature lives in that feature's
   `texts.js`, not scattered through the logic.
 - No build step, no npm, no framework. New external libraries only after an
@@ -79,10 +84,10 @@ explaining.
 ## 6. Working
 
 - One change per commit. Never change structure and address at the same time.
-- Every local CSS/JS reference carries a `?v=` marker. Before every commit
-  that changes CSS or JS, run `sh tools/bump-version.sh`. A new reference gets
-  its `?v=` marker by hand once; a new file that contains such references is
-  added to `FILES` in the script.
+- Every local CSS/JS reference and every `import` path carries a `?v=` marker.
+  Before every commit that changes CSS or JS, run `sh tools/bump-version.sh`;
+  it stamps the same number everywhere. A new reference or import gets its
+  `?v=` marker by hand once (any number).
 - Commit messages: `<area>: <what changed>`, imperative —
   e.g. `news: add issue 36`, `atlas: move routing into features/routing`.
 - Test on GitHub Pages after every push, in this order:
@@ -96,7 +101,8 @@ explaining.
 
 Not yet following these rules, converted in their stage:
 
-- `src/atlas/` — global functions in classic scripts instead of ES modules (stage 3b)
+- Inline handlers in the markup and in generated HTML — to be replaced by
+  `addEventListener` over time; until then listed in `window-bridge.js`
 - `styles/atlas/atlas.css` — German comments, mixed topics (stage 4)
 - `simstagram.html`, `metaverse.html`, `character-sheet.html` — single files
   with inline CSS/JS and German comments (stage 5)

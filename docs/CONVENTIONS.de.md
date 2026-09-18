@@ -57,12 +57,18 @@ erklären muss.
 
 ## 4. JavaScript
 
-- ES-Module (`<script type="module">`, `import` / `export`).
+- ES-Module (`import` / `export`). Eine Datei importiert alles, was sie
+  braucht, und exportiert nur, was andere Dateien brauchen. Neue Module kommen
+  in `main.js` und bekommen ein `<link rel="modulepreload">` in `index.html`.
 - **Ausnahme:** `src/atlas/ui/viewport.js` bleibt ein klassisches Script
   (siehe [ARCHITECTURE.de.md](ARCHITECTURE.de.md)).
-- Funktionen, die aus Inline-Handlern im Markup (`onclick="…"`) aufgerufen
-  werden, hängen ausdrücklich an `window` — an einer Stelle pro Feature-Modul,
-  bis die Inline-Handler ersetzt sind.
+- Gemeinsamer, veränderlicher Zustand gehört ins Objekt `state`
+  (`core/state.js`), nie in exportierte `let`-Variablen, die andere Dateien
+  neu zuweisen müssten.
+- Funktionen für Inline-Handler (`onclick="…"`) stehen in
+  `src/atlas/window-bridge.js`. Neuer Code nutzt stattdessen `addEventListener`.
+- Auf andere Features über Haken reagieren (z.B. `onEnterWorld`), nie deren
+  Funktionen überschreiben.
 - Ab Etappe 3 liegen die deutschen Anzeige-Texte eines Features in dessen
   `texts.js`, nicht verstreut in der Logik.
 - Kein Build-Schritt, kein npm, kein Framework. Neue externe Bibliotheken
@@ -80,10 +86,11 @@ erklären muss.
 ## 6. Arbeitsweise
 
 - Eine Änderung pro Commit. Nie Struktur und Adresse gleichzeitig ändern.
-- Jede lokale CSS-/JS-Einbindung trägt ein `?v=`-Anhängsel. Vor jedem Commit,
-  der CSS oder JS ändert, `sh tools/bump-version.sh` ausführen. Eine neue
-  Einbindung bekommt ihr `?v=` einmal von Hand; eine neue Datei mit solchen
-  Einbindungen wird im Script bei `FILES` ergänzt.
+- Jede lokale CSS-/JS-Einbindung und jeder `import`-Pfad trägt ein
+  `?v=`-Anhängsel. Vor jedem Commit, der CSS oder JS ändert,
+  `sh tools/bump-version.sh` ausführen; es setzt überall dieselbe Nummer. Eine
+  neue Einbindung oder ein neuer Import bekommt ihr `?v=` einmal von Hand
+  (beliebige Zahl).
 - Commit-Nachrichten: `<bereich>: <was sich ändert>`, englisch, in Befehlsform —
   z.B. `news: add issue 36`, `atlas: move routing into features/routing`.
 - Nach jedem Push auf GitHub Pages testen, in dieser Reihenfolge:
@@ -97,7 +104,8 @@ erklären muss.
 
 Hält sich noch nicht an diese Regeln, wird in seiner Etappe umgestellt:
 
-- `src/atlas/` — globale Funktionen in klassischen Scripts statt ES-Modulen (Etappe 3b)
+- Inline-Handler im Markup und im erzeugten HTML — nach und nach durch
+  `addEventListener` ersetzen; bis dahin in `window-bridge.js` aufgeführt
 - `styles/atlas/atlas.css` — deutsche Kommentare, Themen gemischt (Etappe 4)
 - `simstagram.html`, `metaverse.html`, `character-sheet.html` — Single-Files
   mit CSS/JS im Dokument und deutschen Kommentaren (Etappe 5)

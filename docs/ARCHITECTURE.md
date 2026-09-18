@@ -30,7 +30,9 @@ store empty directories.
 ```
 src/
   shared/      Used by more than one page (config, API, helpers) — empty so far
-  atlas/       ATLAS application
+  atlas/       ATLAS application (ES modules)
+    main.js    Entry point: imports all modules
+    window-bridge.js  Functions called from inline handlers, attached to window
     config.js  Global constants (BASE, IMG, SCRIPT_URL, ADMIN_PASS)
     data/      Static data: buildings, worlds, lot coordinates, road network
     core/      Shared state, sheet data access, start-up (boot.js)
@@ -60,29 +62,34 @@ A feature folder answers "where is X". Dijkstra routing goes to
 
 ---
 
-## Load order in `index.html`
-
-The order is binding:
+## Loading in `index.html`
 
 1. `styles/atlas/atlas.css`
-2. `src/atlas/ui/viewport.js` — **classic script, not a module**
-3. Markup
-4. `src/atlas/config.js` and `src/atlas/data/*.js` — configuration and static data
-5. `src/atlas/core/state.js`, `core/sheet-data.js` — shared state, sheet access
-6. `src/atlas/ui/*.js` — UI building blocks
-7. `src/atlas/features/*/*.js` — features; within `map/`: `lot-helpers.js`,
-   `continent-map.js`, `world-view.js`, then `world-search.js` (it wraps
-   `enterWorld()` and must come after `world-view.js`)
-8. `src/atlas/core/boot.js` — **always last** of the ATLAS scripts
-9. `src/atlas/features/events/event-pill.js`
-10. Loading screen markup, then `src/atlas/ui/loading.js`
+2. `src/atlas/ui/viewport.js` — **classic script, not a module** (see below)
+3. `<link rel="modulepreload">` for every ATLAS module — the browser fetches
+   all of them in parallel right away instead of discovering them one
+   `import` at a time. Measured with 120 ms delay per file: modules without
+   preload were about 12 % slower to show the map than the old classic
+   scripts; with preload they are as fast.
+4. Markup
+5. `<script type="module" src="src/atlas/main.js">` — the only ATLAS entry.
+   Modules run after the document is parsed, before `DOMContentLoaded`.
+6. `src/atlas/features/events/event-pill.js`, loading screen markup and
+   `src/atlas/ui/loading.js` — classic scripts, self-contained.
 
-Until stage 3b, all ATLAS scripts are classic scripts that share the global
-scope. The rule that keeps this safe: **files only define things when they
-load; `core/boot.js` comes last and starts the page.** A file may register
-event listeners at load time, but must not call into files loaded after it.
-This also means that no timer or early click can hit a function that is not
-loaded yet.
+### How the modules fit together
+
+- Every file **imports** what it uses and **exports** what others use.
+  Import paths carry the same `?v=` marker as the pages (see `tools/`).
+- **Shared mutable state** lives in one object, `state` in `core/state.js`
+  (`state.currentWorld = w`). Imported plain variables are read-only.
+- **Inline handlers** (`onclick="goBack()"`) run in the global scope. The
+  functions they call are attached to `window` in `window-bridge.js` — one
+  list, easy to check.
+- `main.js` lists all modules; `core/boot.js` is last and starts the page on
+  `load`. Files only define things and register listeners while loading.
+- Hooks instead of overriding: `onEnterWorld(fn)` in `features/map/world-view.js`
+  lets other files react to entering a world (used by the world search).
 
 ### Why `viewport.js` must not be a module
 
@@ -94,36 +101,14 @@ which is exactly what we need.
 
 ---
 
-## Stage 3a is complete — next: stage 3b
+## Stage 3 is complete
 
-The former `core.js` is fully split into `core/`, `ui/` and `features/`.
-All comments in these files are English. The code itself was only moved,
-never changed.
-
-Stage 3b converts the files to ES modules (`import`/`export`). Two things to
-watch:
-
-- **76 inline handlers** in the markup and in generated HTML
-  (`onclick="goBack()"` etc.) call about 48 functions. Modules have their own scope, so these functions must
-  be attached to `window` explicitly — otherwise the handlers break.
-- The functions call each other across files. Every file needs matching
-  `import` lines.
-
----
-
-## Cleanup after stage 3a
-
-Done, each as its own commit:
-
-- **Start-up:** the two `load` handlers in `core/boot.js` are merged into one,
-  the duplicated `ENTRY_MODE` and `_prioritizeInitialImages()` removed. At
-  start, forum stats and the sheet CSV are now fetched once instead of twice,
-  and the character view opens once instead of twice.
-- **World image fallback:** `enterWorld()` shows the gradient again when a
-  world image fails to load (the inline `onerror` handler was broken).
-- **Unreachable admin tools removed:** lots tab, export tab, characters tab,
-  the position mode, and the unused functions `getCharsAtLot()` and
-  `getAgeGroup()`.
+- 3a: the former single `core.js` is split into `core/`, `ui/` and `features/`,
+  all comments English.
+- Cleanup: duplicated start-up merged, image fallback fixed, unreachable admin
+  tools removed.
+- 3b: ES modules with explicit imports/exports, shared state object, window
+  bridge, module preloading.
 
 Still applied, but no longer editable: lot overrides in `localStorage`
 (`sw_custom_lots`, `sw_hidden_lots`, `sw_renamed_lots`), read by `getLots()`.

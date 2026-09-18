@@ -26,7 +26,7 @@ Statische Seite auf GitHub Pages, per iframe ins Forum eingebettet.
 
 ```
 src/
-  atlas/      Weltkarte (config.js, data/, core/, ui/, features/)
+  atlas/      Weltkarte, ES-Module (main.js, config.js, data/, core/, ui/, features/)
   news/       Kiosk
 styles/       CSS, gespiegelt zu src/
 docs/         Architektur, Regeln, Umstellung
@@ -67,8 +67,8 @@ sh tools/bump-version.sh
 ```
 
 GitHub Pages hält jede Datei rund zehn Minuten im Zwischenspeicher. Das
-Anhängsel `?v=` an jeder CSS-/JS-Einbindung sorgt dafür, dass Seite und Scripts
-immer als zusammengehöriger Satz ankommen. Ohne es kann eine neue `index.html`
+Anhängsel `?v=` an jeder CSS-/JS-Einbindung und jedem `import`-Pfad sorgt
+dafür, dass Seite und Module immer als zusammengehöriger Satz ankommen. Ohne es kann eine neue `index.html`
 auf ein altes Script treffen, und die Karte bleibt leer. Wirkt eine Seite
 trotzdem alt, mit Cmd+Shift+R neu laden.
 
