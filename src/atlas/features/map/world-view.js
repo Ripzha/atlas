@@ -2,9 +2,15 @@
    Entering a world (image, rent info, lots), rendering lots and clusters,
    going back, and clicks in the world view (calibration mode).
    Called from inline handlers: goBack().
-   Classic script, must load BEFORE world-search.js (which wraps enterWorld). */
+   Other files can react to entering a world via onEnterWorld(fn) instead of
+   replacing enterWorld() (the world search uses it for "Zuletzt besucht"). */
+
+// Callbacks that run whenever a world is entered, before it is rendered.
+const enterWorldHooks=[];
+function onEnterWorld(fn){ enterWorldHooks.push(fn); }
 
 function enterWorld(w){
+  enterWorldHooks.forEach(function(fn){ fn(w); });
   try{sessionStorage.setItem('atlas_world',w.name);}catch(e){}
   state.currentWorld=w;
   mapC.classList.remove('active');

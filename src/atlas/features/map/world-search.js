@@ -1,6 +1,6 @@
 /* PROJECT ATLAS - World search.
-   Search box with favorites and recently visited worlds. Wraps enterWorld()
-   to record recent worlds — therefore it must load AFTER world-view.js. */
+   Search box with favorites and recently visited worlds. Records recent
+   worlds through onEnterWorld() from world-view.js. */
 
 (function(){
   const searchInput=document.getElementById('world-search-input');
@@ -14,15 +14,13 @@
   function saveRecents(r){try{localStorage.setItem('atlas_recents',JSON.stringify(r));}catch(e){}}
 
   // Record recent when entering world
-  const _origEnter=enterWorld;
-  window.enterWorld=function(w){
+  onEnterWorld(function(w){
     if(w&&w.name){
       let r=loadRecents().filter(n=>n!==w.name);
       r.unshift(w.name);
       saveRecents(r.slice(0,MAX_RECENTS));
     }
-    return _origEnter(w);
-  };
+  });
 
   function toggleFav(name){
     let f=loadFavs();
