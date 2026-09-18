@@ -2,7 +2,23 @@
    Loads characters, sheet lots, stats and forum activity when the page has
    loaded, restores the last view, prioritizes images of the entry view, and
    pauses periodic updates while the tab is hidden.
-   Classic script, ALWAYS loaded last of the ATLAS scripts. */
+   Imported last by main.js. */
+
+import { otherworlds, worlds } from '../data/worlds.js?v=202609181617';
+import { worldLots } from '../data/world-lots.js?v=202609181617';
+import { fetchSheetLots, sheetWorldMeta } from './sheet-data.js?v=202609181617';
+import { repositionTooltips } from '../ui/tooltips.js?v=202609181617';
+import {
+  updateSidebarForum,
+  updateSidebarStats,
+} from '../features/activity/sidebar-feeds.js?v=202609181617';
+import { openOtherWorld } from '../features/otherworlds/otherworld-view.js?v=202609181617';
+import { enterBuilding } from '../features/buildings/building-view.js?v=202609181617';
+import {
+  fetchCharsFromScript,
+  openCharView,
+} from '../features/characters/character-view.js?v=202609181617';
+import { enterWorld } from '../features/map/world-view.js?v=202609181617';
 
 // Detection runs BEFORE load so other functions can read it
 var ENTRY_MODE = (function(){
@@ -48,14 +64,14 @@ function _prioritizeInitialImages(){
 
 // Bot protection / quota saving: user interaction counts (mouse, scroll, touch, keyboard).
 // Avoidable Apps Script calls wait until a real user is present.
-var _hasInteracted = false;
+export var _hasInteracted = false;
 function _markInteracted(){ _hasInteracted = true; }
 ['mousemove','scroll','keydown','touchstart','click'].forEach(function(ev){
   window.addEventListener(ev, _markInteracted, {once:true, passive:true});
 });
 
 // Tab visibility: periodic updates only run while the tab is in the foreground
-function _isVisible(){ return document.visibilityState !== 'hidden'; }
+export function _isVisible(){ return document.visibilityState !== 'hidden'; }
 
 // setInterval wrapper that pauses while the tab is hidden
 function _smartInterval(fn, ms){

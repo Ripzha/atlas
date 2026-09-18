@@ -1,6 +1,5 @@
 /* PROJECT ATLAS - Draggable panels.
-   Makes the calibration panels draggable by their h4 header.
-   Classic script, loaded before core.js. */
+   Makes the calibration panels draggable by their h4 header. */
 
 // Make calibration panels draggable (the h4 is the grab handle)
 (function(){

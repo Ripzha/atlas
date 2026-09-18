@@ -1,12 +1,11 @@
 /* PROJECT ATLAS - Lot assignment (admin tab "assign").
-   Assigns forum threads to free lots and writes them to the sheet via the
-   Apps Script (action=updateLot).
-   Classic script, loaded before core.js. */
+   Assigns forum threads to free lots and writes them to the sheet via the Apps
+   Script (action=updateLot). */
 
 var _assignLots = null;
 var _assignWorld = null;
 
-function renderAssignTab(c){
+export function renderAssignTab(c){
   if(!c) c = document.getElementById('admin-content');
   c.innerHTML = '<div style="text-align:center;padding:30px;color:rgba(255,255,255,0.3)">⏳ Lade Lots...</div>';
   if(_assignLots){ buildAssignUI(c); return; }
@@ -29,7 +28,7 @@ function renderAssignTab(c){
     .catch(function(){ c.innerHTML = '<div style="color:#ff6b6b;padding:20px">Fehler beim Laden.</div>'; });
 }
 
-function buildAssignUI(c){
+export function buildAssignUI(c){
   var worlds = [];
   _assignLots.forEach(function(l){ if(l.world && worlds.indexOf(l.world)<0) worlds.push(l.world); });
   var selWorld = _assignWorld || worlds[0] || '';

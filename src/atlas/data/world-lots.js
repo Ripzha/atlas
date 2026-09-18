@@ -8,7 +8,7 @@
    an opening brace). Keep the declaration in this form and do not write that
    pattern anywhere else in this file, not even in a comment. */
 
-const worldLots={
+export const worldLots={
   "Innisgreen":[
     {nr:"Strassen",x:27,y:72.1,outdoor:true},
     {nr:"Nr. 1",x:15.3,y:35.1},

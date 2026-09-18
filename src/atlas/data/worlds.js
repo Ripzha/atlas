@@ -6,7 +6,9 @@
    Requires BASE and IMG from src/atlas/config.js.
    Names, links and images from the Google Sheet take precedence at runtime. */
 
-const worlds=[
+import { BASE, IMG } from '../config.js?v=202609181617';
+
+export const worlds=[
   {name:"Innisgreen",x:58.7,y:66.5,color:"#4a8a5a",type:"Feen-Insel",url:BASE+"f59907-Innisgreen.html",img:IMG+"f51848t204p6439n2_JXoiSaHR.png"},
   {name:"Nordhaven",x:11,y:23.7,color:"#4a8aaa",type:"Fjordstadt",url:BASE+"f59567-Nordhaven.html",img:IMG+"f51848t204p5730n2_bcapNnET.png"},
   {name:"Ravenwood",x:63,y:13.1,color:"#5a5a3a",type:"Nebelhochland",url:BASE+"f59271-Ravenwood.html",img:IMG+"f51848t204p4824n2_TWBoOluh.png"},
@@ -39,11 +41,11 @@ const worlds=[
   {name:"Gibbi Point",x:15.7,y:38.2,color:"#2a7a8a",type:"Küstenpunkt",url:BASE+"f60506-Gibbi-Point.html",img:IMG+"f51848t204p6440n2_HbYIrRJo.png"},
 ];
 
-const otherworlds=[
+export const otherworlds=[
   {name:"Bloodmoon Valley",color:"#6a2a4a",type:"Vampirwelt",url:BASE+"f53861-Vampirwelt-Bloodmoon-Valley.html",img:"https://files.homepagemodules.de/b855163/resize/1920x1200/f53861t380p3446n2_bGsQFBhr.png"},
 ];
 
-const OTHERWORLDS_DATA=[
+export const OTHERWORLDS_DATA=[
   {name:"Bloodmoon Valley",type:"Vampirwelt",img:"https://files.homepagemodules.de/b855163/resize/1920x1200/f53861t380p3446n2_bGsQFBhr.png",world:otherworlds[0]},
   {name:"Zauberallee",type:"Magische Welt",img:"https://files.homepagemodules.de/b855163/resize/1920x1200/f51855t406p3532n2_obFYOumL.png",url:"https://www.simsforumrpg.de/t406f51855-Zauberallee.html"},
   {name:"Die Unterwelt",type:"Andere Welt",img:null,url:"https://www.simsforumrpg.de/t425f51855-Die-Unterwelt.html"},
@@ -57,4 +59,4 @@ const OTHERWORLDS_DATA=[
 ];
 
 // Dot colors per world type
-var WORLD_COLORS={'Willow Creek':'#4a8a3a','Oasis Springs':'#c87a2a','Newcrest':'#3a7a8a','Forgotten Hollow':'#5a3a8a','Brindleton Bay':'#3a6aaa','Del Sol Valley':'#c8a02a','Strangerville':'#8a3a3a','Sulani':'#2a8aaa','Glimmerbrook':'#7a3a9a','Britechester':'#3a4a7a','Evergreen Harbor':'#4a7a5a','Mt. Komorebi':'#5a8aaa','Henford-on-Bagley':'#6a8a3a','Tartosa':'#c84a6a','Moonwood Mill':'#4a3a6a','Windenburg':'#5a6a7a','San Myshuno':'#7a4a3a','Granite Falls':'#4a6a3a','Chestnut Ridge':'#aa7a2a','Copperdale':'#6a5a3a','San Sequoia':'#3a7a5a','Bloodmoon Valley':'#6a2a4a'};
+export var WORLD_COLORS={'Willow Creek':'#4a8a3a','Oasis Springs':'#c87a2a','Newcrest':'#3a7a8a','Forgotten Hollow':'#5a3a8a','Brindleton Bay':'#3a6aaa','Del Sol Valley':'#c8a02a','Strangerville':'#8a3a3a','Sulani':'#2a8aaa','Glimmerbrook':'#7a3a9a','Britechester':'#3a4a7a','Evergreen Harbor':'#4a7a5a','Mt. Komorebi':'#5a8aaa','Henford-on-Bagley':'#6a8a3a','Tartosa':'#c84a6a','Moonwood Mill':'#4a3a6a','Windenburg':'#5a6a7a','San Myshuno':'#7a4a3a','Granite Falls':'#4a6a3a','Chestnut Ridge':'#aa7a2a','Copperdale':'#6a5a3a','San Sequoia':'#3a7a5a','Bloodmoon Valley':'#6a2a4a'};

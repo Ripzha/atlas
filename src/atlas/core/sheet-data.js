@@ -1,15 +1,20 @@
 /* PROJECT ATLAS - Sheet data access.
    Loads the lots tab of the Google Sheet (CSV) into sheetLots/sheetWorldMeta
    and merges it with the hardcoded coordinates (getLots). The sheet is the
-   source of truth for names, links and images.
-   Classic script, loaded right after core/state.js. */
+   source of truth for names, links and images. */
+
+import { BASE } from '../config.js?v=202609181617';
+import { worlds } from '../data/worlds.js?v=202609181617';
+import { worldLots } from '../data/world-lots.js?v=202609181617';
+import { customLots, hiddenLots, renamedLots } from './state.js?v=202609181617';
+import { updateOtherworldPortalTokens } from '../features/otherworlds/portal.js?v=202609181617';
 
 // Sheet data for lots (from Google Sheets)
-var sheetLots = {}; // {worldName: {nr: {name, threadUrl, imgUrl}}}
-var sheetWorldMeta = {}; // {worldName: {rent: '...'}} — rows without nr
-var sheetLotsLoaded = false;
+export var sheetLots = {}; // {worldName: {nr: {name, threadUrl, imgUrl}}}
+export var sheetWorldMeta = {}; // {worldName: {rent: '...'}} — rows without nr
+export var sheetLotsLoaded = false;
 
-function fetchSheetLots(cb){
+export function fetchSheetLots(cb){
   if(sheetLotsLoaded){ if(cb) cb(); return; }
   fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vRRllRkwaCacdM0WZZT0cVQflhxJ9Fw5mgId-v615_kE2GdKdbwHMUYCG03HC8gUXfg7lucTs1Mqhg1/pub?output=csv&gid=306313316&single=true')
     .then(r=>r.text())
@@ -83,7 +88,7 @@ function fetchSheetLots(cb){
     .catch(()=>{ sheetLotsLoaded = true; if(cb) cb(); });
 }
 
-function applySheetData(lot, wname){
+export function applySheetData(lot, wname){
   const worldSheet = sheetLots[wname] || {};
   const nr = lot.nr || (lot.name && lot.name.match(/^Nr\./) ? lot.name.split(' - ')[0].trim() : null);
   if(!nr) return lot;
@@ -120,7 +125,7 @@ function applySheetData(lot, wname){
   return merged;
 }
 
-function getLots(wname){
+export function getLots(wname){
   const hidden=hiddenLots[wname]||[];
   const renamed=renamedLots[wname]||{};
   const worldSheet=sheetLots[wname]||{};

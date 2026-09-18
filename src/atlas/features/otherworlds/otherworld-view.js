@@ -1,10 +1,14 @@
 /* PROJECT ATLAS - "Andere Welten" view.
    Tiles for worlds without an ATLAS map (hasAtlas=FALSE in the sheet) plus
    Bloodmoon Valley. Falls back to OTHERWORLDS_DATA while the sheet loads.
-   Called from inline handlers: openOtherWorld(), closeOtherWorlds().
-   Classic script, loaded before core.js. */
+   Called from inline handlers: openOtherWorld(), closeOtherWorlds(). */
 
-function openOtherWorld(){
+import { OTHERWORLDS_DATA, otherworlds } from '../../data/worlds.js?v=202609181617';
+import { sheetWorldMeta } from '../../core/sheet-data.js?v=202609181617';
+import { buildCharTokensHtml, getCharsAtWorld } from '../characters/tokens.js?v=202609181617';
+import { enterWorld } from '../map/world-view.js?v=202609181617';
+
+export function openOtherWorld(){
   // Collect data from sheetWorldMeta: worlds with hasAtlas=FALSE → into the modal
   // Plus: Bloodmoon Valley as a special case (RPG world WITH its own ATLAS map AND in the modal)
   var data = [];
@@ -81,7 +85,7 @@ function openOtherWorld(){
   try{sessionStorage.setItem('atlas_view','otherworlds');}catch(e){}
 }
 
-function closeOtherWorlds(){
+export function closeOtherWorlds(){
   document.getElementById('otherworlds-container').classList.remove('open');
   try{
     if(sessionStorage.getItem('atlas_view')==='otherworlds') sessionStorage.removeItem('atlas_view');

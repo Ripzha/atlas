@@ -1,7 +1,6 @@
 /* PROJECT ATLAS - Tooltips.
    Sidebar nav tooltips (items with a data-tip attribute) and repositioning of
-   lot/cluster tooltips that would leave the screen.
-   Classic script, loaded before core.js. */
+   lot/cluster tooltips that would leave the screen. */
 
 // Hover tooltip for sidebar items with a data-tip attribute.
 // Same style as .activity-preview, but without fetch/async.
@@ -46,7 +45,7 @@ document.addEventListener('mouseout', function(e){
 });
 
 // Reposition lot/cluster tooltips that would go off-screen
-function repositionTooltips(){
+export function repositionTooltips(){
   document.querySelectorAll('.lot-dot, .cluster-dot').forEach(function(dot){
     var tt = dot.querySelector('.lot-tooltip, .cluster-hover');
     if(!tt) return;

@@ -1,9 +1,13 @@
 /* PROJECT ATLAS - Sidebar feeds.
    Forum statistics and online users, the three newest characters, and forum
-   activity outside the RPG worlds. Data comes from the Apps Script (SCRIPT_URL).
-   Classic script, loaded before core.js. */
+   activity outside the RPG worlds. Data comes from the Apps Script
+   (SCRIPT_URL). */
 
-function updateSidebarStats(){
+import { SCRIPT_URL } from '../../config.js?v=202609181617';
+import { syncMobileActivitySheet } from '../../ui/mobile-sheets.js?v=202609181617';
+import { CHARS } from '../characters/character-view.js?v=202609181617';
+
+export function updateSidebarStats(){
   // Fetch live forum stats from Apps Script
   fetch(SCRIPT_URL+'?action=stats')
     .then(function(r){return r.json();})
@@ -28,7 +32,7 @@ function updateSidebarStats(){
 
 // Top 3 newest characters — sorted by forum thread ID (highest = newest,
 // because Xobor counts up monotonically and edits do not change the ID)
-function updateSidebarNewChars(){
+export function updateSidebarNewChars(){
   var el=document.getElementById('sidebar-newchars');
   if(!el) return;
   if(!CHARS.length){
@@ -70,7 +74,7 @@ function updateSidebarNewChars(){
 }
 
 // Forum activity outside the RPG worlds (gallery, blog, OOC areas)
-function updateSidebarForum(){
+export function updateSidebarForum(){
   var el=document.getElementById('sidebar-forum');
   if(!el) return;
   // Show the mini compass on first load (not on refresh — el already has content then)

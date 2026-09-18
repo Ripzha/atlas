@@ -2,6 +2,10 @@
    Search box with favorites and recently visited worlds. Records recent
    worlds through onEnterWorld() from world-view.js. */
 
+import { worlds } from '../../data/worlds.js?v=202609181617';
+import { mapIA } from './continent-map.js?v=202609181617';
+import { onEnterWorld } from './world-view.js?v=202609181617';
+
 (function(){
   const searchInput=document.getElementById('world-search-input');
   const searchClear=document.getElementById('world-search-clear');

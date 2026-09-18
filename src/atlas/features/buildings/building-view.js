@@ -1,11 +1,20 @@
 /* PROJECT ATLAS - Building view.
-   Floor plans with apartment dots; floor switching. Data: BUILDINGS.
-   Called from inline handlers: changeBuildingFloor().
-   Classic script, loaded before core.js. */
+   Floor plans with apartment dots; floor switching. Data: BUILDINGS. Called
+   from inline handlers: changeBuildingFloor(). */
 
-let buildingFloorIdx=0,currentBuildingKey=null;
+import { BUILDINGS } from '../../data/buildings.js?v=202609181617';
+import { worldLots } from '../../data/world-lots.js?v=202609181617';
+import { state } from '../../core/state.js?v=202609181617';
+import {
+  applySheetData,
+  sheetLotsLoaded,
+  sheetWorldMeta,
+} from '../../core/sheet-data.js?v=202609181617';
+import { parseLotLabel } from '../map/lot-helpers.js?v=202609181617';
 
-function enterBuilding(buildingKey,lots){
+export let buildingFloorIdx=0,currentBuildingKey=null;
+
+export function enterBuilding(buildingKey,lots){
   buildingFloorIdx=0;currentBuildingKey=buildingKey;
   const bc=document.getElementById('building-container');
   const data=BUILDINGS[buildingKey];
@@ -95,7 +104,7 @@ function renderBuildingBg(imgs){
     document.getElementById('building-no-img').style.display='block';
   }
 }
-function changeBuildingFloor(dir){
+export function changeBuildingFloor(dir){
   const data=BUILDINGS[currentBuildingKey];
   const imgs=data?.imgs||[];
   buildingFloorIdx=Math.max(0,Math.min(imgs.length-1,buildingFloorIdx+dir));
@@ -106,4 +115,4 @@ function updateFloorNav(imgs){
   document.getElementById('floor-up-btn').style.opacity=buildingFloorIdx>0?'1':'0.3';
   document.getElementById('floor-down-btn').style.opacity=buildingFloorIdx<imgs.length-1?'1':'0.3';
 }
-function exitBuilding(){const bc=document.getElementById('building-container');if(bc)bc.style.display='none';try{sessionStorage.removeItem('atlas_building');}catch(e){}}
+export function exitBuilding(){const bc=document.getElementById('building-container');if(bc)bc.style.display='none';try{sessionStorage.removeItem('atlas_building');}catch(e){}}

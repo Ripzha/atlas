@@ -1,9 +1,14 @@
 /* PROJECT ATLAS - "Zuletzt gesehen" sidebar.
    Characters active in the last 14 days, grouped by forum post (merged cards
-   with unfolding tokens), plus the hover preview of the latest post.
-   Classic script, loaded before core.js. */
+   with unfolding tokens), plus the hover preview of the latest post. */
 
-function updateSidebarActivity(){
+import { SCRIPT_URL } from '../../config.js?v=202609181617';
+import { WORLD_COLORS } from '../../data/worlds.js?v=202609181617';
+import { syncMobileActivitySheet } from '../../ui/mobile-sheets.js?v=202609181617';
+import { CHARS } from '../characters/character-view.js?v=202609181617';
+import { _hasInteracted, _isVisible } from '../../core/boot.js?v=202609181617';
+
+export function updateSidebarActivity(){
   var el=document.getElementById('sidebar-activity');
   if(!el||!CHARS.length)return;
   // Sort by lastSeenDate DESC (newest first)

@@ -4,7 +4,7 @@
      'auth-status'     show login/register buttons for guests only
      'atlas-highlight' highlight an element (used by the Eve guide)
      'open-charview'   open the character view (used by the Eve guide)
-   Classic script, loaded before core.js. */
+   Also closeAtlas(): tells the forum header to close the ATLAS frame. */
 
 // Eve lives in the Xobor header (different origin) and cannot reach into our DOM.
 // She sends postMessage({action:'atlas-highlight', selector:'...'})
@@ -124,7 +124,7 @@
 
 // Close ATLAS: in the forum iframe the header closes the frame (atlas-close);
 // opened directly, go to the forum. Called from inline handlers: closeAtlas().
-function closeAtlas(){
+export function closeAtlas(){
   localStorage.setItem('atlas_open','0');
   // Embedded in the iframe (Xobor): notify the parent, which closes the ATLAS frame.
   // Standalone (opened directly): navigate to the forum.

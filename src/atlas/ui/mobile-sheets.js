@@ -1,10 +1,9 @@
 /* PROJECT ATLAS - Mobile sheets.
    Bottom sheets on phones (navigation, activity), syncing the activity sheet
-   with the desktop sidebar, and swipe-down to close.
-   Classic script, loaded before core.js. Called from inline handlers:
-   openSheet(), closeSheet(). */
+   with the desktop sidebar, and swipe-down to close. Called from inline
+   handlers: openSheet(), closeSheet(). */
 
-function openSheet(id){
+export function openSheet(id){
   document.getElementById('sheet-overlay').classList.add('open');
   ['nav','activity'].forEach(s=>document.getElementById('sheet-'+s).classList.toggle('open',s===id));
   // Activity sheet: clone content + click handlers from the desktop sidebar.
@@ -13,11 +12,11 @@ function openSheet(id){
     syncMobileActivitySheet();
   }
 }
-function closeSheet(){document.getElementById('sheet-overlay').classList.remove('open');document.querySelectorAll('.sheet').forEach(s=>s.classList.remove('open'));}
+export function closeSheet(){document.getElementById('sheet-overlay').classList.remove('open');document.querySelectorAll('.sheet').forEach(s=>s.classList.remove('open'));}
 
 // Syncs the desktop sidebar content into the mobile activity sheet while it is open.
 // Called after every updateSidebar* so the sheet updates live.
-function syncMobileActivitySheet(){
+export function syncMobileActivitySheet(){
   var sheet = document.getElementById('sheet-activity');
   if(!sheet || !sheet.classList.contains('open')) return;
   try {

@@ -1,10 +1,14 @@
 /* PROJECT ATLAS - Character view.
-   Grid of all characters with tabs, search, filters (player, gender, age),
-   A–Z sorting and hover card. Loads characters from the Apps Script and
-   caches them in sessionStorage. CHARS starts with a small fallback list.
-   Classic script, loaded before core.js. */
+   Grid of all characters with tabs, search, filters (player, gender, age), A–Z
+   sorting and hover card. Loads characters from the Apps Script and caches
+   them in sessionStorage. CHARS starts with a small fallback list. */
 
-var CHARS=[
+import { SCRIPT_URL } from '../../config.js?v=202609181617';
+import { updateAllTokens } from './tokens.js?v=202609181617';
+import { updateSidebarActivity } from '../activity/last-seen.js?v=202609181617';
+import { updateSidebarNewChars } from '../activity/sidebar-feeds.js?v=202609181617';
+
+export var CHARS=[
   {n:"Sullivan 'Blaze' Blaisdell",p:"Ripzha",type:"haupt",u:"https://www.simsforumrpg.de/t78f51849-Sullivan-Blaze-Blaisdell.html",h:"Newcrest",img:"",age:"18",job:""},
   {n:"Artjom Komarow",p:"Ripzha",type:"haupt",u:"https://www.simsforumrpg.de/t266f51849-Artjom-Komarow.html",h:"Willow Creek",img:"",age:"18",job:""},
   {n:"Vaas Del Toro",p:"Ripzha",type:"haupt",u:"https://www.simsforumrpg.de/t654f51849-Vaas-Del-Toro.html",h:"",img:"",age:"21",job:""},
@@ -21,7 +25,7 @@ var charSortAZ=false;
 var charFetched=false;
 var charSearchTerm='';
 
-function openCharView(type){
+export function openCharView(type){
   charActiveType=type||'haupt';
   location.hash='chars-'+charActiveType;
   try{sessionStorage.setItem('atlas_view','chars');}catch(e){}
@@ -72,13 +76,13 @@ function fitCharGrid(){
   if(colW>0)grid.style.gridAutoRows=colW+'px';
 }
 
-function closeCharView(){
+export function closeCharView(){
   document.getElementById('char-container').classList.remove('open');
   location.hash='';
   try{sessionStorage.removeItem('atlas_view');}catch(e){}
 }
 
-function switchCharTab(type,btn){
+export function switchCharTab(type,btn){
   charSearchTerm='';
   var si=document.getElementById('char-search');
   if(si)si.value='';
@@ -91,7 +95,7 @@ function switchCharTab(type,btn){
   buildPlayerFilter();
 }
 
-function reloadChars(){
+export function reloadChars(){
   charFetched=false;
   var grid=document.getElementById('char-grid');
   if(grid)grid.innerHTML='<div style="color:rgba(255,255,255,0.3);font-size:22px;padding:60px;grid-column:1/-1;text-align:center">⏳</div>';
@@ -102,7 +106,7 @@ function reloadChars(){
   });
 }
 
-async function fetchCharsFromScript(){
+export async function fetchCharsFromScript(){
   // Cache: show immediately from sessionStorage
   try{
     var cached=sessionStorage.getItem('atlas_chars_cache');
@@ -156,12 +160,12 @@ async function fetchCharsFromScript(){
   if(document.getElementById('char-age-bar')&&document.getElementById('char-age-bar').classList.contains('open'))buildAgeFilter();
 }
 
-function charSearchFilter(val){
+export function charSearchFilter(val){
   charSearchTerm=val.toLowerCase().trim();
   charRenderFiltered();
 }
 
-function toggleCharSort(){
+export function toggleCharSort(){
   charSortAZ=!charSortAZ;
   var btn=document.getElementById('char-sort-btn');
   if(btn)btn.classList.toggle('active',charSortAZ);
@@ -224,7 +228,7 @@ function buildPlayerFilter(){
   bar.innerHTML=btns;
 }
 
-function togglePlayerFilter(btn){
+export function togglePlayerFilter(btn){
   var p=btn.textContent;
   var idx=charPlayerFilter.indexOf(p);
   if(idx>-1){charPlayerFilter.splice(idx,1);btn.classList.remove('active');}
@@ -236,7 +240,7 @@ function togglePlayerFilter(btn){
 var charAgeFilter=[];
 var charGenderFilter=[];
 
-function toggleGenderFilter(btn,val){
+export function toggleGenderFilter(btn,val){
   var idx=charGenderFilter.indexOf(val);
   if(idx>-1){charGenderFilter.splice(idx,1);btn.classList.remove('active');}
   else{charGenderFilter.push(val);btn.classList.add('active');}
@@ -254,7 +258,7 @@ var AGE_GROUPS=[
   {label:'Senior',range:'ab 70 Jahre',min:70,max:99999}
 ];
 
-function toggleAgeFilter(){
+export function toggleAgeFilter(){
   var bar=document.getElementById('char-age-bar');
   var btn=document.getElementById('char-age-toggle');
   var isOpen=bar.classList.contains('open');
@@ -304,7 +308,7 @@ function updateResetBtn(){
   if(btn)btn.classList.toggle('visible',hasFilter);
 }
 
-function resetAllFilters(){
+export function resetAllFilters(){
   charAgeFilter=[];
   charGenderFilter=[];
   charPlayerFilter=[];
@@ -315,7 +319,7 @@ function resetAllFilters(){
   charRenderFiltered();
 }
 
-function toggleAgeGroup(btn){
+export function toggleAgeGroup(btn){
   var label=btn.getAttribute('data-label');
   var idx=charAgeFilter.indexOf(label);
   if(idx>-1){charAgeFilter.splice(idx,1);btn.classList.remove('active');}

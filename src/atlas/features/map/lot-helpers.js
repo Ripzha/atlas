@@ -1,9 +1,10 @@
 /* PROJECT ATLAS - Lot helpers.
    Label parsing ("Nr. 5ZZ" → "Nr. 5"), nr ranges for building clusters, and
-   grouping of lots that share one position.
-   Classic script, loaded before the other map files. */
+   grouping of lots that share one position. */
 
-function parseLotLabel(lot){
+import { sheetLots, sheetLotsLoaded } from '../../core/sheet-data.js?v=202609181617';
+
+export function parseLotLabel(lot){
   const name=lot.name||'';
   if(lot.nr){
     // Double+ letter suffix ONLY after digits ("Nr. 5ZZ", "Nr. 23ZY") - hide suffix
@@ -22,7 +23,7 @@ function parseLotLabel(lot){
 }
 // For building cluster dots: compute the nr range from the sheet
 // Example: building="Culpepper-Apartments" with Nr. 1, 2, 3, 4 in the sheet → "Nr. 1-4"
-function getBuildingNrRange(buildingName, wname){
+export function getBuildingNrRange(buildingName, wname){
   if(!sheetLotsLoaded) return '';
   const worldSheet = sheetLots[wname] || {};
   const nrs = new Set();
@@ -45,7 +46,7 @@ function getBuildingNrRange(buildingName, wname){
   if(isContinuous) return 'Nr. '+min+'-'+max;
   return 'Nr. '+sorted.join(',');
 }
-function groupLots(lots){
+export function groupLots(lots){
   const groups=[],used=new Set();
   lots.forEach((lot,i)=>{
     if(used.has(i))return;

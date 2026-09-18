@@ -1,10 +1,16 @@
 /* PROJECT ATLAS - Continent map.
    Sizes the map image, creates the world dots with hover cards and token
    containers, handles tap-to-preview on touch devices and the map calibration
-   click. Classic script, loaded after lot-helpers.js. */
+   click. */
 
-const mapC=document.getElementById('map-container');
-const mapIA=document.getElementById('map-image-area');
+import { worlds } from '../../data/worlds.js?v=202609181617';
+import { state } from '../../core/state.js?v=202609181617';
+import { updateAllTokens } from '../characters/tokens.js?v=202609181617';
+import { updateCalibLog } from '../admin/calibration.js?v=202609181617';
+import { enterWorld } from './world-view.js?v=202609181617';
+
+export const mapC=document.getElementById('map-container');
+export const mapIA=document.getElementById('map-image-area');
 
 // Size map-image-area to match actual image aspect ratio
 (function(){

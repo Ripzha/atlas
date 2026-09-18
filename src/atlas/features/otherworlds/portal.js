@@ -1,7 +1,10 @@
 /* PROJECT ATLAS - "Andere Welten" portal.
    Draggable portal on the continent map with particles and tokens of
-   characters currently in outer worlds. Opens the "Andere Welten" view.
-   Classic script, loaded before core.js. */
+   characters currently in outer worlds. Opens the "Andere Welten" view. */
+
+import { sheetWorldMeta } from '../../core/sheet-data.js?v=202609181617';
+import { openOtherWorld } from './otherworld-view.js?v=202609181617';
+import { CHARS } from '../characters/character-view.js?v=202609181617';
 
 // "Andere Welten" portal: mini map with particles, drag + tokens
 // Outer world characters = characters whose lastSeenName is a "hasAtlas=false" world
@@ -18,7 +21,7 @@ function getCharsInOuterWorlds(){
   });
 }
 
-function updateOtherworldPortalTokens(){
+export function updateOtherworldPortalTokens(){
   var portal = document.getElementById('otherworld-portal');
   if(!portal) return;
   var tokensEl = portal.querySelector('.ow-portal-tokens');
@@ -47,7 +50,7 @@ function updateOtherworldPortalTokens(){
   tokensEl.innerHTML = html;
 }
 // Backward compatibility: the old name is still called from updateAllTokens
-function updateOtherworldArrowTokens(){ updateOtherworldPortalTokens(); }
+export function updateOtherworldArrowTokens(){ updateOtherworldPortalTokens(); }
 
 // Particle animation: small lights swirling into the portal
 function startPortalParticles(canvas){

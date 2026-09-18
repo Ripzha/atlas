@@ -1,9 +1,10 @@
 /* PROJECT ATLAS - Route planner (navigator).
    Dijkstra on the defined road network (window.ATLAS_ROUTES, or the routes
    saved in the editor via localStorage). Offers an alternative without flight
-   if the fastest route contains one.
-   Classic script, loaded before core.js. Called from inline handlers:
+   if the fastest route contains one. Called from inline handlers:
    toggleNavi(), setNaviMode(), calcNavi(), _naviShowAlt(). */
+
+import { worlds } from '../../data/worlds.js?v=202609181617';
 
 (function(){
   let naviMode=false; // 'from' | 'to' | false

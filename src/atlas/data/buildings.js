@@ -7,7 +7,9 @@
    an opening brace). Keep the declaration in this form and do not write that
    pattern anywhere else in this file, not even in a comment. */
 
-const BUILDINGS = {
+import { BASE, IMG } from '../config.js?v=202609181617';
+
+export const BUILDINGS = {
   "Culpepper-Apartments":{imgs:[IMG+"pictures_u1170_BtwAdlUp.png"],lots:[
     {nr:"Nr. 1",x:40.7,y:40.3},
     {nr:"Nr. 2",x:52.6,y:32.4},

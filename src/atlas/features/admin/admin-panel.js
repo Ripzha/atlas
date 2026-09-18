@@ -1,8 +1,11 @@
 /* PROJECT ATLAS - Admin panel.
-   Opens after clicking the logo five times and entering ADMIN_PASS.
-   Tabs: "assign" (lot assignment) and "routen" (route editor).
-   Called from inline handlers: closeAdmin(), setAdminTab(), renderAdminContent().
-   Classic script, loaded before core.js. */
+   Opens after clicking the logo five times and entering ADMIN_PASS. Tabs:
+   "assign" (lot assignment) and "routen" (route editor). Called from inline
+   handlers: closeAdmin(), setAdminTab(), renderAdminContent(). */
+
+import { ADMIN_PASS } from '../../config.js?v=202609181617';
+import { state } from '../../core/state.js?v=202609181617';
+import { renderAssignTab } from './lot-assignment.js?v=202609181617';
 
 document.getElementById('logo-icon').addEventListener('click',()=>{
   state.logoClicks++;clearTimeout(state.logoTimer);state.logoTimer=setTimeout(()=>state.logoClicks=0,5000);
@@ -42,6 +45,6 @@ function showAdminLogin(){
   input.addEventListener('keydown',e=>{if(e.key==='Enter')submit();else if(e.key==='Escape')ov.remove();});
 }
 function openAdmin(){document.body.classList.add('admin-mode');document.getElementById('admin-panel').classList.add('open');document.getElementById('logo-icon').classList.add('admin-active');state.adminTab='assign';setAdminTab('assign');}
-function closeAdmin(){document.body.classList.remove('admin-mode');document.getElementById('admin-panel').classList.remove('open');document.getElementById('logo-icon').classList.remove('admin-active');state.adminMode=false;}
-function setAdminTab(t){state.adminTab=t;['assign','routen'].forEach(id=>document.getElementById('atab-'+id).classList.toggle('active',id===t));renderAdminContent();}
-function renderAdminContent(){const c=document.getElementById('admin-content');if(state.adminTab==='assign')renderAssignTab(c);else if(state.adminTab==='routen')renderRoutenTab(c);}
+export function closeAdmin(){document.body.classList.remove('admin-mode');document.getElementById('admin-panel').classList.remove('open');document.getElementById('logo-icon').classList.remove('admin-active');state.adminMode=false;}
+export function setAdminTab(t){state.adminTab=t;['assign','routen'].forEach(id=>document.getElementById('atab-'+id).classList.toggle('active',id===t));renderAdminContent();}
+export function renderAdminContent(){const c=document.getElementById('admin-content');if(state.adminTab==='assign')renderAssignTab(c);else if(state.adminTab==='routen')renderRoutenTab(c);}

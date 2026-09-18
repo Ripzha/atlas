@@ -1,7 +1,9 @@
 /* PROJECT ATLAS - Character tokens.
-   Small portraits on world dots, lot dots and clusters showing where characters
-   were last seen (matched by forum thread ID).
-   Classic script, loaded before core.js. */
+   Small portraits on world dots, lot dots and clusters showing where
+   characters were last seen (matched by forum thread ID). */
+
+import { updateOtherworldArrowTokens } from '../otherworlds/portal.js?v=202609181617';
+import { CHARS } from './character-view.js?v=202609181617';
 
 function getThreadIdFromUrl(url){
   if(!url) return null;
@@ -9,7 +11,7 @@ function getThreadIdFromUrl(url){
   return m ? m[1] : null;
 }
 
-function updateAllTokens(){
+export function updateAllTokens(){
   if(!CHARS.length){ setTimeout(updateAllTokens, 1000); return; }
   // Update lot dots
   document.querySelectorAll('.dot-char-tokens[data-lot-url]').forEach(function(el){
@@ -87,7 +89,7 @@ function updateAllTokens(){
   if(typeof updateOtherworldArrowTokens === 'function') updateOtherworldArrowTokens();
 }
 
-function buildCharTokensHtml(chars){
+export function buildCharTokensHtml(chars){
   if(!chars||!chars.length) return '';
   var MAX=5;
   var extra=chars.length>MAX?chars.length-MAX:0;
@@ -106,7 +108,7 @@ function buildCharTokensHtml(chars){
   '</div>';
 }
 
-function getCharsAtWorld(worldName){
+export function getCharsAtWorld(worldName){
   if(!worldName) return [];
   return CHARS.filter(function(c){
     // Only show characters with lastSeenName AND lastSeenUrl —

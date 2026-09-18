@@ -1,10 +1,12 @@
 /* PROJECT ATLAS - Route editor (admin).
    Fullscreen editor to draw routes between worlds, analyze the network and
-   export/import it as JSON. Saves to localStorage ('atlas_custom_routes').
-   The exported JSON is what src/atlas/data/routes.js contains.
-   Classic script, loaded before core.js, after navigator.js. Called from inline
+   export/import it as JSON. Saves to localStorage ('atlas_custom_routes'). The
+   exported JSON is what src/atlas/data/routes.js contains. Called from inline
    handlers: closeRoutenEditor(), raTM(), raST(), raClear(), raSave(),
-   raAnalyzeNet(), raCopyExport(), raImportPrompt(), raClearAll(), raIgnoreWorld(). */
+   raAnalyzeNet(), raCopyExport(), raImportPrompt(), raClearAll(),
+   raIgnoreWorld(). */
+
+import { worlds } from '../../data/worlds.js?v=202609181617';
 
 (function(){
 

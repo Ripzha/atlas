@@ -1,8 +1,10 @@
 /* PROJECT ATLAS - Building calibration (admin).
-   Click mode to record apartment coordinates per floor and copy them.
-   Called from inline handlers: toggleBuildingCalib(), clearBuildingCalib(),
-   copyBuildingCalib().
-   Classic script, loaded before core.js. */
+   Click mode to record apartment coordinates per floor and copy them. Called
+   from inline handlers: toggleBuildingCalib(), clearBuildingCalib(),
+   copyBuildingCalib(). */
+
+import { BUILDINGS } from '../../data/buildings.js?v=202609181617';
+import { buildingFloorIdx, currentBuildingKey } from './building-view.js?v=202609181617';
 
 let calibBuildingMode=false,calibBuildingData=[];
 
@@ -11,7 +13,7 @@ function getBuildingCalibLots(){
   // Only lots visible on current floor (no floors prop = all floors)
   return allLots.filter(l=>!l.floors||l.floors.includes(buildingFloorIdx));
 }
-function toggleBuildingCalib(){
+export function toggleBuildingCalib(){
   calibBuildingMode=!calibBuildingMode;
   const panel=document.getElementById('calib-building-panel');
   const bc=document.getElementById('building-container');
@@ -26,14 +28,14 @@ function toggleBuildingCalib(){
     document.getElementById('calib-building-log').textContent='Noch keine Klicks...';
   }
 }
-function clearBuildingCalib(){
+export function clearBuildingCalib(){
   calibBuildingData=[];
   const lots=getBuildingCalibLots();
   document.getElementById('calib-building-next').textContent=lots[0]?.name||'—';
   document.getElementById('calib-building-count').textContent='0 / '+lots.length;
   document.getElementById('calib-building-log').textContent='Noch keine Klicks...';
 }
-function copyBuildingCalib(){
+export function copyBuildingCalib(){
   const txt=calibBuildingData.map(d=>`{name:"${d.name}",x:${d.x},y:${d.y}}`).join(',\n');
   navigator.clipboard.writeText(txt).then(()=>alert('✓ Kopiert!'));
 }

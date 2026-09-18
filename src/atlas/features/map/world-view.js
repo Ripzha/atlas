@@ -5,11 +5,29 @@
    Other files can react to entering a world via onEnterWorld(fn) instead of
    replacing enterWorld() (the world search uses it for "Zuletzt besucht"). */
 
+import { worldLots } from '../../data/world-lots.js?v=202609181617';
+import { customLots, state } from '../../core/state.js?v=202609181617';
+import {
+  fetchSheetLots,
+  getLots,
+  sheetLots,
+  sheetLotsLoaded,
+  sheetWorldMeta,
+} from '../../core/sheet-data.js?v=202609181617';
+import { repositionTooltips } from '../../ui/tooltips.js?v=202609181617';
+import { showMobileDotBar } from '../../ui/mobile-dot-bar.js?v=202609181617';
+import { updateAllTokens } from '../characters/tokens.js?v=202609181617';
+import { enterBuilding, exitBuilding } from '../buildings/building-view.js?v=202609181617';
+import { updateCalibLog } from '../admin/calibration.js?v=202609181617';
+import { renderAdminContent } from '../admin/admin-panel.js?v=202609181617';
+import { getBuildingNrRange, groupLots, parseLotLabel } from './lot-helpers.js?v=202609181617';
+import { mapC, mapIA } from './continent-map.js?v=202609181617';
+
 // Callbacks that run whenever a world is entered, before it is rendered.
 const enterWorldHooks=[];
-function onEnterWorld(fn){ enterWorldHooks.push(fn); }
+export function onEnterWorld(fn){ enterWorldHooks.push(fn); }
 
-function enterWorld(w){
+export function enterWorld(w){
   enterWorldHooks.forEach(function(fn){ fn(w); });
   try{sessionStorage.setItem('atlas_world',w.name);}catch(e){}
   state.currentWorld=w;
@@ -70,7 +88,7 @@ function enterWorld(w){
   });
 }
 
-function goBack(){
+export function goBack(){
   const bc=document.getElementById('building-container');
   if(bc&&bc.style.display!=='none'){exitBuilding();return;}
   document.getElementById('world-container').classList.remove('active');
@@ -238,7 +256,7 @@ function sizeWorldImageArea(){
 }
 window.addEventListener('resize',sizeWorldImageArea);
 
-const worldC=document.getElementById('world-container');
+export const worldC=document.getElementById('world-container');
 worldC.addEventListener('click',e=>{
   if(!e.target.closest('.cluster-dot'))worldC.querySelectorAll('.cluster-dot.open').forEach(c=>c.classList.remove('open'));
   if(!state.calibWorldMode)return;
