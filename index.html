@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Simswelt — Projekt ATLAS</title>
 
+<!-- Open the connections to the data and image hosts right away, so the first
+     requests do not wait for DNS and TLS. crossorigin: the data is loaded with
+     fetch() (CORS); images are not, so that host goes without. The Apps Script
+     answers via script.googleusercontent.com (redirect). -->
+<link rel="preconnect" href="https://script.google.com" crossorigin>
+<link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
+<link rel="preconnect" href="https://docs.google.com" crossorigin>
+<link rel="preconnect" href="https://files.homepagemodules.de">
+
 <!-- Stylesheet: complete ATLAS CSS, same order as in the old single file -->
 <link rel="stylesheet" href="styles/atlas/atlas.css?v=202609181426">
 
