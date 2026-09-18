@@ -26,7 +26,7 @@ Statische Seite auf GitHub Pages, per iframe ins Forum eingebettet.
 
 ```
 src/
-  atlas/      Weltkarte (core.js, ui/, features/)
+  atlas/      Weltkarte (config.js, data/, core.js, ui/, features/)
   news/       Kiosk
 styles/       CSS, gespiegelt zu src/
 docs/         Architektur, Regeln, Umstellung
@@ -45,7 +45,9 @@ Aus dem FlipHTML5-Link braucht es nur den Pfad-Teil, z.B. `idohu/ztbc`.
 
 **Grundstück oder Charakter ändern** → im Google Sheet, nicht im Code.
 
-**Welt-Koordinaten anpassen** → `src/atlas/core.js` (Kalibrier-Modus im Admin-Panel).
+**Koordinaten anpassen** → Punkte der Kontinentkarte in `src/atlas/data/worlds.js`,
+Grundstücke pro Welt in `src/atlas/data/world-lots.js`, Gebäude-Etagen in
+`src/atlas/data/buildings.js`. Die Werte liefert der Kalibrier-Modus im Admin-Panel.
 
 ---
 

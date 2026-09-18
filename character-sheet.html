@@ -421,10 +421,13 @@ function loadHomeData(cb){
     DATA_LOADING=false;cb();
   });
 }
-// Fetches src/atlas/core.js (same origin) and parses worldLots + BUILDINGS from its source.
-// Dependency: if worldLots or BUILDINGS move (stage 3), this path must follow.
+// Fetches the ATLAS data files (same origin) and parses worldLots + BUILDINGS from their source.
+// Dependency: if worldLots or BUILDINGS move or change their declaration, these paths must follow.
 function loadAtlasJsData_(){
-  return fetch("src/atlas/core.js").then(function(r){return r.text();}).then(function(html){
+  return Promise.all([
+    fetch("src/atlas/data/buildings.js").then(function(r){return r.text();}),
+    fetch("src/atlas/data/world-lots.js").then(function(r){return r.text();})
+  ]).then(function(parts){return parts.join("\n");}).then(function(html){
     function extractObj(name){
       var re=new RegExp("const\\s+"+name+"\\s*=\\s*\\{");
       var m=re.exec(html);

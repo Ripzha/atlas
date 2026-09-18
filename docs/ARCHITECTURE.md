@@ -56,9 +56,14 @@ The order is binding:
 1. `styles/atlas/atlas.css`
 2. `src/atlas/ui/viewport.js` — **classic script, not a module**
 3. Markup
-4. `src/atlas/core.js`
-5. `src/atlas/features/events/event-pill.js`
-6. Loading screen markup, then `src/atlas/ui/loading.js`
+4. `src/atlas/config.js` — `BASE`, `IMG`, `ADMIN_PASS`
+5. `src/atlas/data/buildings.js`, `worlds.js`, `world-lots.js` — static data
+6. `src/atlas/core.js`
+7. `src/atlas/features/events/event-pill.js`
+8. Loading screen markup, then `src/atlas/ui/loading.js`
+
+Until stage 3b, all ATLAS scripts are classic scripts that share the global
+scope. Each file must load after the files whose values it uses at load time.
 
 ### Why `viewport.js` must not be a module
 
@@ -72,9 +77,11 @@ which is exactly what we need.
 
 ## State of `core.js`
 
-`core.js` is still the undivided core logic from the former single file
-(4987 lines, 111 functions in the global scope, comments still in German).
-Splitting it into `features/` folders is stage 3.
+`core.js` is still the core logic from the former single file (about 4300
+lines, 111 functions in the global scope, comments still in German).
+Configuration and static data have already been moved out (stage 3a, cut 1).
+Splitting the rest into `features/` folders continues in stage 3a; converting
+to ES modules is stage 3b.
 
 Two things to watch:
 
@@ -90,12 +97,13 @@ Two things to watch:
 
 Things that break silently if they are changed on one side only:
 
-- **Character sheet → `core.js`.** `character-sheet.html` fetches
-  `src/atlas/core.js` as text and extracts `worldLots` and `BUILDINGS` by
-  searching for `const worldLots = {` and `const BUILDINGS = {`.
-  If these objects move or are renamed (stage 3), the fetch path and the
-  pattern in `loadAtlasJsData_()` must follow — ideally replaced by a shared
-  data module both pages import.
+- **Character sheet → data files.** `character-sheet.html` fetches
+  `src/atlas/data/buildings.js` and `src/atlas/data/world-lots.js` as text and
+  finds `BUILDINGS` and `worldLots` by pattern (keyword `const`, name, equals
+  sign, opening brace). That pattern must not appear anywhere else in those
+  files, not even in a comment. If the objects move or are renamed, the paths
+  in `loadAtlasJsData_()` must follow — to be replaced by a shared data module
+  in stage 3b.
 - **Apps Script → Simstagram.** The Apps Script builds links to
   `simstagram.html#post-…` with a full URL. When the address changes, the
   script must be updated and redeployed (see [MIGRATION.md](MIGRATION.md)).

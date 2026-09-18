@@ -58,9 +58,15 @@ Die Reihenfolge ist bindend:
 1. `styles/atlas/atlas.css`
 2. `src/atlas/ui/viewport.js` — **klassisches Script, kein Modul**
 3. Markup
-4. `src/atlas/core.js`
-5. `src/atlas/features/events/event-pill.js`
-6. Loading-Screen-Markup, danach `src/atlas/ui/loading.js`
+4. `src/atlas/config.js` — `BASE`, `IMG`, `ADMIN_PASS`
+5. `src/atlas/data/buildings.js`, `worlds.js`, `world-lots.js` — feste Daten
+6. `src/atlas/core.js`
+7. `src/atlas/features/events/event-pill.js`
+8. Loading-Screen-Markup, danach `src/atlas/ui/loading.js`
+
+Bis Etappe 3b sind alle ATLAS-Scripts klassische Scripts, die sich den globalen
+Raum teilen. Jede Datei muss nach den Dateien laden, deren Werte sie beim Laden
+braucht.
 
 ### Warum `viewport.js` kein Modul sein darf
 
@@ -74,9 +80,11 @@ bis das vorangehende Stylesheet geladen ist. Genau das brauchen wir.
 
 ## Zustand von `core.js`
 
-`core.js` ist noch die ungeteilte Kern-Logik aus dem früheren Single-File
-(4987 Zeilen, 111 Funktionen im globalen Namensraum, Kommentare noch deutsch).
-Die Aufteilung in die `features/`-Ordner ist Etappe 3.
+`core.js` ist noch die Kern-Logik aus dem früheren Single-File (rund 4300
+Zeilen, 111 Funktionen im globalen Namensraum, Kommentare noch deutsch).
+Konfiguration und feste Daten sind bereits ausgelagert (Etappe 3a, Schnitt 1).
+Die Aufteilung des Rests in `features/`-Ordner läuft in Etappe 3a weiter, die
+Umstellung auf ES-Module ist Etappe 3b.
 
 Zwei Dinge sind dabei zu beachten:
 
@@ -93,12 +101,13 @@ Zwei Dinge sind dabei zu beachten:
 
 Stellen, die lautlos brechen, wenn nur eine Seite geändert wird:
 
-- **Charakterbogen → `core.js`.** `character-sheet.html` lädt
-  `src/atlas/core.js` als Text und holt sich `worldLots` und `BUILDINGS`
-  über die Suche nach `const worldLots = {` und `const BUILDINGS = {`.
-  Wandern oder heissen diese Objekte anders (Etappe 3), müssen Ladepfad und
-  Suchmuster in `loadAtlasJsData_()` mitziehen — am besten ersetzt durch ein
-  gemeinsames Daten-Modul, das beide Seiten einbinden.
+- **Charakterbogen → Daten-Dateien.** `character-sheet.html` lädt
+  `src/atlas/data/buildings.js` und `src/atlas/data/world-lots.js` als Text und
+  findet `BUILDINGS` und `worldLots` über ein Suchmuster (Schlüsselwort `const`,
+  Name, Gleichheitszeichen, öffnende Klammer). Dieses Muster darf sonst nirgends
+  in diesen Dateien vorkommen, auch nicht in einem Kommentar. Wandern oder
+  heissen die Objekte anders, müssen die Pfade in `loadAtlasJsData_()`
+  mitziehen — in Etappe 3b ersetzt durch ein gemeinsames Daten-Modul.
 - **Apps Script → Simstagram.** Das Apps Script baut Links auf
   `simstagram.html#post-…` mit voller Adresse. Bei einem Adresswechsel muss
   das Script angepasst und neu bereitgestellt werden
