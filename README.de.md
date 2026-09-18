@@ -46,6 +46,10 @@ Aus dem FlipHTML5-Link braucht es nur den Pfad-Teil, z.B. `idohu/ztbc`.
 
 **Grundstück oder Charakter ändern** → im Google Sheet, nicht im Code.
 
+**Strassennetz nachführen** → Routen im Routen-Editor (Admin-Panel) zeichnen,
+„JSON kopieren" und den Inhalt von `window.ATLAS_ROUTES` in
+`src/atlas/data/routes.js` ersetzen.
+
 **Koordinaten anpassen** → Punkte der Kontinentkarte in `src/atlas/data/worlds.js`,
 Grundstücke pro Welt in `src/atlas/data/world-lots.js`, Gebäude-Etagen in
 `src/atlas/data/buildings.js`. Die Werte liefert der Kalibrier-Modus im Admin-Panel.

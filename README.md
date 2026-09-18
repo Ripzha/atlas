@@ -45,6 +45,10 @@ Switching the forum over: [docs/MIGRATION.md](docs/MIGRATION.md)
 
 **Change a lot or character** → in the Google Sheet, not in the code.
 
+**Update the road network** → draw routes in the route editor (admin panel),
+"JSON kopieren", and replace the contents of `window.ATLAS_ROUTES` in
+`src/atlas/data/routes.js`.
+
 **Adjust coordinates** → continent dots in `src/atlas/data/worlds.js`, lots per
 world in `src/atlas/data/world-lots.js`, building floors in
 `src/atlas/data/buildings.js`. The calibration mode in the admin panel produces
