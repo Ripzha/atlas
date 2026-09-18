@@ -95,4 +95,6 @@ Hält sich noch nicht an diese Regeln, wird in seiner Etappe umgestellt:
 
 - `src/atlas/core.js` — deutsche Kommentare, globale Funktionen (Etappe 3)
 - `styles/atlas/atlas.css` — deutsche Kommentare, Themen gemischt (Etappe 4)
+- `simstagram.html`, `metaverse.html`, `character-sheet.html` — Single-Files
+  mit CSS/JS im Dokument und deutschen Kommentaren (Etappe 5)
 - `index_alt.html` — alter Single-File, nur noch als Rettungsanker

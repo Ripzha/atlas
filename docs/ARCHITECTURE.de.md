@@ -12,11 +12,14 @@ kurz und stabil bleiben.
 
 | Seite | URL | Zweck | Stand |
 |---|---|---|---|
-| `index.html` | `/` | ATLAS — interaktive Weltkarte | hier |
-| `news.html` | `/news.html` | SimsWelt News Kiosk | hier |
-| `simstagram.html` | `/simstagram.html` | Charakter-Feed | noch in `simswelt`, Etappe 5 |
-| `metaverse.html` | `/metaverse.html` | Blog für Interviews & OOC | noch in `simswelt`, Etappe 5 |
-| `rpg_char_html.html` | `/rpg_char_html.html` | Charakterbogen-Generator | noch in `simswelt`, Etappe 5 (wird `character-sheet.html`) |
+| `index.html` | `/` | ATLAS — interaktive Weltkarte | in Dateien aufgeteilt (Etappe 1–2) |
+| `news.html` | `/news.html` | SimsWelt News Kiosk | modular (Etappe 2) |
+| `simstagram.html` | `/simstagram.html` | Charakter-Feed | Single-File, Aufräumen in Etappe 5 |
+| `metaverse.html` | `/metaverse.html` | Blog für Interviews & OOC | Single-File, Aufräumen in Etappe 5 |
+| `character-sheet.html` | `/character-sheet.html` | Charakterbogen-Generator | Single-File, Aufräumen in Etappe 5 (hiess `rpg_char_html.html`) |
+
+Links zwischen den Seiten sind relativ (`simstagram.html`, keine volle Adresse).
+Sie funktionieren dadurch unabhängig davon, unter welcher Adresse das Repo läuft.
 
 ---
 
@@ -83,6 +86,23 @@ Zwei Dinge sind dabei zu beachten:
   sonst greifen die Handler ins Leere.
 - Die Funktionen rufen sich quer durcheinander auf. Jeder Schnitt braucht
   passende `import`-Zeilen.
+
+---
+
+## Bekannte Abhängigkeiten
+
+Stellen, die lautlos brechen, wenn nur eine Seite geändert wird:
+
+- **Charakterbogen → `core.js`.** `character-sheet.html` lädt
+  `src/atlas/core.js` als Text und holt sich `worldLots` und `BUILDINGS`
+  über die Suche nach `const worldLots = {` und `const BUILDINGS = {`.
+  Wandern oder heissen diese Objekte anders (Etappe 3), müssen Ladepfad und
+  Suchmuster in `loadAtlasJsData_()` mitziehen — am besten ersetzt durch ein
+  gemeinsames Daten-Modul, das beide Seiten einbinden.
+- **Apps Script → Simstagram.** Das Apps Script baut Links auf
+  `simstagram.html#post-…` mit voller Adresse. Bei einem Adresswechsel muss
+  das Script angepasst und neu bereitgestellt werden
+  (siehe [MIGRATION.de.md](MIGRATION.de.md)).
 
 ---
 

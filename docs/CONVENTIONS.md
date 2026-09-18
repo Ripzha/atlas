@@ -94,4 +94,6 @@ Not yet following these rules, converted in their stage:
 
 - `src/atlas/core.js` — German comments, global functions (stage 3)
 - `styles/atlas/atlas.css` — German comments, mixed topics (stage 4)
+- `simstagram.html`, `metaverse.html`, `character-sheet.html` — single files
+  with inline CSS/JS and German comments (stage 5)
 - `index_alt.html` — old single file, kept only as a rollback

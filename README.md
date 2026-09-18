@@ -16,10 +16,9 @@ Static site on GitHub Pages, embedded into the forum via iframe.
 |---|---|---|
 | `index.html` | `/` | ATLAS world map |
 | `news.html` | `/news.html` | SimsWelt News kiosk |
-
-Still in the old `simswelt` repo, moving here in stage 5:
-`simstagram.html`, `metaverse.html`, `rpg_char_html.html`.
-Until then the links to them in `index.html` intentionally point to `simswelt`.
+| `simstagram.html` | `/simstagram.html` | Character feed |
+| `metaverse.html` | `/metaverse.html` | Blog for interviews & OOC |
+| `character-sheet.html` | `/character-sheet.html` | Character sheet generator |
 
 ---
 
@@ -30,11 +29,12 @@ src/
   atlas/      World map (core.js, ui/, features/)
   news/       Kiosk
 styles/       CSS, mirrors src/
-docs/         Architecture and conventions
+docs/         Architecture, conventions, migration
 ```
 
 Details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) ·
-Rules for all code: [docs/CONVENTIONS.md](docs/CONVENTIONS.md)
+Rules for all code: [docs/CONVENTIONS.md](docs/CONVENTIONS.md) ·
+Switching the forum over: [docs/MIGRATION.md](docs/MIGRATION.md)
 
 ---
 

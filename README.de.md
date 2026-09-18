@@ -16,10 +16,9 @@ Statische Seite auf GitHub Pages, per iframe ins Forum eingebettet.
 |---|---|---|
 | `index.html` | `/` | ATLAS Weltkarte |
 | `news.html` | `/news.html` | SimsWelt News Kiosk |
-
-Noch im alten Repo `simswelt`, ziehen mit Etappe 5 hierher um:
-`simstagram.html`, `metaverse.html`, `rpg_char_html.html`.
-Die Links darauf in `index.html` zeigen bis dahin bewusst auf `simswelt`.
+| `simstagram.html` | `/simstagram.html` | Charakter-Feed |
+| `metaverse.html` | `/metaverse.html` | Blog für Interviews & OOC |
+| `character-sheet.html` | `/character-sheet.html` | Charakterbogen-Generator |
 
 ---
 
@@ -30,11 +29,12 @@ src/
   atlas/      Weltkarte (core.js, ui/, features/)
   news/       Kiosk
 styles/       CSS, gespiegelt zu src/
-docs/         Architektur und Regeln
+docs/         Architektur, Regeln, Umstellung
 ```
 
 Ausführlich: [docs/ARCHITECTURE.de.md](docs/ARCHITECTURE.de.md) ·
-Regeln für allen Code: [docs/CONVENTIONS.de.md](docs/CONVENTIONS.de.md)
+Regeln für allen Code: [docs/CONVENTIONS.de.md](docs/CONVENTIONS.de.md) ·
+Forum umstellen: [docs/MIGRATION.de.md](docs/MIGRATION.de.md)
 
 ---
 

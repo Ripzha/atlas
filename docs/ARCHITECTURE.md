@@ -11,11 +11,14 @@ Entry pages live in the root on purpose, so forum links stay short and stable.
 
 | Page | URL | Purpose | Status |
 |---|---|---|---|
-| `index.html` | `/` | ATLAS — interactive world map | here |
-| `news.html` | `/news.html` | SimsWelt News kiosk | here |
-| `simstagram.html` | `/simstagram.html` | Character feed | still in `simswelt`, stage 5 |
-| `metaverse.html` | `/metaverse.html` | Blog for interviews & OOC | still in `simswelt`, stage 5 |
-| `rpg_char_html.html` | `/rpg_char_html.html` | Character sheet generator | still in `simswelt`, stage 5 (becomes `character-sheet.html`) |
+| `index.html` | `/` | ATLAS — interactive world map | split into files (stages 1–2) |
+| `news.html` | `/news.html` | SimsWelt News kiosk | modular (stage 2) |
+| `simstagram.html` | `/simstagram.html` | Character feed | single file, cleanup in stage 5 |
+| `metaverse.html` | `/metaverse.html` | Blog for interviews & OOC | single file, cleanup in stage 5 |
+| `character-sheet.html` | `/character-sheet.html` | Character sheet generator | single file, cleanup in stage 5 (was `rpg_char_html.html`) |
+
+Links between the pages are relative (`simstagram.html`, not a full URL), so
+they keep working wherever the repo is served from.
 
 ---
 
@@ -80,6 +83,22 @@ Two things to watch:
   must be attached to `window` explicitly — otherwise the handlers break.
 - The functions call each other across areas. Every cut needs matching
   `import` lines.
+
+---
+
+## Known dependencies
+
+Things that break silently if they are changed on one side only:
+
+- **Character sheet → `core.js`.** `character-sheet.html` fetches
+  `src/atlas/core.js` as text and extracts `worldLots` and `BUILDINGS` by
+  searching for `const worldLots = {` and `const BUILDINGS = {`.
+  If these objects move or are renamed (stage 3), the fetch path and the
+  pattern in `loadAtlasJsData_()` must follow — ideally replaced by a shared
+  data module both pages import.
+- **Apps Script → Simstagram.** The Apps Script builds links to
+  `simstagram.html#post-…` with a full URL. When the address changes, the
+  script must be updated and redeployed (see [MIGRATION.md](MIGRATION.md)).
 
 ---
 
