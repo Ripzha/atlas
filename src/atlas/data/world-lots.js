@@ -196,8 +196,8 @@ export const worldLots={
   "Brindleton Bay":[
     {nr:"Strassen",name:"Brindleton Bay (Strassen)",x:53.1,y:76.3,outdoor:true},
     {nr:"Nr. 1",x:24.7,y:31.6},
-    {nr:"Nr. 2",x:30.5,y:43.4},
-    {nr:"Nr. 3",x:28.2,y:53.1},
+    {nr:"Nr. 2",x:17.8,y:41.3},
+    {nr:"Nr. 3",x:31.3,y:43.3},
     {nr:"Nr. 4",x:32.4,y:39.3},
     {nr:"Nr. 5",x:35.4,y:32.8},
     {nr:"Nr. 6",x:58,y:35.1},
