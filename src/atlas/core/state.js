@@ -10,7 +10,7 @@
 export const state={
   adminMode:false, logoClicks:0, logoTimer:null, adminTab:'lots',
   currentWorld:null,
-  calibMapMode:false, calibWorldMode:false,
+  calibMapMode:false, calibWorldMode:false, calibBuildingMode:false,
   calibMapData:[], calibWorldData:[], calibMapIdx:0,
 };
 

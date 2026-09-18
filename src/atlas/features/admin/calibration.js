@@ -3,15 +3,22 @@
    (world view) and copy them for src/atlas/data/. Called from inline handlers:
    toggleCalib(), copyCalib(), clearCalib(). */
 
-import { worlds } from '../../data/worlds.js?v=202609181817';
-import { state } from '../../core/state.js?v=202609181817';
-import { getLots } from '../../core/sheet-data.js?v=202609181817';
-import { mapC } from '../map/continent-map.js?v=202609181817';
-import { worldC } from '../map/world-view.js?v=202609181817';
+import { worlds } from '../../data/worlds.js?v=202609182140';
+import { state } from '../../core/state.js?v=202609182140';
+import { getLots } from '../../core/sheet-data.js?v=202609182140';
+import { mapC } from '../map/continent-map.js?v=202609182140';
+import { worldC } from '../map/world-view.js?v=202609182140';
+
+// While a calibration mode is on, the admin panel is hidden (body.calibrating),
+// so the whole map can be clicked. It comes back when calibration ends.
+export function updateCalibrating(){
+  document.body.classList.toggle('calibrating', !!(state.calibMapMode || state.calibWorldMode || state.calibBuildingMode));
+}
 
 export function toggleCalib(mode){
   if(mode==='map'){state.calibMapMode=!state.calibMapMode;document.getElementById('calib-map-panel').style.display=state.calibMapMode?'block':'none';mapC.style.cursor=state.calibMapMode?'crosshair':'default';if(state.calibMapMode)document.getElementById('calib-next').textContent=worlds[state.calibMapIdx]?.name||'—';}
   else{state.calibWorldMode=!state.calibWorldMode;document.getElementById('calib-world-panel').style.display=state.calibWorldMode?'block':'none';worldC.style.cursor=state.calibWorldMode?'crosshair':'default';if(state.calibWorldMode)document.getElementById('calib-world-next').textContent=getLots(state.currentWorld?.name||'')[state.calibWorldData.length]?.name||'—';}
+  updateCalibrating();
 }
 export function updateCalibLog(mode){const data=mode==='map'?state.calibMapData:state.calibWorldData;const log=document.getElementById(mode==='map'?'calib-map-log':'calib-world-log');log.innerHTML=data.length===0?'Noch keine Klicks...':data.map(d=>`<div style="color:#ffcc44">${d.name}</div><div style="color:#777">x:${d.x}, y:${d.y}</div>`).join('');log.scrollTop=log.scrollHeight;}
 export function copyCalib(mode){

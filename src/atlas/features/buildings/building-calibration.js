@@ -3,10 +3,12 @@
    from inline handlers: toggleBuildingCalib(), clearBuildingCalib(),
    copyBuildingCalib(). */
 
-import { BUILDINGS } from '../../data/buildings.js?v=202609181817';
-import { buildingFloorIdx, currentBuildingKey } from './building-view.js?v=202609181817';
+import { updateCalibrating } from '../admin/calibration.js?v=202609182140';
+import { state } from '../../core/state.js?v=202609182140';
+import { BUILDINGS } from '../../data/buildings.js?v=202609182140';
+import { buildingFloorIdx, currentBuildingKey } from './building-view.js?v=202609182140';
 
-let calibBuildingMode=false,calibBuildingData=[];
+let calibBuildingData=[];
 
 function getBuildingCalibLots(){
   const allLots=BUILDINGS[currentBuildingKey]?.lots||[];
@@ -14,12 +16,13 @@ function getBuildingCalibLots(){
   return allLots.filter(l=>!l.floors||l.floors.includes(buildingFloorIdx));
 }
 export function toggleBuildingCalib(){
-  calibBuildingMode=!calibBuildingMode;
+  state.calibBuildingMode=!state.calibBuildingMode;
   const panel=document.getElementById('calib-building-panel');
   const bc=document.getElementById('building-container');
-  panel.style.display=calibBuildingMode?'block':'none';
-  bc.style.cursor=calibBuildingMode?'crosshair':'default';
-  if(calibBuildingMode){
+  panel.style.display=state.calibBuildingMode?'block':'none';
+  updateCalibrating();
+  bc.style.cursor=state.calibBuildingMode?'crosshair':'default';
+  if(state.calibBuildingMode){
     calibBuildingData=[];
     const lots=getBuildingCalibLots();
     const floorLabel=BUILDINGS[currentBuildingKey]?.imgs?.length>1?' (Ebene '+(buildingFloorIdx+1)+')':'';
@@ -42,7 +45,7 @@ export function copyBuildingCalib(){
 
 document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('building-container').addEventListener('click',function(e){
-    if(!calibBuildingMode)return;
+    if(!state.calibBuildingMode)return;
     if(e.target.closest('.calib-panel')||e.target.closest('.calib-btn')||e.target.closest('#floor-nav'))return;
     const bc=document.getElementById('building-bg-inner')||document.getElementById('building-container');
     const r=bc.getBoundingClientRect();
