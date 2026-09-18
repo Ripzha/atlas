@@ -46,7 +46,7 @@ function buildAssignUI(c){
     : '<div style="font-size:11px;color:rgba(255,255,255,0.3)">Alle vergeben ✓</div>';
 
   c.innerHTML = '<div style="margin-bottom:10px"><div class="a-label">Welt</div>'
-    +'<select class="a-select" onchange="_assignWorld=this.value;buildAssignUI(document.getElementById(\'admin-content\'))">'+worldOpts+'</select></div>'
+    +'<select class="a-select" onchange="window._adminAssignWorld(this.value)">'+worldOpts+'</select></div>'
     +'<div style="font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:6px">Unvergeben ('+unassigned.length+'):</div>'
     +'<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">'+grid+'</div>'
     +'<div id="assign-form" style="display:none;border-top:0.5px solid rgba(255,255,255,0.08);padding-top:10px">'
@@ -75,6 +75,14 @@ function buildAssignUI(c){
     +'<div id="assign-msg" style="font-size:11px;color:#4aaa6a;text-align:center;margin-top:6px;min-height:14px"></div>'
     +'</div>';
 }
+
+// World dropdown: switch the world and rebuild the list. A function instead of
+// setting _assignWorld in the inline handler, which would not reach the
+// variable once the files are ES modules.
+window._adminAssignWorld = function(world){
+  _assignWorld = world;
+  buildAssignUI(document.getElementById('admin-content'));
+};
 
 window._adminAssignSelect = function(nr){
   document.querySelectorAll('#admin-content .a-btn[data-nr]').forEach(function(b){
