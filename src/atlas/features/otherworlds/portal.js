@@ -227,8 +227,7 @@ function initOtherworldPortal(){
   updateOtherworldPortalTokens();
 }
 
-if(document.readyState === 'loading'){
-  document.addEventListener('DOMContentLoaded', initOtherworldPortal);
-} else {
-  initOtherworldPortal();
-}
+// Start once the document is parsed. Always via DOMContentLoaded: the portal
+// needs CHARS and sheetWorldMeta from other files, which are only guaranteed
+// to be ready then (ES modules run after parsing, but before this event).
+document.addEventListener('DOMContentLoaded', initOtherworldPortal);
