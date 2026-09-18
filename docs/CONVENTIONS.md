@@ -70,6 +70,8 @@ explaining.
   at load time must only use `core/events.js`.
 - Data from the Sheet or the Apps Script goes through `core/cache.js`: show
   the cached value first, then refresh in the background.
+- Images from Xobor that are shown smaller than full screen go through
+  `imageUrl(url, size)` from `core/images.js` with the matching size constant.
 - From stage 3 on, German UI text for a feature lives in that feature's
   `texts.js`, not scattered through the logic.
 - No build step, no npm, no framework. New external libraries only after an

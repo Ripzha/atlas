@@ -72,6 +72,8 @@ erklären muss.
   Laden nutzen ausschliesslich `core/events.js`.
 - Daten aus Sheet oder Apps Script laufen über `core/cache.js`: zuerst den
   gespeicherten Wert zeigen, dann im Hintergrund auffrischen.
+- Bilder von Xobor, die kleiner als bildschirmfüllend angezeigt werden, laufen
+  über `imageUrl(url, grösse)` aus `core/images.js` mit der passenden Konstante.
 - Ab Etappe 3 liegen die deutschen Anzeige-Texte eines Features in dessen
   `texts.js`, nicht verstreut in der Logik.
 - Kein Build-Schritt, kein npm, kein Framework. Neue externe Bibliotheken

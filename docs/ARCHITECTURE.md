@@ -35,7 +35,7 @@ src/
     window-bridge.js  Functions called from inline handlers, attached to window
     config.js  Global constants (BASE, IMG, SCRIPT_URL, ADMIN_PASS)
     data/      Static data: buildings, worlds, lot coordinates, road network
-    core/      Shared state, sheet data access, data cache, events, start-up (boot.js)
+    core/      Shared state, sheet data access, data cache, events, image sizes, start-up (boot.js)
     ui/        Cross-cutting UI building blocks (tooltips, sheets, zoom …)
     features/  One folder per domain area:
       map/           continent map, world view, world search, lot helpers
@@ -111,6 +111,21 @@ Measured with the Apps Script and the sheet answering 1.5 s late (second
 visit): character tokens and "Zuletzt gesehen" appear after about 0.4 s
 instead of 4.9 s, forum activity after 0.4 s instead of 6.4 s, no loading
 screen.
+
+### Image sizes
+
+Xobor serves every uploaded image in any size; the size is part of the address
+(`.../resize/1920x1200/<file>`). `core/images.js` rewrites that part so small
+images are requested small: tokens and sidebar portraits at 96 px width, hover
+cards, tooltips and character cards at 400 px, "Andere Welten" tiles at 640 px
+(about two to three times the size on screen, for sharp high-resolution
+displays; `x9999` limits only the width and keeps the aspect ratio).
+The continent map and the world and building backgrounds stay at full size,
+because they can be zoomed.
+
+Measured on the continent map, one world and the character view: of 50 image
+requests, 48 were full size (1920×1200) before; now 2 are — the map and the
+world background.
 
 ### Why `viewport.js` must not be a module
 

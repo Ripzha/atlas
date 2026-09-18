@@ -36,7 +36,7 @@ src/
     window-bridge.js  Funktionen für Inline-Handler, an window gehängt
     config.js  Globale Konstanten (BASE, IMG, SCRIPT_URL, ADMIN_PASS)
     data/      Feste Daten: Gebäude, Welten, Grundstücks-Koordinaten, Strassennetz
-    core/      Gemeinsamer Zustand, Sheet-Zugriff, Daten-Zwischenspeicher, Ereignisse, Start (boot.js)
+    core/      Gemeinsamer Zustand, Sheet-Zugriff, Daten-Zwischenspeicher, Ereignisse, Bildgrössen, Start (boot.js)
     ui/        Übergreifende Oberflächen-Bausteine (Tooltips, Sheets, Zoom …)
     features/  Ein Ordner pro Fachbereich:
       map/           Kontinentkarte, Welt-Ansicht, Welten-Suche, Grundstücks-Hilfen
@@ -112,6 +112,22 @@ jedes Bild warten, auch auf die grosse Kontinentkarte.
 Gemessen mit 1,5 s Verzögerung bei Apps Script und Sheet (zweiter Besuch):
 Charakter-Portraits und „Zuletzt gesehen" erscheinen nach rund 0,4 s statt
 4,9 s, die Forum-Aktivität nach 0,4 s statt 6,4 s, ohne Ladebildschirm.
+
+### Bildgrössen
+
+Xobor liefert jedes hochgeladene Bild in beliebiger Grösse; die Grösse steht in
+der Adresse (`.../resize/1920x1200/<Datei>`). `core/images.js` ändert diesen
+Teil, damit kleine Bilder klein angefragt werden: Portraits auf der Karte und
+in den Seitenleisten mit 96 px Breite, Hover-Karten, Tooltips und
+Charakter-Karten mit 400 px, Kacheln „Andere Welten" mit 640 px (etwa das
+Zwei- bis Dreifache der Anzeige, damit es auf hochauflösenden Bildschirmen
+scharf bleibt; `x9999` begrenzt nur die Breite und behält das Seitenverhältnis).
+Kontinentkarte sowie Welt- und Gebäude-Hintergründe bleiben in voller Grösse,
+weil man in sie hineinzoomen kann.
+
+Gemessen auf Kontinentkarte, einer Welt und der Charakter-Ansicht: Von 50
+Bild-Anfragen waren vorher 48 in voller Grösse (1920×1200), jetzt 2 — die
+Karte und der Welt-Hintergrund.
 
 ### Warum `viewport.js` kein Modul sein darf
 
