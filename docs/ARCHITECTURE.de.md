@@ -15,7 +15,7 @@ kurz und stabil bleiben.
 | `index.html` | `/` | ATLAS — interaktive Weltkarte | in Dateien aufgeteilt (Etappe 1–2) |
 | `news.html` | `/news.html` | SimsWelt News Kiosk | modular (Etappe 2) |
 | `simstagram.html` | `/simstagram.html` | Charakter-Feed | Single-File, Aufräumen in Etappe 5 |
-| `metaverse.html` | `/metaverse.html` | Blog für Interviews & OOC | Single-File, Aufräumen in Etappe 5 |
+| `metaverse.html` | `/metaverse.html` | Blog für Interviews & OOC | aufgeteilt (Etappe 5): `src/metaverse/`, `styles/metaverse/` |
 | `character-sheet.html` | `/character-sheet.html` | Charakterbogen-Generator | Single-File, Aufräumen in Etappe 5 (hiess `rpg_char_html.html`) |
 
 Links zwischen den Seiten sind relativ (`simstagram.html`, keine volle Adresse).
@@ -51,7 +51,7 @@ src/
       events/        Event-Pille
   news/        Kiosk
   simstagram/  Feed (noch Single-File im Wurzelverzeichnis)
-  metaverse/   Blog (noch Single-File im Wurzelverzeichnis)
+  metaverse/   Blog — main.js, window-bridge.js
 
 styles/        CSS, gespiegelt zur src-Struktur
 docs/          Diese Unterlagen
