@@ -14,7 +14,9 @@ ATLAS-Funktionen, die im Xobor-Forum selbst laufen, nicht auf der ATLAS-Seite:
 Gemeinsam genutzt: `src/forum/main.js` (Einstieg), `page.js` (Forum-Seite
 auslesen), `worlds.js` (Forum-Nummer → Welt), `src/shared/backend.js`
 (Adressen von Apps Script und Sheet), `src/shared/csv.js` (CSV-Leser),
-`styles/forum/forum.css`.
+`src/shared/html.js` (Text fürs Markup entschärfen),
+`src/shared/event-pill/event-pill.js` (die Pille selbst, gemeinsam mit der
+Karte), `styles/forum/forum.css`.
 
 ## Wie sie geladen werden
 

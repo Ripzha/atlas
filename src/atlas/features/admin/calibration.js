@@ -3,12 +3,12 @@
    (world view) and copy them for src/atlas/data/. Called from inline handlers:
    toggleCalib(), copyCalib(), clearCalib(). */
 
-import { worldLots } from '../../data/world-lots.js?v=202609201139';
-import { worlds } from '../../data/worlds.js?v=202609201139';
-import { state } from '../../core/state.js?v=202609201139';
-import { getLots } from '../../core/sheet-data.js?v=202609201139';
-import { mapC } from '../map/continent-map.js?v=202609201139';
-import { worldC } from '../map/world-view.js?v=202609201139';
+import { worldLots } from '../../data/world-lots.js?v=202609201617';
+import { worlds } from '../../data/worlds.js?v=202609201617';
+import { state } from '../../core/state.js?v=202609201617';
+import { getLots } from '../../core/sheet-data.js?v=202609201617';
+import { mapC } from '../map/continent-map.js?v=202609201617';
+import { worldC } from '../map/world-view.js?v=202609201617';
 
 // While a calibration mode is on, the admin panel is hidden (body.calibrating),
 // so the whole map can be clicked. It comes back when calibration ends.

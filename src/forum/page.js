@@ -76,8 +76,6 @@ export function copyText(text){
 }
 
 // Escapes text for use inside HTML.
-export function escapeHtml(s){
-  return String(s == null ? '' : s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-}
+/* Kept here so the existing imports in src/forum/ keep working; the function
+   itself lives in src/shared/html.js, because the map needs it too. */
+export { escapeHtml } from '../shared/html.js?v=202609201617';

@@ -13,7 +13,9 @@ ATLAS features that run inside the Xobor forum itself, not in the ATLAS page:
 
 Shared: `src/forum/main.js` (entry), `page.js` (reading the forum page),
 `worlds.js` (forum id → world), `src/shared/backend.js` (Apps Script and
-sheet addresses), `src/shared/csv.js` (CSV reader), `styles/forum/forum.css`.
+sheet addresses), `src/shared/csv.js` (CSV reader), `src/shared/html.js`
+(escaping text for markup), `src/shared/event-pill/event-pill.js` (the pill
+itself, shared with the map), `styles/forum/forum.css`.
 
 ## How they are loaded
 

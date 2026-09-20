@@ -12,9 +12,9 @@
    the "new character" question again (Blaze in the forum footer). The
    functions called from the panel's inline handlers are attached to window. */
 
-import { CHARS_CSV_URL, APPS_SCRIPT_URL, callAppsScript } from '../shared/backend.js?v=202609201139';
-import { fetchCsvObjects } from '../shared/csv.js?v=202609201139';
-import { forumId, loggedInUser, escapeHtml } from './page.js?v=202609201139';
+import { CHARS_CSV_URL, APPS_SCRIPT_URL, callAppsScript } from '../shared/backend.js?v=202609201617';
+import { fetchCsvObjects } from '../shared/csv.js?v=202609201617';
+import { forumId, loggedInUser, escapeHtml } from './page.js?v=202609201617';
 
 const CHAR_FORUMS = ['51849', '51850', '51851', '51852', '52617'];
 const ARCHIVE_FORUM = '51852';
