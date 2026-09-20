@@ -1,0 +1,154 @@
+/* PROJECT ATLAS - Andere Welten: Portal und dessen Tokens
+   Aus styles/atlas/atlas.css herausgeloest (Etappe 4). Die Regeln stehen
+   untereinander in derselben Reihenfolge wie vorher, damit sich an der
+   Kaskade nichts aendert. Ladereihenfolge in index.html:
+   base, map, sidebar, chars, portal, admin, event. */
+
+/* ── CHARACTER VIEW ── */
+#otherworlds-container {position:fixed;inset:0;z-index:200;background:#050d18;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#otherworlds-container.open {display:block}
+#otherworlds-header {position:sticky;top:0;background:#050d18;z-index:10;padding:14px 20px 10px;border-bottom:0.5px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:10px}
+.otherworld-grid {display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;padding:24px}
+.otherworld-tile {background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.1);border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.2s}
+.otherworld-tile:hover {background:rgba(255,255,255,0.08);border-color:rgba(106,42,74,0.6);transform:translateY(-2px)}
+.otherworld-tile.empty {opacity:0.3;cursor:default;pointer-events:none}
+.otherworld-tile.empty:hover {transform:none}
+/* ═══ "Andere Welten"-Sterntor: Mini-Karte am Rand mit Partikel-Effekt ═══ */
+#otherworld-portal {position:absolute;
+  /* Default: rechts mittig. Verschiebbar entlang der Ränder. */
+  top:50%;right:14px;left:auto;bottom:auto;
+  transform:translateY(-50%);
+  width:88px;height:88px;
+  z-index:20;
+  cursor:grab;
+  user-select:none;
+  touch-action:none;
+  pointer-events:auto;}
+#otherworld-portal.dragging {cursor:grabbing;opacity:0.85}
+#otherworld-portal:hover .ow-portal-frame {border-color:rgba(74,170,106,0.85);
+  box-shadow:
+    0 0 18px rgba(74,170,106,0.45),
+    inset 0 0 16px rgba(74,170,106,0.25);}
+#otherworld-portal:hover .ow-portal-compass {transform:rotate(8deg)}
+.ow-portal-particles {position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:120px;height:120px;
+  pointer-events:none;
+  z-index:1;}
+.ow-portal-frame {position:absolute;
+  top:8px;left:8px;right:8px;bottom:8px;
+  border:1.5px solid rgba(74,170,106,0.5);
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(15,40,30,0.7) 0%, rgba(8,20,16,0.85) 70%, rgba(4,13,20,0.95) 100%);
+  box-shadow:
+    0 0 12px rgba(74,170,106,0.25),
+    inset 0 0 12px rgba(74,170,106,0.15);
+  display:flex;align-items:center;justify-content:center;
+  z-index:2;
+  transition:border-color 0.25s, box-shadow 0.25s;
+  overflow:hidden;}
+.ow-portal-compass {width:62px;height:62px;
+  filter:drop-shadow(0 0 4px rgba(74,170,106,0.5));
+  transition:transform 0.6s ease-out;
+  animation:compassDrift 14s ease-in-out infinite;}
+@media (max-width:600px) {
+  /* Mobile: Portal auf 50% schrumpfen */
+  #otherworld-portal {width:44px;height:44px}
+  .ow-portal-particles {width:60px;height:60px}
+  .ow-portal-frame {top:4px;left:4px;right:4px;bottom:4px;border-width:1px}
+  .ow-portal-compass {width:31px;height:31px;filter:drop-shadow(0 0 2px rgba(74,170,106,0.5))}
+}
+
+/* Tokens am Portal — am unteren Rand, gleicher Stil wie Welt-Dot-Tokens */
+.ow-portal-tokens {position:absolute;
+  left:50%;
+  bottom:-12px;
+  transform:translateX(-50%);
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:auto;
+  z-index:3;
+  height:clamp(18px,2vw,28px);}
+@media (pointer:coarse) {
+  /* Touch-Devices: Portal-Tokens nur sichtbar wenn Karte mindestens 50% reingezoomt
+     (gleiche Logik wie für Welt-Dot-Tokens — sonst kluttert es auf Mobile).
+     Portal sitzt innerhalb #map-image-area, deshalb greift der Selektor direkt. */
+  #map-image-area .ow-portal-tokens {display:none}
+  #map-image-area.tokens-on-zoom .ow-portal-tokens {display:flex}
+}
+
+/* Wenn Portal links am Rand klebt: Tokens nach rechts vom Portal versetzen */
+#otherworld-portal[data-edge="left"] .ow-portal-tokens {left:auto;right:-60%;bottom:50%;
+  transform:translateY(50%);}
+/* Wenn rechts: Tokens nach links vom Portal versetzen */
+#otherworld-portal[data-edge="right"] .ow-portal-tokens {left:-60%;right:auto;bottom:50%;
+  transform:translateY(50%);}
+/* Oben/unten: Tokens bleiben mittig unter/über dem Portal */
+#otherworld-portal[data-edge="top"] .ow-portal-tokens {top:auto;bottom:-12px;left:50%;
+  transform:translateX(-50%);}
+#otherworld-portal[data-edge="bottom"] .ow-portal-tokens {bottom:auto;top:-12px;left:50%;
+  transform:translateX(-50%);}
+/* Hover: Tokens spreizen + wachsen wie bei Welt-Dot-Tokens */
+.ow-portal-tokens:hover .ow-portal-token-wrap {margin-left:4px}
+.ow-portal-tokens .ow-portal-token-wrap:first-child {margin-left:0 !important}
+.ow-portal-tokens:hover .ow-portal-token, .ow-portal-tokens:hover img.ow-portal-token {width:clamp(24px,2.6vw,36px) !important;
+  height:clamp(24px,2.6vw,36px) !important;}
+.ow-portal-tokens:hover .ow-portal-token-ph {width:clamp(24px,2.6vw,36px) !important;
+  height:clamp(24px,2.6vw,36px) !important;
+  font-size:clamp(10px,1vw,14px) !important;}
+.ow-portal-tokens:hover .ow-portal-count {width:clamp(24px,2.6vw,36px) !important;
+  height:clamp(24px,2.6vw,36px) !important;
+  font-size:clamp(10px,1vw,14px) !important;}
+.ow-portal-token-hidden {display:none}
+.ow-portal-tokens:hover .ow-portal-token-hidden {display:block}
+.ow-portal-tokens:hover .ow-portal-count {display:none}
+.ow-portal-token-wrap {position:relative;
+  margin-left:clamp(-10px,-0.7vw,-6px);
+  transition:margin 0.2s ease;
+  pointer-events:auto;}
+.ow-portal-token-wrap:hover .ow-portal-token-name {display:block}
+.ow-portal-token-name {display:none;
+  position:absolute;
+  bottom:calc(100% + 4px);left:50%;
+  transform:translateX(-50%);
+  background:rgba(0,0,0,0.92);
+  color:#fff;
+  font-size:9px;
+  white-space:nowrap;
+  padding:2px 6px;
+  border-radius:4px;
+  pointer-events:none;
+  z-index:100;
+  border:0.5px solid rgba(255,255,255,0.15);}
+.ow-portal-token, img.ow-portal-token {display:block;
+  width:clamp(18px,2vw,28px);
+  height:clamp(18px,2vw,28px);
+  border-radius:50%;
+  object-fit:cover;
+  border:1.5px solid rgba(74,170,106,0.8);
+  box-shadow:0 1px 4px rgba(0,0,0,0.8);
+  transition:width 0.2s ease, height 0.2s ease;}
+.ow-portal-token-ph {width:clamp(18px,2vw,28px);
+  height:clamp(18px,2vw,28px);
+  border-radius:50%;
+  background:rgba(74,170,106,0.3);
+  border:1.5px solid rgba(74,170,106,0.6);
+  display:flex;align-items:center;justify-content:center;
+  font-size:clamp(8px,0.8vw,11px);
+  color:#4aaa6a;
+  box-shadow:0 1px 4px rgba(0,0,0,0.8);
+  transition:width 0.2s ease, height 0.2s ease, font-size 0.2s ease;}
+.ow-portal-count {width:clamp(18px,2vw,28px);
+  height:clamp(18px,2vw,28px);
+  border-radius:50%;
+  background:rgba(74,170,106,0.85);
+  border:1.5px solid rgba(168,212,184,0.85);
+  color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:clamp(8px,0.8vw,11px);
+  font-weight:600;
+  box-shadow:0 1px 4px rgba(0,0,0,0.8);
+  transition:width 0.2s ease, height 0.2s ease;}
+/* Tokens auf "Andere Welten"-Kacheln — rechts oben aufs Bild, nicht überm Namen */
+.otherworld-tile {position:relative}

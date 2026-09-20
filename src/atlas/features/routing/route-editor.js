@@ -6,7 +6,7 @@
    raAnalyzeNet(), raCopyExport(), raImportPrompt(), raClearAll(),
    raIgnoreWorld(). */
 
-import { worlds } from '../../data/worlds.js?v=202609201617';
+import { worlds } from '../../data/worlds.js?v=202609201740';
 
 (function(){
 

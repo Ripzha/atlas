@@ -67,7 +67,15 @@ nach `src/atlas/features/routing/`, die Charakter-Ansicht nach
 
 ## Laden in `index.html`
 
-1. `styles/atlas/atlas.css`
+1. Die sieben Stylesheets unter `styles/atlas/`, in genau dieser Reihenfolge:
+   1. `base.css`
+   2. `map.css`
+   3. `sidebar.css`
+   4. `chars.css`
+   5. `portal.css`
+   6. `admin.css`
+   7. `event.css`
+   Die Reihenfolge ist Teil der Kaskade und darf nicht getauscht werden.
 2. `src/atlas/ui/viewport.js` — **klassisches Script, kein Modul** (siehe unten)
 3. `<link rel="modulepreload">` für jedes ATLAS-Modul — der Browser holt alle
    sofort parallel, statt sie Import für Import zu entdecken. Gemessen mit

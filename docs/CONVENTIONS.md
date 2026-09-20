@@ -108,7 +108,6 @@ Not yet following these rules, converted in their stage:
 
 - Inline handlers in the markup and in generated HTML — to be replaced by
   `addEventListener` over time; until then listed in `window-bridge.js`
-- `styles/atlas/atlas.css` — German comments, mixed topics (stage 4)
 - `simstagram.html`, `metaverse.html`, `character-sheet.html` — single files
   with inline CSS/JS and German comments (stage 5)
 - `index_alt.html` — old single file, kept only as a rollback

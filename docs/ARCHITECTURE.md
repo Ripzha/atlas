@@ -65,7 +65,15 @@ A feature folder answers "where is X". Dijkstra routing goes to
 
 ## Loading in `index.html`
 
-1. `styles/atlas/atlas.css`
+1. The seven stylesheets in `styles/atlas/`, in exactly this order:
+   1. `base.css`
+   2. `map.css`
+   3. `sidebar.css`
+   4. `chars.css`
+   5. `portal.css`
+   6. `admin.css`
+   7. `event.css`
+   The order is part of the cascade and must not be changed.
 2. `src/atlas/ui/viewport.js` — **classic script, not a module** (see below)
 3. `<link rel="modulepreload">` for every ATLAS module — the browser fetches
    all of them in parallel right away instead of discovering them one

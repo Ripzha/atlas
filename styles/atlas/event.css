@@ -1,0 +1,198 @@
+/* PROJECT ATLAS - Event-Pille und Event-Panel
+   Aus styles/atlas/atlas.css herausgeloest (Etappe 4). Die Regeln stehen
+   untereinander in derselben Reihenfolge wie vorher, damit sich an der
+   Kaskade nichts aendert. Ladereihenfolge in index.html:
+   base, map, sidebar, chars, portal, admin, event. */
+
+/* ═══ ATLAS Event-Pille — Position überschreibt Forum-Defaults ═══ */
+/* Forum hatte: top:50% left:24px (vertikal zentriert im Header).
+   Atlas: top:12px left:16px — oben links auf Kontinent.
+   In Welt-Ansicht: tiefer damit Mietpreise (top:48px) + Legende-Box (top:78px, bis ~210px offen) nicht verdeckt werden. */
+#atlasEventPill {top:12px !important;
+  left:16px !important;
+  transform:none !important;
+  padding:7px 16px 7px 12px !important;
+  border-radius:100px !important;
+  z-index:50 !important;}
+#atlasEventPill .atlas-pill-icon {font-size:15px !important}
+#atlasEventPill .atlas-pill-label {font-size:8px !important;letter-spacing:1.8px !important}
+#atlasEventPill .atlas-pill-name {font-size:12px !important;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#atlasEventPill:hover {transform:scale(1.04) !important}
+#atlasEventPillHint {display:none !important}
+/* Welt-Ansicht: Pille tiefer damit Legende + Mietpreise frei bleiben */
+body:has(#world-container.active) #atlasEventPill {top:auto !important;
+  bottom:60px !important;
+  left:12px !important;}
+@media (max-width:768px) {
+  /* Mobile: Pille klein unten — Kontinent links, Welt rechts (Legend liegt links) */
+  #atlasEventPill {top:auto !important;
+    bottom:calc(110px + env(safe-area-inset-bottom)) !important;
+    left:8px !important;
+    right:auto !important;
+    transform:none !important;
+    padding:5px 12px 5px 8px !important;
+    max-width:calc(100vw - 16px) !important;
+    width:auto !important;
+    justify-content:flex-start !important;}
+  #atlasEventPill .atlas-pill-name {font-size:11px !important;max-width:55vw}
+  /* Welt-Karte: Pille rechts oben über den Lots */
+  body:has(#world-container.active) #atlasEventPill {top:auto !important;
+    bottom:calc(110px + env(safe-area-inset-bottom)) !important;
+    left:auto !important;
+    right:8px !important;
+    justify-content:flex-start !important;}
+}
+
+/* Pille NIEMALS sichtbar in Char-View / Other-Worlds / Building / Modale Views */
+body:has(#char-container.open) #atlasEventPill, body:has(#otherworlds-container.open) #atlasEventPill, body:has(#building-container[style*="display: block"]) #atlasEventPill, body:has(#building-container[style*="display:block"]) #atlasEventPill, body:has(.sheet.open) #atlasEventPill {display:none !important}
+/* ====== Event-Pille Mobile + Pillen-Position (alt: Zeile 6265-6437) ====== */
+/* === EVENT-PILLE === */
+#atlasEventPill {position: absolute;
+    top: 50%;
+    left: 24px;
+    transform: translateY(-50%);
+    background: linear-gradient(135deg, rgba(255,150,80,0.12) 0%, rgba(255,100,60,0.08) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,170,100,0.35);
+    border-radius: 100px;
+    padding: 11px 22px 11px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 0 0 rgba(255,150,80,0.4), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    animation: atlasEventPulse 3s ease-in-out infinite;
+    z-index: 10;
+    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;}
+#atlasEventPill.atlas-fixed {position: fixed; top: 120px;}
+@keyframes atlasEventPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,150,80,0.35), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1); }
+    50%      { box-shadow: 0 0 0 8px rgba(255,150,80,0), 0 8px 40px rgba(255,120,60,0.2), inset 0 1px 0 rgba(255,255,255,0.15); }
+  }
+#atlasEventPill:hover {transform: translateY(-50%) scale(1.04);}
+#atlasEventPill .atlas-pill-icon {font-size: 18px; filter: drop-shadow(0 0 8px rgba(255,150,80,0.6));}
+#atlasEventPill .atlas-pill-label {font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,200,160,0.7); font-weight: 500;}
+#atlasEventPill .atlas-pill-name {font-size: 14px; font-weight: 500; color: #fff; margin-top: 1px;}
+#atlasEventPill .atlas-pill-text {line-height: 1.2;}
+#atlasEventPillHint {position: absolute;
+    top: calc(50% + 36px);
+    left: 24px;
+    transform: none;
+    font-size: 10px;
+    color: rgba(255,180,140,0.55);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 9;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;}
+#atlasEventPillHint.atlas-fixed {position: fixed; top: calc(120px + 36px);}
+/* === PANEL === */
+#atlasEventPanel {position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) translateY(-20px);
+    width: 92%;
+    max-width: 580px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, rgba(20,16,30,0.95) 0%, rgba(15,12,22,0.98) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,170,100,0.2);
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, transform 0.4s cubic-bezier(0.34,1.56,0.64,1), visibility 0.3s;
+    z-index: 10000;
+    overflow: hidden;
+    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;}
+#atlasEventPanel .atlas-panel-head {padding: 20px 22px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); background: linear-gradient(180deg, rgba(255,150,80,0.05) 0%, transparent 100%); flex-shrink: 0;}
+#atlasEventPanel .atlas-tabs-wrap {flex-shrink: 0;}
+#atlasEventPanel.open {opacity: 1; visibility: visible; transform: translate(-50%, -50%) translateY(0);}
+#atlasEventPanel .atlas-panel-head {padding: 20px 22px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); background: linear-gradient(180deg, rgba(255,150,80,0.05) 0%, transparent 100%);}
+#atlasEventPanel .atlas-panel-head-row {display: flex; align-items: center; justify-content: space-between; gap: 12px;}
+#atlasEventPanel .atlas-panel-tag {font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,200,160,0.6); margin-bottom: 4px;}
+#atlasEventPanel .atlas-panel-title {font-size: 18px; font-weight: 500; color: #fff; display: flex; align-items: center; gap: 10px;}
+#atlasEventPanel .atlas-panel-title .atlas-icon {font-size: 20px; filter: drop-shadow(0 0 6px rgba(255,150,80,0.5));}
+#atlasEventPanel .atlas-panel-close {background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: all 0.2s;}
+#atlasEventPanel .atlas-panel-close:hover {background: rgba(255,255,255,0.12); color: #fff;}
+#atlasEventPanel .atlas-panel-desc {margin-top: 12px; font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.7); font-style: italic;}
+#atlasEventPanel .atlas-disclaimer {margin-top: 10px; font-size: 11px; color: rgba(255,180,140,0.55); letter-spacing: 0.3px;}
+#atlasEventPanel .atlas-panel-meta {margin-top: 10px; display: flex; gap: 14px; font-size: 11px; color: rgba(255,255,255,0.4);}
+#atlasEventPanel .atlas-panel-meta a {color: rgba(255,180,140,0.85); text-decoration: none;}
+#atlasEventPanel .atlas-panel-meta a:hover {color: rgba(255,200,160,1);}
+#atlasEventPanel .atlas-tabs {display: flex; flex-wrap: wrap; gap: 2px 4px; padding: 12px 16px 0; border-bottom: 1px solid rgba(255,255,255,0.06);}
+#atlasEventPanel .atlas-tab {background: transparent; border: none; color: rgba(255,255,255,0.5); padding: 8px 14px; font-size: 12px; cursor: pointer; border-radius: 6px 6px 0 0; transition: all 0.2s; white-space: nowrap; border-bottom: 2px solid transparent; margin-bottom: -1px; font-family: inherit;}
+#atlasEventPanel .atlas-tab:hover {color: rgba(255,255,255,0.8);}
+#atlasEventPanel .atlas-tab.active {color: #fff; border-bottom-color: rgba(255,170,100,0.7);}
+#atlasEventPanel .atlas-tab-content {padding: 18px 22px 16px; font-size: 13px; line-height: 1.65; color: rgba(255,255,255,0.78); flex: 1 1 auto; min-height: 0; overflow-y: auto; display: none; white-space: pre-wrap;}
+#atlasEventPanel .atlas-tab-content::-webkit-scrollbar {width: 6px;}
+#atlasEventPanel .atlas-tab-content::-webkit-scrollbar-thumb {background: rgba(255,255,255,0.1); border-radius: 3px;}
+#atlasEventPanel .atlas-tab-content.active {display: block;}
+#atlasEventPanel .atlas-panel-foot {padding: 14px 22px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between; gap: 12px; background: rgba(0,0,0,0.2);}
+#atlasEventPanel .atlas-last-post {color: rgba(255,180,140,0.85); text-decoration: none; font-size: 12px;}
+#atlasEventPanel .atlas-last-post:hover {color: rgba(255,200,160,1);}
+#atlasEventPanel .atlas-updated {font-size: 10px; color: rgba(255,255,255,0.3);}
+#atlasEventBackdrop {position: fixed; inset: 0; background: rgba(0,0,0,0.5); opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; z-index: 9999;}
+#atlasEventBackdrop.open {opacity: 1; visibility: visible;}
+/* Pille während Panel offen ausblenden — schlägt das !important im Mobile-CSS */
+#atlasEventPill.atlas-pill-hidden {visibility: hidden !important; pointer-events: none !important; opacity: 0 !important;}
+@media (max-width: 768px) {
+  /* === MOBILE (&#8804;768px) === */
+  /* Mobile: Pille absolute oben rechts — scrollt mit der Seite weg.
+         Kleiner und kompakter als auf Desktop. */
+  #atlasEventPill {position: absolute !important;
+      top: 103px !important;
+      right: 12px !important;
+      left: auto !important;
+      transform: none !important;
+      margin: 0 !important;
+      padding: 6px 12px !important;
+      animation: atlasEventPulseMobile 3s ease-in-out infinite;
+      width: auto !important;
+      min-width: 0 !important;
+      max-width: calc(100% - 24px);
+      z-index: 99998 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      visibility: visible !important;
+      opacity: 1 !important;}
+  #atlasEventPill:hover, #atlasEventPill:active {transform: scale(1.04) !important;}
+  #atlasEventPill .atlas-pill-icon {font-size: 13px !important; flex-shrink: 0; display: inline-block !important;}
+  #atlasEventPill .atlas-pill-text {display: inline-block !important; flex: 1 1 auto; min-width: 0;}
+  #atlasEventPill .atlas-pill-label {display: block !important; font-size: 10px !important; letter-spacing: 0.3px !important; text-transform: none !important; color: #fff !important; font-weight: 500 !important; white-space: nowrap;}
+  #atlasEventPill .atlas-pill-name {display: none !important;}
+  @keyframes atlasEventPulseMobile {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255,150,80,0.35), 0 4px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1); }
+      50%      { box-shadow: 0 0 0 6px rgba(255,150,80,0), 0 4px 24px rgba(255,120,60,0.2), inset 0 1px 0 rgba(255,255,255,0.15); }
+    }
+  #atlasEventPillHint {display: none !important; /* auf Mobile keinen Hinweis-Text — die Pille selbst ist sichtbar genug */}
+  /* Panel: bottom-sheet-Stil auf Mobile */
+  #atlasEventPanel {top: auto;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      max-width: 100%;
+      max-height: 85vh;
+      transform: translate(0, 100%);
+      border-radius: 16px 16px 0 0;
+      border-bottom: none;}
+  #atlasEventPanel.open {transform: translate(0, 0);}
+  #atlasEventPanel .atlas-panel-head {padding: 16px 18px 14px;}
+  #atlasEventPanel .atlas-panel-title {font-size: 16px;}
+  #atlasEventPanel .atlas-panel-desc {font-size: 12px;}
+  #atlasEventPanel .atlas-tabs {padding: 10px 12px 0;}
+  #atlasEventPanel .atlas-tab {padding: 7px 11px; font-size: 11px;}
+  #atlasEventPanel .atlas-tab-content {padding: 16px 18px 14px; font-size: 13px;}
+  #atlasEventPanel .atlas-panel-foot {padding: 12px 18px;}
+  #atlasEventPanel .atlas-last-post {font-size: 11px;}
+  #atlasEventPanel .atlas-updated {font-size: 9px;}
+}

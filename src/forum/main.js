@@ -8,16 +8,16 @@
    Each feature decides for itself whether it is needed on the current page.
    A feature that fails does not stop the others. */
 
-import { initLastSeenTracker } from './last-seen-tracker.js?v=202609201617';
-import { initCharacterEditor } from './character-editor.js?v=202609201617';
-import { initLotAssignment } from './lot-assignment.js?v=202609201617';
-import { initEventPill } from './event-pill.js?v=202609201617';
+import { initLastSeenTracker } from './last-seen-tracker.js?v=202609201740';
+import { initCharacterEditor } from './character-editor.js?v=202609201740';
+import { initLotAssignment } from './lot-assignment.js?v=202609201740';
+import { initEventPill } from './event-pill.js?v=202609201740';
 
 const FEATURES = { initLastSeenTracker, initCharacterEditor, initLotAssignment, initEventPill };
 
 const css = document.createElement('link');
 css.rel = 'stylesheet';
-css.href = new URL('../../styles/forum/forum.css?v=202609201617', import.meta.url).href;
+css.href = new URL('../../styles/forum/forum.css?v=202609201740', import.meta.url).href;
 document.head.appendChild(css);
 
 function start(){

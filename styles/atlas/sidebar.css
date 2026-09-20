@@ -1,0 +1,105 @@
+/* PROJECT ATLAS - Seitenleisten, Aktivitaet, obere und untere Navigation
+   Aus styles/atlas/atlas.css herausgeloest (Etappe 4). Die Regeln stehen
+   untereinander in derselben Reihenfolge wie vorher, damit sich an der
+   Kaskade nichts aendert. Ladereihenfolge in index.html:
+   base, map, sidebar, chars, portal, admin, event. */
+
+#topnav {display:flex;align-items:center;justify-content:space-between;padding:8px 14px;padding-right:56px;background:rgba(0,0,0,0.75);border-bottom:0.5px solid rgba(255,255,255,0.08);flex-shrink:0;z-index:100}
+#left {width:165px;flex-shrink:0;background:rgba(0,0,0,0.55);border-right:0.5px solid rgba(255,255,255,0.06);padding:12px 10px;display:flex;flex-direction:column;gap:4px;overflow-y:auto}
+#right {width:165px;flex-shrink:0;background:rgba(0,0,0,0.55);border-left:0.5px solid rgba(255,255,255,0.06);padding:12px 10px;display:flex;flex-direction:column;gap:10px;overflow-y:auto}
+#left, #right {scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.15) transparent}
+#left::-webkit-scrollbar, #right::-webkit-scrollbar {width:6px;height:6px;background:transparent}
+#left::-webkit-scrollbar-thumb, #right::-webkit-scrollbar-thumb {background:rgba(255,255,255,0.12);border-radius:3px}
+#left::-webkit-scrollbar-thumb:hover, #right::-webkit-scrollbar-thumb:hover {background:rgba(255,255,255,0.22)}
+#left::-webkit-scrollbar-track, #right::-webkit-scrollbar-track {background:transparent}
+.activity-item {padding:5px 7px;background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.07);border-radius:5px;display:flex;align-items:center;gap:7px;margin-bottom:4px;position:relative}
+/* Merged Activity Card: mehrere Chars im selben Forum-Post */
+.activity-merged .merged-icon {width:26px;height:26px;
+  flex-shrink:0;
+  border-radius:50%;
+  background:rgba(168,212,184,0.08);
+  border:1.5px solid rgba(168,212,184,0.5);
+  display:flex;align-items:center;justify-content:center;}
+.activity-preview {position:fixed;background:rgba(5,12,22,0.97);border:0.5px solid rgba(74,170,106,0.3);border-radius:8px;padding:10px 12px;z-index:200;max-width:280px;font-size:11px;line-height:1.5;color:rgba(255,255,255,0.85);box-shadow:0 6px 24px rgba(0,0,0,0.85);pointer-events:none;font-style:italic}
+.activity-preview::before {content:"";position:absolute;width:8px;height:8px;background:rgba(5,12,22,0.97);border-left:0.5px solid rgba(74,170,106,0.3);border-bottom:0.5px solid rgba(74,170,106,0.3);transform:rotate(45deg)}
+.activity-preview.right::before {left:-5px;top:50%;margin-top:-4px}
+.activity-preview.left::before {right:-5px;top:50%;margin-top:-4px;transform:rotate(225deg)}
+.activity-preview-loading {color:rgba(255,255,255,0.4);font-style:normal;font-size:10px;display:flex;align-items:center;gap:8px}
+.activity-preview-loading .mini-compass {width:14px;height:14px;flex-shrink:0;
+  position:relative;}
+.activity-preview-loading .mini-compass::before {content:"";
+  position:absolute;inset:0;
+  border-radius:50%;
+  border:0.5px solid rgba(168,212,184,0.3);}
+.activity-preview-loading .mini-compass::after {content:"";
+  position:absolute;
+  top:1px;left:50%;
+  width:1px;height:5px;
+  margin-left:-0.5px;
+  background:#a8d4b8;
+  transform-origin:0.5px 6px;
+  animation:miniCompassSpin 1.4s cubic-bezier(0.5,0.05,0.5,0.95) infinite;}
+@media (max-width:768px) {
+  .activity-preview {display:none!important}
+}
+
+.activity-dot {width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.activity-name {font-size:11px;font-weight:500}
+.activity-world {font-size:10px;color:rgba(255,255,255,0.35)}
+#mob-bar {display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(6,12,24,0.97);border-top:0.5px solid rgba(255,255,255,0.1);z-index:200;height:calc(50px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom)}
+@media (max-width:768px) {
+  #left, #right {display:none!important}
+  #mob-bar {display:flex!important}
+  /* Routenplaner-Btn (früher "Navi") tiefer damit Welt-Suche oben frei bleibt */
+  #navi-btn {top:54px!important}
+  #navi-btn .navi-label-desktop {display:none!important}
+  #navi-btn .navi-label-mobile {display:inline!important}
+  #navi-panel {top:86px!important}
+}
+
+@media (pointer:fine) {
+  #mob-bar {display:none!important}
+}
+
+#navi-btn {position:absolute;top:12px;right:12px;z-index:50;background:rgba(5,12,22,0.88);border:0.5px solid rgba(255,255,255,0.18);border-radius:7px;padding:6px 11px;font-size:11px;color:rgba(255,255,255,0.75);cursor:pointer;display:flex;align-items:center;gap:5px;backdrop-filter:blur(8px);transition:border-color 0.15s,color 0.15s}
+#navi-btn:hover {border-color:rgba(74,170,106,0.5);color:#fff}
+#navi-btn.active {border-color:rgba(74,170,106,0.6);color:#4aaa6a}
+#navi-btn .navi-icon {font-size:13px}
+#navi-btn .navi-label-mobile {display:none}
+#navi-btn .navi-label-desktop {display:inline}
+#navi-panel {position:absolute;top:44px;right:12px;z-index:49;width:230px;background:rgba(5,12,22,0.97);border:0.5px solid rgba(255,255,255,0.12);border-radius:9px;backdrop-filter:blur(12px);overflow:hidden;display:none;animation:naviIn 0.18s ease}
+#navi-panel.open {display:block}
+#navi-panel .np-head {padding:10px 13px;border-bottom:0.5px solid rgba(255,255,255,0.07);font-size:10px;letter-spacing:1.5px;color:rgba(255,255,255,0.35);text-transform:uppercase;font-weight:500}
+#navi-panel .np-body {padding:12px 13px}
+#navi-route-svg {position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:9;overflow:visible}
+@media (min-width: 769px) and (max-width: 1366px) and (pointer: coarse) {
+  /* ════════════════════════════════════════════════════════════════════════════
+     TABLET QUERFORMAT (769px - 1366px + touch)
+     ----------------------------------------------------------------------------
+     Nur Sidebars und Topnav vergrössert. Char-Grid, Karten-Pan/Zoom,
+     Welt-Container und Mobile-Layout sind explizit NICHT betroffen.
+     Hochformat-Tablets (≤768px) bekommen weiterhin das Mobile-Layout.
+     ============================================================================ */
+  /* Sidebars breiter & mehr Padding für Touch */
+  #left, #right {width: 220px;
+    padding: 16px 12px;}
+  /* Activity-Items grösser für Touch-Bedienung */
+  .activity-item {padding: 10px 10px;
+    gap: 10px;
+    margin-bottom: 6px;
+    font-size: 12px;}
+  .activity-thumb, .activity-thumb img {width: 36px;
+    height: 36px;}
+  /* Nav-Items im linken Sidebar grösser */
+  #left .nav-item {padding: 9px 10px;
+    font-size: 13px;}
+  /* Topnav-Buttons grösser */
+  #topnav {padding: 10px 18px;
+    padding-right: 60px;}
+  #topnav a, #topnav button {font-size: 13px;}
+  /* Mini-Compass beim Lade-Pillen sichtbarer */
+  .activity-preview-loading {font-size: 11px;
+    padding: 8px 4px;}
+  /* Sidebar-Headings (h3 etc.) etwas grösser */
+  #left h3, #right h3, #left h4, #right h4 {font-size: 11px;}
+}
