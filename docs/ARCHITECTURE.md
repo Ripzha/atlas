@@ -83,8 +83,8 @@ A feature folder answers "where is X". Dijkstra routing goes to
 4. Markup
 5. `<script type="module" src="src/atlas/main.js">` — the only ATLAS entry.
    Modules run after the document is parsed, before `DOMContentLoaded`.
-6. `src/atlas/features/events/event-pill.js`, loading screen markup and
-   `src/atlas/ui/loading.js` — classic scripts, self-contained.
+6. Loading screen markup and `src/atlas/ui/loading.js` — a classic script,
+   self-contained.
 
 ### How the modules fit together
 

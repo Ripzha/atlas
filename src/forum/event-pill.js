@@ -7,7 +7,7 @@
    canvas (#particleoverlay). Phones: attached to <body>; where it sits there is
    decided by styles/forum/forum.css, so nothing is set from here. */
 
-import { createEventPill } from '../shared/event-pill/event-pill.js?v=202609201740';
+import { createEventPill } from '../shared/event-pill/event-pill.js?v=202609201748';
 
 export function initEventPill(){
   createEventPill({

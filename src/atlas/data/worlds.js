@@ -6,7 +6,7 @@
    Requires BASE and IMG from src/atlas/config.js.
    Names, links and images from the Google Sheet take precedence at runtime. */
 
-import { BASE, IMG } from '../config.js?v=202609201740';
+import { BASE, IMG } from '../config.js?v=202609201748';
 
 export const worlds=[
   {name:"Innisgreen",x:58.7,y:66.5,color:"#4a8a5a",type:"Feen-Insel",url:BASE+"f59907-Innisgreen.html",img:IMG+"f51848t204p6439n2_JXoiSaHR.png"},

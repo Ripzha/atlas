@@ -78,4 +78,4 @@ export function copyText(text){
 // Escapes text for use inside HTML.
 /* Kept here so the existing imports in src/forum/ keep working; the function
    itself lives in src/shared/html.js, because the map needs it too. */
-export { escapeHtml } from '../shared/html.js?v=202609201740';
+export { escapeHtml } from '../shared/html.js?v=202609201748';

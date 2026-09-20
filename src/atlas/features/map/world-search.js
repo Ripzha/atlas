@@ -2,9 +2,9 @@
    Search box with favorites and recently visited worlds. Records recent
    worlds through the 'enter-world' event (core/events.js). */
 
-import { on } from '../../core/events.js?v=202609201740';
-import { worlds } from '../../data/worlds.js?v=202609201740';
-import { mapIA } from './continent-map.js?v=202609201740';
+import { on } from '../../core/events.js?v=202609201748';
+import { worlds } from '../../data/worlds.js?v=202609201748';
+import { mapIA } from './continent-map.js?v=202609201748';
 
 (function(){
   const searchInput=document.getElementById('world-search-input');

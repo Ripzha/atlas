@@ -84,8 +84,8 @@ nach `src/atlas/features/routing/`, die Charakter-Ansicht nach
 4. Markup
 5. `<script type="module" src="src/atlas/main.js">` — der einzige ATLAS-Einstieg.
    Module laufen nach dem Einlesen des Dokuments, vor `DOMContentLoaded`.
-6. `src/atlas/features/events/event-pill.js`, Loading-Screen-Markup und
-   `src/atlas/ui/loading.js` — klassische Scripts, in sich geschlossen.
+6. Loading-Screen-Markup und `src/atlas/ui/loading.js` — klassisches Script,
+   in sich geschlossen.
 
 ### Wie die Module zusammenspielen
 
@@ -191,7 +191,9 @@ unberührt:
 - Last-Seen-Tracker
 - Lot-Zuweisungs-Werkzeug
 - Charakter-Editor
-- Event-Pille (Forum-Fassung — wird später mit der ATLAS-Fassung zusammengeführt)
+- Event-Pille — beide Seiten nutzen denselben Baustein `src/shared/event-pill/`;
+  `src/forum/event-pill.js` und `src/atlas/features/events/event-pill.js`
+  enthalten nur noch die jeweiligen Einstellungen
 - Eve- und Delsyn-Begleiter (Forum-Kopfzeile)
 
 ---
