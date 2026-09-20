@@ -18,10 +18,11 @@
    so the curated unit and anchor rows in the sheet stay untouched. The functions called from the popup's inline
    handlers are attached to window (window._alot…). */
 
-import { LOTS_CSV_URL, callAppsScript } from '../shared/backend.js?v=202609182324';
-import { fetchCsvObjects } from '../shared/csv.js?v=202609182324';
-import { worldFromUrl, OUTER_WORLDS_FORUM } from './worlds.js?v=202609182324';
-import { forumId, threadId, postNumbersOnPage, hasFreshPostTime, firstPostImages, cleanPageUrl, escapeHtml } from './page.js?v=202609182324';
+import { LOTS_CSV_URL, callAppsScript } from '../shared/backend.js?v=202609201139';
+import { fetchCsvObjects } from '../shared/csv.js?v=202609201139';
+import { worldFromUrl, OUTER_WORLDS_FORUM } from './worlds.js?v=202609201139';
+import { forumId, threadId, postNumbersOnPage, hasFreshPostTime, firstPostImages, cleanPageUrl, escapeHtml } from './page.js?v=202609201139';
+import { worldLots } from '../atlas/data/world-lots.js?v=202609201139';
 
 const EDIT_FLAG_MAX_AGE = 5 * 60 * 1000;
 const FRESH_THREAD = /vor einer Minute|gerade eben|vor \d+ Minuten/i;
@@ -252,7 +253,7 @@ function buildAssignPopup(world, lots, title, postUrl, worldImage){
     ${header('Grundstück zuweisen', '&#128205; ' + escapeHtml(world), true)}
     ${FEATURE_BADGE}
     <div class="alot-intro">Neuer Thread: <strong>${escapeHtml(title || 'Unbekannt')}</strong></div>
-    ${img ? `<img class="alot-world-img" src="${escapeHtml(img)}" alt="${escapeHtml(world)}">` : ''}
+    ${img ? `<div class="alot-map alot-minimize-hide" id="alot-map"><img class="alot-world-img" src="${escapeHtml(img)}" alt="${escapeHtml(world)}"></div>` : ''}
     <div id="alot-content" class="alot-minimize-hide"></div>
     <button type="button" class="alot-save alot-minimize-hide" id="alot-save" disabled>Zuweisen</button>
     <div id="alot-msg" class="alot-minimize-hide"></div>`);
@@ -265,10 +266,55 @@ function buildAssignPopup(world, lots, title, postUrl, worldImage){
   };
   document.getElementById('alot-save').onclick = () => save(world, postUrl, title, lots);
   exposeHandlers(lots);
-  renderDotChoice(lots);
+  renderDotChoice(lots, world);
 }
 
-function renderDotChoice(lots){
+// Coordinates of a dot group, from the hard-coded lot data. The coordinates
+// carry either a plain lot number ("Nr. 4") or a name ("Strassen",
+// "Alto-Apartments"). The sheet side may be a bare group ("4"), a full lot
+// number ("Nr. 4") or a row of that dot ("Nr. 4#", "Nr. 4A", "Nr. 4BZZ"): tried
+// as written first, then reduced to its leading number. "Nr. " is ignored on
+// both sides, as ATLAS does.
+const bareNr = n => String(n == null ? '' : n).replace(/^Nr\.\s*/, '').trim();
+const baseNr = n => { const m = bareNr(n).match(/^\d+/); return m ? m[0] : bareNr(n); };
+
+function dotCoords(world, group, nr){
+  const bare = bareNr, base = baseNr;
+  const list = (worldLots[world] || []).filter(l => typeof l.x === 'number' && typeof l.y === 'number');
+  for(const key of [bare(group), base(group), base(nr)]){
+    if(!key) continue;
+    const hit = list.find(l => bare(l.nr) === key);
+    if(hit) return hit;
+  }
+  return null;
+}
+
+// Numbered dots on the world picture, one per button below. A dot is drawn only
+// where calibrated coordinates exist; the buttons stay the complete list.
+function renderDotMap(world, groups){
+  const map = document.getElementById('alot-map');
+  if(!map) return;
+  map.querySelectorAll('.alot-dot').forEach(d => d.remove());
+  [...groups.keys()].forEach(g => {
+    const pos = dotCoords(world, g, groups.get(g)[0].nr);
+    if(!pos) return;
+    const occupied = groups.get(g).some(l => l.threadUrl);
+    const nr = groups.get(g)[0].nr;
+    const name = (groups.get(g).find(l => l.name) || {}).name || '';
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.className = 'alot-dot' + (occupied ? ' occupied' : '');
+    dot.dataset.group = g;
+    dot.style.left = pos.x + '%';
+    dot.style.top = pos.y + '%';
+    dot.textContent = baseNr(g);   // "Nr. 6#" -> "6", "Strassen" stays
+    dot.title = name || String(nr);
+    dot.onclick = () => window._alotPickNr(nr, g);
+    map.appendChild(dot);
+  });
+}
+
+function renderDotChoice(lots, world){
   state = { nr: null, dotGroup: null, dotLots: [], existing: null, isComplex: null, isNewOnDot: null };
   document.getElementById('alot-save').disabled = true;
   // Map keeps the sheet order (a plain object would sort number-like keys first)
@@ -284,6 +330,7 @@ function renderDotChoice(lots){
     + '<div class="alot-label">Dot-Nummer wählen:</div>'
     + '<div class="alot-grid">' + buttons + '</div>'
     + '<div id="alot-step2"></div>';
+  renderDotMap(world, groups);
 }
 
 // A JS string literal safe for an inline onclick attribute
@@ -297,6 +344,7 @@ function exposeHandlers(allLots){
 
   window._alotPickNr = function(nr, group){
     document.querySelectorAll('.alot-btn').forEach(b => b.classList.toggle('selected', b.dataset.group === group));
+    document.querySelectorAll('.alot-dot').forEach(d => d.classList.toggle('selected', d.dataset.group === group));
     state.nr = nr;
     state.dotGroup = group;
     const grpLots = allLots.filter(l => (l.dotGroup || l.nr) === group);
