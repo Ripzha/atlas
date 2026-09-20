@@ -15,7 +15,7 @@ Entry pages live in the root on purpose, so forum links stay short and stable.
 | `news.html` | `/news.html` | SimsWelt News kiosk | modular (stage 2) |
 | `simstagram.html` | `/simstagram.html` | Character feed | split up (stage 5): `src/simstagram/`, `styles/simstagram/` |
 | `metaverse.html` | `/metaverse.html` | Blog for interviews & OOC | split up (stage 5): `src/metaverse/`, `styles/metaverse/` |
-| `character-sheet.html` | `/character-sheet.html` | Character sheet generator | single file, cleanup in stage 5 (was `rpg_char_html.html`) |
+| `character-sheet.html` | `/character-sheet.html` | Character sheet generator | split up (stage 5): `src/character-sheet/`, `styles/character-sheet/` (was `rpg_char_html.html`) |
 
 Links between the pages are relative (`simstagram.html`, not a full URL), so
 they keep working wherever the repo is served from.
@@ -51,6 +51,7 @@ src/
   news/        Kiosk
   simstagram/  Feed — main.js, window-bridge.js
   metaverse/   Blog — main.js, window-bridge.js
+  character-sheet/  Character sheet — main.js
 
 styles/        CSS, mirrors the src/ layout
 docs/          This documentation
@@ -165,7 +166,7 @@ They only exist in browsers where the former lot editor was used.
 
 Things that break silently if they are changed on one side only:
 
-- **Character sheet → data files.** `character-sheet.html` fetches
+- **Character sheet → data files.** `src/character-sheet/main.js` fetches
   `src/atlas/data/buildings.js` and `src/atlas/data/world-lots.js` as text and
   finds `BUILDINGS` and `worldLots` by pattern (keyword `const`, name, equals
   sign, opening brace). That pattern must not appear anywhere else in those

@@ -7,12 +7,12 @@
    ("vor einer Minute"), not after editing and not for a freshly created thread
    (the first post of a thread is the lot description, not an RPG post). */
 
-import { CHARS_CSV_URL, callAppsScript } from '../shared/backend.js?v=202609201833';
-import { fetchCsvObjects } from '../shared/csv.js?v=202609201833';
-import { worldFromUrl } from './worlds.js?v=202609201833';
+import { CHARS_CSV_URL, callAppsScript } from '../shared/backend.js?v=202609201852';
+import { fetchCsvObjects } from '../shared/csv.js?v=202609201852';
+import { worldFromUrl } from './worlds.js?v=202609201852';
 import {
   threadId, loggedInUser, postNumbersOnPage, hasFreshPostTime, cleanPageUrl, copyText, escapeHtml,
-} from './page.js?v=202609201833';
+} from './page.js?v=202609201852';
 
 const EDIT_FLAG_MAX_AGE = 5 * 60 * 1000;   // an edit counts as "just edited" for 5 minutes
 const TRACKED_MAX_AGE  = 10 * 60 * 1000;   // a tracked post is not asked for again for 10 minutes

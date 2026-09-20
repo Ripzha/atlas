@@ -16,7 +16,7 @@ kurz und stabil bleiben.
 | `news.html` | `/news.html` | SimsWelt News Kiosk | modular (Etappe 2) |
 | `simstagram.html` | `/simstagram.html` | Charakter-Feed | aufgeteilt (Etappe 5): `src/simstagram/`, `styles/simstagram/` |
 | `metaverse.html` | `/metaverse.html` | Blog für Interviews & OOC | aufgeteilt (Etappe 5): `src/metaverse/`, `styles/metaverse/` |
-| `character-sheet.html` | `/character-sheet.html` | Charakterbogen-Generator | Single-File, Aufräumen in Etappe 5 (hiess `rpg_char_html.html`) |
+| `character-sheet.html` | `/character-sheet.html` | Charakterbogen-Generator | aufgeteilt (Etappe 5): `src/character-sheet/`, `styles/character-sheet/` (hiess früher `rpg_char_html.html`) |
 
 Links zwischen den Seiten sind relativ (`simstagram.html`, keine volle Adresse).
 Sie funktionieren dadurch unabhängig davon, unter welcher Adresse das Repo läuft.
@@ -52,6 +52,7 @@ src/
   news/        Kiosk
   simstagram/  Feed — main.js, window-bridge.js
   metaverse/   Blog — main.js, window-bridge.js
+  character-sheet/  Charakterbogen — main.js
 
 styles/        CSS, gespiegelt zur src-Struktur
 docs/          Diese Unterlagen
@@ -168,7 +169,7 @@ Grundstücks-Editor benutzt wurde.
 
 Stellen, die lautlos brechen, wenn nur eine Seite geändert wird:
 
-- **Charakterbogen → Daten-Dateien.** `character-sheet.html` lädt
+- **Charakterbogen → Daten-Dateien.** `src/character-sheet/main.js` lädt
   `src/atlas/data/buildings.js` und `src/atlas/data/world-lots.js` als Text und
   findet `BUILDINGS` und `worldLots` über ein Suchmuster (Schlüsselwort `const`,
   Name, Gleichheitszeichen, öffnende Klammer). Dieses Muster darf sonst nirgends
