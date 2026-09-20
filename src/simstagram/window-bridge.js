@@ -6,6 +6,7 @@
    addEventListener ersetzt, faellt sein Eintrag hier weg. */
 
 import {
+  autoH,
   cancelPopupWait,
   closeCompose,
   closePM,
@@ -18,9 +19,10 @@ import {
   openLikePopup,
   openPost,
   refreshCmts,
-} from './main.js?v=202609201830';
+} from './main.js?v=202609201833';
 
 Object.assign(window, {
+  autoH,
   cancelPopupWait,
   closeCompose,
   closePM,

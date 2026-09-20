@@ -4,24 +4,24 @@
    last view, prioritizes images of the entry view, and pauses periodic updates
    while the tab is hidden. Imported last by main.js. */
 
-import { IMG_CARD, imageUrl } from './images.js?v=202609201830';
-import { on } from './events.js?v=202609201830';
-import { readCache } from './cache.js?v=202609201830';
-import { otherworlds, worlds } from '../data/worlds.js?v=202609201830';
-import { worldLots } from '../data/world-lots.js?v=202609201830';
-import { fetchSheetLots, sheetWorldMeta } from './sheet-data.js?v=202609201830';
-import { repositionTooltips } from '../ui/tooltips.js?v=202609201830';
+import { IMG_CARD, imageUrl } from './images.js?v=202609201833';
+import { on } from './events.js?v=202609201833';
+import { readCache } from './cache.js?v=202609201833';
+import { otherworlds, worlds } from '../data/worlds.js?v=202609201833';
+import { worldLots } from '../data/world-lots.js?v=202609201833';
+import { fetchSheetLots, sheetWorldMeta } from './sheet-data.js?v=202609201833';
+import { repositionTooltips } from '../ui/tooltips.js?v=202609201833';
 import {
   updateSidebarForum,
   updateSidebarStats,
-} from '../features/activity/sidebar-feeds.js?v=202609201830';
-import { openOtherWorld } from '../features/otherworlds/otherworld-view.js?v=202609201830';
-import { enterBuilding } from '../features/buildings/building-view.js?v=202609201830';
+} from '../features/activity/sidebar-feeds.js?v=202609201833';
+import { openOtherWorld } from '../features/otherworlds/otherworld-view.js?v=202609201833';
+import { enterBuilding } from '../features/buildings/building-view.js?v=202609201833';
 import {
   fetchCharsFromScript,
   openCharView,
-} from '../features/characters/character-view.js?v=202609201830';
-import { enterWorld } from '../features/map/world-view.js?v=202609201830';
+} from '../features/characters/character-view.js?v=202609201833';
+import { enterWorld } from '../features/map/world-view.js?v=202609201833';
 
 // Detection runs BEFORE load so other functions can read it
 var ENTRY_MODE = (function(){

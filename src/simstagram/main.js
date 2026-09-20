@@ -470,6 +470,12 @@ export function closeCompose() {
   document.body.style.overflow = '';
 }
 
+/* Laesst das Kommentar-Eingabefeld mit dem Text mitwachsen. Wird von
+   oninput="autoH(this)" im Markup und nach dem Abschicken aufgerufen. Die
+   Funktion fehlte hier seit jeher — beide Aufrufe liefen in einen Fehler und
+   das Feld blieb einzeilig. Gleiche Fassung wie in src/metaverse/main.js. */
+export function autoH(el){ if(!el) return; el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
+
 function onFileSelect(e) {} // legacy stub — compose modal no longer has file upload
 function onDrop(e) { e.preventDefault(); }
 function previewImg(file) {} // legacy stub
