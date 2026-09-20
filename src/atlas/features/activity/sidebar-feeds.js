@@ -3,11 +3,11 @@
    activity outside the RPG worlds. Data comes from the Apps Script
    (SCRIPT_URL); the last known data is shown immediately from the cache. */
 
-import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609201813';
-import { readCache, writeCache } from '../../core/cache.js?v=202609201813';
-import { SCRIPT_URL } from '../../config.js?v=202609201813';
-import { syncMobileActivitySheet } from '../../ui/mobile-sheets.js?v=202609201813';
-import { CHARS } from '../characters/character-view.js?v=202609201813';
+import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609201830';
+import { readCache, writeCache } from '../../core/cache.js?v=202609201830';
+import { SCRIPT_URL } from '../../config.js?v=202609201830';
+import { syncMobileActivitySheet } from '../../ui/mobile-sheets.js?v=202609201830';
+import { CHARS } from '../characters/character-view.js?v=202609201830';
 
 let statsShown=false;
 

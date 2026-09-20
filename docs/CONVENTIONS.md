@@ -108,6 +108,6 @@ Not yet following these rules, converted in their stage:
 
 - Inline handlers in the markup and in generated HTML — to be replaced by
   `addEventListener` over time; until then listed in `window-bridge.js`
-- `simstagram.html`, `character-sheet.html` — single files with inline CSS/JS
-  and German comments (stage 5; `metaverse.html` is already split up)
+- `character-sheet.html` — single file with inline CSS/JS and German comments
+  (stage 5; `metaverse.html` and `simstagram.html` are already split up)
 - `index_alt.html` — old single file, kept only as a rollback

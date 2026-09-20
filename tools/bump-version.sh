@@ -21,7 +21,7 @@
 set -e
 cd "$(dirname "$0")/.."
 
-FILES="index.html news.html metaverse.html character-sheet.html $(find src -name '*.js' | sort)"
+FILES="index.html news.html metaverse.html simstagram.html character-sheet.html $(find src -name '*.js' | sort)"
 NEW=$(date +%Y%m%d%H%M)
 
 for f in $FILES; do

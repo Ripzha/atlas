@@ -14,7 +14,7 @@ kurz und stabil bleiben.
 |---|---|---|---|
 | `index.html` | `/` | ATLAS — interaktive Weltkarte | in Dateien aufgeteilt (Etappe 1–2) |
 | `news.html` | `/news.html` | SimsWelt News Kiosk | modular (Etappe 2) |
-| `simstagram.html` | `/simstagram.html` | Charakter-Feed | Single-File, Aufräumen in Etappe 5 |
+| `simstagram.html` | `/simstagram.html` | Charakter-Feed | aufgeteilt (Etappe 5): `src/simstagram/`, `styles/simstagram/` |
 | `metaverse.html` | `/metaverse.html` | Blog für Interviews & OOC | aufgeteilt (Etappe 5): `src/metaverse/`, `styles/metaverse/` |
 | `character-sheet.html` | `/character-sheet.html` | Charakterbogen-Generator | Single-File, Aufräumen in Etappe 5 (hiess `rpg_char_html.html`) |
 
@@ -50,7 +50,7 @@ src/
       forum-bridge/  Nachrichten von/zur Forum-Kopfzeile
       events/        Event-Pille
   news/        Kiosk
-  simstagram/  Feed (noch Single-File im Wurzelverzeichnis)
+  simstagram/  Feed — main.js, window-bridge.js
   metaverse/   Blog — main.js, window-bridge.js
 
 styles/        CSS, gespiegelt zur src-Struktur

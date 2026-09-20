@@ -1,38 +1,36 @@
-/* PROJECT ATLAS - Metaverse: Bruecke zu window.
-   Inline-Handler im Markup und im erzeugten HTML (onclick="showHome()") laufen
+/* PROJECT ATLAS - Simstagram: Bruecke zu window.
+   Inline-Handler im Markup und im erzeugten HTML (onclick="openPost()") laufen
    im globalen Gueltigkeitsbereich und sehen die Funktionen eines Moduls nicht.
    Die Funktionen, die sie brauchen, haengen hier an window — an einer Stelle,
    damit die Liste leicht zu pruefen ist. Wird ein Inline-Handler durch
    addEventListener ersetzt, faellt sein Eintrag hier weg. */
 
 import {
-  autoH,
   cancelPopupWait,
+  closeCompose,
   closePM,
+  goPage,
+  goToForumPost,
+  jumpTo,
   loadFeed,
   openCommentPopup,
-  openNewPost,
+  openCompose,
+  openLikePopup,
   openPost,
   refreshCmts,
-  showHome,
-  showSeries,
-  slideNav,
-  toggleInfo,
-  toggleZoom,
 } from './main.js?v=202609201830';
 
 Object.assign(window, {
-  autoH,
   cancelPopupWait,
+  closeCompose,
   closePM,
+  goPage,
+  goToForumPost,
+  jumpTo,
   loadFeed,
   openCommentPopup,
-  openNewPost,
+  openCompose,
+  openLikePopup,
   openPost,
   refreshCmts,
-  showHome,
-  showSeries,
-  slideNav,
-  toggleInfo,
-  toggleZoom,
 });

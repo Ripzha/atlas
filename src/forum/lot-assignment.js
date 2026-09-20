@@ -18,11 +18,11 @@
    so the curated unit and anchor rows in the sheet stay untouched. The functions called from the popup's inline
    handlers are attached to window (window._alot…). */
 
-import { LOTS_CSV_URL, callAppsScript } from '../shared/backend.js?v=202609201813';
-import { fetchCsvObjects } from '../shared/csv.js?v=202609201813';
-import { worldFromUrl, OUTER_WORLDS_FORUM } from './worlds.js?v=202609201813';
-import { forumId, threadId, postNumbersOnPage, hasFreshPostTime, firstPostImages, cleanPageUrl, escapeHtml } from './page.js?v=202609201813';
-import { worldLots } from '../atlas/data/world-lots.js?v=202609201813';
+import { LOTS_CSV_URL, callAppsScript } from '../shared/backend.js?v=202609201830';
+import { fetchCsvObjects } from '../shared/csv.js?v=202609201830';
+import { worldFromUrl, OUTER_WORLDS_FORUM } from './worlds.js?v=202609201830';
+import { forumId, threadId, postNumbersOnPage, hasFreshPostTime, firstPostImages, cleanPageUrl, escapeHtml } from './page.js?v=202609201830';
+import { worldLots } from '../atlas/data/world-lots.js?v=202609201830';
 
 const EDIT_FLAG_MAX_AGE = 5 * 60 * 1000;
 const FRESH_THREAD = /vor einer Minute|gerade eben|vor \d+ Minuten/i;

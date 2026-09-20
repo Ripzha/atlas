@@ -13,7 +13,7 @@ Entry pages live in the root on purpose, so forum links stay short and stable.
 |---|---|---|---|
 | `index.html` | `/` | ATLAS — interactive world map | split into files (stages 1–2) |
 | `news.html` | `/news.html` | SimsWelt News kiosk | modular (stage 2) |
-| `simstagram.html` | `/simstagram.html` | Character feed | single file, cleanup in stage 5 |
+| `simstagram.html` | `/simstagram.html` | Character feed | split up (stage 5): `src/simstagram/`, `styles/simstagram/` |
 | `metaverse.html` | `/metaverse.html` | Blog for interviews & OOC | split up (stage 5): `src/metaverse/`, `styles/metaverse/` |
 | `character-sheet.html` | `/character-sheet.html` | Character sheet generator | single file, cleanup in stage 5 (was `rpg_char_html.html`) |
 
@@ -49,7 +49,7 @@ src/
       forum-bridge/  messages from/to the forum header
       events/        event pill
   news/        Kiosk
-  simstagram/  Feed (still a single file in the root)
+  simstagram/  Feed — main.js, window-bridge.js
   metaverse/   Blog — main.js, window-bridge.js
 
 styles/        CSS, mirrors the src/ layout
