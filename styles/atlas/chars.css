@@ -42,6 +42,7 @@
 #char-container {position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;background:#050d18;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;overscroll-behavior:contain}
 #char-container.open {display:block}
 #char-header {position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:0.5px solid rgba(255,255,255,0.08);flex-wrap:wrap;background:#050d18}
+#char-header .view-back {align-self:flex-start}
 #char-tabs {display:flex;gap:4px;flex-shrink:0}
 .char-tab {background:transparent;border:0.5px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.4);border-radius:6px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s}
 .char-tab.active {background:rgba(100,180,120,0.15);border-color:#4aaa6a;color:#4aaa6a}
@@ -61,7 +62,6 @@
 #char-sort-btn {background:transparent;border:0.5px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.4);border-radius:6px;padding:5px 9px;cursor:pointer;font-size:11px;font-weight:600;flex-shrink:0}
 #char-sort-btn.active {border-color:#4aaa6a;color:#4aaa6a}
 #char-reload {background:transparent;border:0.5px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.4);border-radius:6px;padding:5px 9px;cursor:pointer;font-size:13px;flex-shrink:0}
-#char-close {background:transparent;border:none;color:rgba(255,255,255,0.35);font-size:18px;cursor:pointer;padding:2px 6px;flex-shrink:0}
 #char-grid {padding:10px;display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;align-content:start}
 .char-card {background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.08);border-radius:8px;overflow:hidden;cursor:pointer;transition:all 0.2s;position:relative}
 #char-grid.az-mode {display:block}
@@ -81,7 +81,7 @@
 #char-hover-card.visible {opacity:1;pointer-events:auto}
 @media (max-width:768px) {
   #char-grid {grid-template-columns:repeat(3,1fr);gap:6px;padding:8px;padding-bottom:calc(60px + env(safe-area-inset-bottom))}
-  #char-header {padding:8px 10px;gap:6px}
+  #char-header {padding:10px 14px;gap:6px}
   #char-create-btn {width:100%;text-align:center;margin-top:4px;justify-content:center}
   #char-tabs .char-tab {font-size:10px;padding:4px 8px}
   #char-filter-bar {max-width:100%;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none}

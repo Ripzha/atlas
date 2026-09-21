@@ -7,7 +7,7 @@
 /* ── CHARACTER VIEW ── */
 #otherworlds-container {position:fixed;inset:0;z-index:200;background:#050d18;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch}
 #otherworlds-container.open {display:block}
-#otherworlds-header {position:sticky;top:0;background:#050d18;z-index:10;padding:14px 20px 10px;border-bottom:0.5px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:10px}
+#otherworlds-header {position:sticky;top:0;background:#050d18;z-index:10;padding:10px 14px;border-bottom:0.5px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:10px}
 .otherworld-grid {display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;padding:24px}
 .otherworld-tile {background:rgba(255,255,255,0.04);border:0.5px solid rgba(255,255,255,0.1);border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.2s}
 .otherworld-tile:hover {background:rgba(255,255,255,0.08);border-color:rgba(106,42,74,0.6);transform:translateY(-2px)}

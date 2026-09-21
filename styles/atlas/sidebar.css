@@ -115,6 +115,7 @@
   #left .nav-item {padding: 9px 10px;
     font-size: 13px;}
   /* Topnav-Buttons grösser */
+  #char-header, #otherworlds-header {padding-left:18px;padding-right:18px}
   #topnav {padding: 10px 18px;
     padding-right: 60px;}
   #topnav a, #topnav button {font-size: 13px;}
