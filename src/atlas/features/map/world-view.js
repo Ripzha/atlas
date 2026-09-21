@@ -5,29 +5,29 @@
    Other files can react to entering a world via on('enter-world', fn) from
    core/events.js (the world search uses it for "Zuletzt besucht"). */
 
-import { IMG_CARD, imageUrl } from '../../core/images.js?v=202609211444';
-import { emit, on } from '../../core/events.js?v=202609211444';
-import { worldLots } from '../../data/world-lots.js?v=202609211444';
-import { customLots, state } from '../../core/state.js?v=202609211444';
+import { IMG_CARD, imageUrl } from '../../core/images.js?v=202609211447';
+import { emit, on } from '../../core/events.js?v=202609211447';
+import { worldLots } from '../../data/world-lots.js?v=202609211447';
+import { customLots, state } from '../../core/state.js?v=202609211447';
 import {
   fetchSheetLots,
   getLots,
   sheetLots,
   sheetLotsLoaded,
   sheetWorldMeta,
-} from '../../core/sheet-data.js?v=202609211444';
-import { repositionTooltips } from '../../ui/tooltips.js?v=202609211444';
-import { showMobileDotBar } from '../../ui/mobile-dot-bar.js?v=202609211444';
-import { updateAllTokens } from '../characters/tokens.js?v=202609211444';
-import { enterBuilding, exitBuilding } from '../buildings/building-view.js?v=202609211444';
+} from '../../core/sheet-data.js?v=202609211447';
+import { repositionTooltips } from '../../ui/tooltips.js?v=202609211447';
+import { showMobileDotBar } from '../../ui/mobile-dot-bar.js?v=202609211447';
+import { updateAllTokens } from '../characters/tokens.js?v=202609211447';
+import { enterBuilding, exitBuilding } from '../buildings/building-view.js?v=202609211447';
 import {
   calibWorldLots,
   updateCalibLog,
   updateCalibrating,
-} from '../admin/calibration.js?v=202609211444';
-import { renderAdminContent } from '../admin/admin-panel.js?v=202609211444';
-import { getBuildingNrRange, groupLots, parseLotLabel } from './lot-helpers.js?v=202609211444';
-import { mapC, mapIA } from './continent-map.js?v=202609211444';
+} from '../admin/calibration.js?v=202609211447';
+import { renderAdminContent } from '../admin/admin-panel.js?v=202609211447';
+import { getBuildingNrRange, groupLots, parseLotLabel } from './lot-helpers.js?v=202609211447';
+import { mapC, mapIA } from './continent-map.js?v=202609211447';
 
 /* "Neuer Ort": opens the empty new-topic form in the forum for exactly this
    world. The forum id is part of the world's forum address
