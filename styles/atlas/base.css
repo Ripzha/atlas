@@ -178,8 +178,11 @@ html {overscroll-behavior:none}
   #btn-login, #btn-register, #btn-forum {display:none}
 }
 
+/* The bottom bar's sheets work with a mouse as well (see sidebar.css). The dot
+   bar is part of the tap-to-preview pattern, which only exists on touch: with a
+   mouse a click opens the lot directly. */
 @media (pointer:fine) {
-  .sheet-overlay, .sheet, #mobile-dot-bar {display:none!important}
+  #mobile-dot-bar {display:none!important}
 }
 
 @media (pointer:coarse) {

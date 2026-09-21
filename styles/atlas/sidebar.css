@@ -77,9 +77,11 @@
   #navi-panel {top:86px!important}
 }
 
-@media (pointer:fine) {
-  #mob-bar {display:none!important}
-}
+/* The switch to the phone layout depends only on the width (max-width:768px
+   above), never on the pointer: a narrow desktop window hides the sidebars and
+   must therefore show the bottom bar. A rule here used to hide the bottom bar
+   for every mouse device, which left narrow desktop windows without any
+   navigation. */
 
 #navi-btn {position:absolute;top:12px;right:12px;z-index:50;background:rgba(5,12,22,0.88);border:0.5px solid rgba(255,255,255,0.18);border-radius:7px;padding:6px 11px;font-size:11px;color:rgba(255,255,255,0.75);cursor:pointer;display:flex;align-items:center;gap:5px;backdrop-filter:blur(8px);transition:border-color 0.15s,color 0.15s}
 #navi-btn:hover {border-color:rgba(74,170,106,0.5);color:#fff}
