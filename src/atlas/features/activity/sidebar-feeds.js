@@ -3,11 +3,11 @@
    activity outside the RPG worlds. Data comes from the Apps Script
    (SCRIPT_URL); the last known data is shown immediately from the cache. */
 
-import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609211430';
-import { readCache, writeCache } from '../../core/cache.js?v=202609211430';
-import { SCRIPT_URL } from '../../config.js?v=202609211430';
-import { syncMobileActivitySheet } from '../../ui/mobile-sheets.js?v=202609211430';
-import { CHARS } from '../characters/character-view.js?v=202609211430';
+import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609211444';
+import { readCache, writeCache } from '../../core/cache.js?v=202609211444';
+import { SCRIPT_URL } from '../../config.js?v=202609211444';
+import { syncMobileActivitySheet } from '../../ui/mobile-sheets.js?v=202609211444';
+import { CHARS } from '../characters/character-view.js?v=202609211444';
 
 /* "Neue Charaktere" always shows two entries. "Im Forum" draws up to twelve;
    how many of them are visible is decided by sidebar-fit.js, depending on the
@@ -142,17 +142,21 @@ function renderForumEvents(el, events){
   }
   /* Which group an entry belongs to. Shown as a readable label and a coloured
      edge on the card, so the kind is clear at a glance — before, only a tiny
-     emoji on the avatar told them apart. Simstagram posts are blog entries
-     whose link the Apps Script rewrote to simstagram.html. */
+     emoji on the avatar told them apart. For blog entries the Apps Script sends
+     cat ('simstagram' or 'metaverse'), found via the blog categories c1386 and
+     c1375. Older Apps Script versions send no cat: then Simstagram is still
+     recognised by its rewritten link, and the rest falls under "Blog". */
   function feedGroup(ev){
     var t = ev.type;
-    if((t==='blog_entry'||t==='blog_comment') && /simstagram\.html/.test(ev.url||'')) return 'simstagram';
+    var isBlog = (t==='blog_entry'||t==='blog_comment');
+    if(ev.cat==='simstagram' || (isBlog && /simstagram\.html/.test(ev.url||''))) return 'simstagram';
+    if(ev.cat==='metaverse') return 'metaverse';
     if(t==='forum_topic'||t==='forum_message') return 'forum';
     if(t==='gallery_picture') return 'gallery';
-    if(t==='blog_entry'||t==='blog_comment') return 'blog';
+    if(isBlog) return 'blog';
     return 'community';   // new member, guestbook, "gefällt das"
   }
-  var GROUP_LABEL = {simstagram:'Simstagram', forum:'Forum', gallery:'Galerie', blog:'Blog', community:'Community'};
+  var GROUP_LABEL = {simstagram:'Simstagram', metaverse:'Metaverse', forum:'Forum', gallery:'Galerie', blog:'Blog', community:'Community'};
   el.innerHTML=events.slice(0,FORUM_MAX).map(function(ev){
     var title=(ev.title||'');
     var titleShort = title.length>28 ? title.substr(0,26)+'…' : title;

@@ -128,7 +128,7 @@
 }
 
 /* "Im Forum": each card shows its group as a readable label and a coloured
-   left edge — Simstagram, Forum, Galerie, Blog, Community. Colour and text
+   left edge — Simstagram, Metaverse, Forum, Galerie, Blog, Community. Colour and text
    together, so it is clear at a glance and not only by colour. */
 .feed-item {border-left-width:3px;border-left-style:solid;padding-left:7px}
 .feed-item .feed-head {display:flex;align-items:baseline;justify-content:space-between;gap:6px;margin-bottom:1px}
@@ -137,5 +137,6 @@
 .feed-simstagram {border-left-color:#e0609a}  .feed-simstagram .feed-label {color:#ef86b4}
 .feed-forum      {border-left-color:#4aaa6a}  .feed-forum .feed-label      {color:#6acc8a}
 .feed-gallery    {border-left-color:#e0a040}  .feed-gallery .feed-label    {color:#f0bc66}
-.feed-blog       {border-left-color:#9a7ae0}  .feed-blog .feed-label       {color:#b8a0f0}
+.feed-metaverse  {border-left-color:#9a7ae0}  .feed-metaverse .feed-label  {color:#b8a0f0}
+.feed-blog       {border-left-color:#8a94a6}  .feed-blog .feed-label       {color:#aab4c4}
 .feed-community  {border-left-color:#5aa0e0}  .feed-community .feed-label  {color:#88bdf0}

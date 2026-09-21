@@ -411,8 +411,8 @@ function loadHomeData(cb){
 // Dependency: if worldLots or BUILDINGS move or change their declaration, these paths must follow.
 function loadAtlasJsData_(){
   return Promise.all([
-    fetch("src/atlas/data/buildings.js?v=202609211430").then(function(r){return r.text();}),
-    fetch("src/atlas/data/world-lots.js?v=202609211430").then(function(r){return r.text();})
+    fetch("src/atlas/data/buildings.js?v=202609211444").then(function(r){return r.text();}),
+    fetch("src/atlas/data/world-lots.js?v=202609211444").then(function(r){return r.text();})
   ]).then(function(parts){return parts.join("\n");}).then(function(html){
     function extractObj(name){
       var re=new RegExp("const\\s+"+name+"\\s*=\\s*\\{");
