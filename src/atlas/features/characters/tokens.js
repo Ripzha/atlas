@@ -2,14 +2,36 @@
    Small portraits on world dots, lot dots and clusters showing where
    characters were last seen (matched by forum thread ID). */
 
-import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609211418';
-import { updateOtherworldArrowTokens } from '../otherworlds/portal.js?v=202609211418';
-import { CHARS } from './character-view.js?v=202609211418';
+import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609211425';
+import { updateOtherworldArrowTokens } from '../otherworlds/portal.js?v=202609211425';
+import { CHARS } from './character-view.js?v=202609211425';
 
 function getThreadIdFromUrl(url){
   if(!url) return null;
   var m = url.match(/\/t(\d+)f/);
   return m ? m[1] : null;
+}
+
+/* At most this many tokens are shown stacked; the rest are hidden until the
+   dot is expanded, and a "+N" token stands in for them. */
+const TOKEN_MAX = 5;
+
+/* Markup of one character token. data-char carries the name, so a click on
+   the token can find the character (see token-menu.js). */
+function tokenHtml(c, i){
+  var name = c.n||'';
+  var face = c.img
+    ? '<img class="dot-char-token" src="'+imageUrl(c.img,IMG_THUMB)+'" alt="'+name+'" loading="lazy" decoding="async">'
+    : '<div class="dot-char-token-ph">'+name.charAt(0)+'</div>';
+  var hidden = i>=TOKEN_MAX ? 'dot-char-token-hidden' : '';
+  var key = name.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+  return '<div class="dot-char-token-wrap '+hidden+'" data-char="'+key+'">'+face+'<div class="dot-char-token-name">'+name+'</div></div>';
+}
+
+/* Tokens for a list of characters, plus the "+N" token if there are more. */
+function tokensHtml(chars){
+  return chars.map(tokenHtml).join('')
+    + (chars.length>TOKEN_MAX ? '<div class="dot-char-token-wrap dot-char-token-extra"><div class="dot-char-token-ph">+'+(chars.length-TOKEN_MAX)+'</div></div>' : '');
 }
 
 export function updateAllTokens(){
@@ -24,25 +46,13 @@ export function updateAllTokens(){
       return lotThreadId && getThreadIdFromUrl(c.lastSeenUrl) === lotThreadId;
     });
     // Update innerHTML only, keep the container with its data attribute
-    var inner = chars.map(function(c,i){
-      var name=c.n||'';
-      var inner2=c.img?'<img class="dot-char-token" src="'+imageUrl(c.img,IMG_THUMB)+'" alt="'+name+'" loading="lazy" decoding="async">':'<div class="dot-char-token-ph">'+name.charAt(0)+'</div>';
-      var hidden=i>=5?'dot-char-token-hidden':'';
-      return '<div class="dot-char-token-wrap '+hidden+'">'+inner2+'<div class="dot-char-token-name">'+name+'</div></div>';
-    }).join('')+(chars.length>5?'<div class="dot-char-token-wrap dot-char-token-extra"><div class="dot-char-token-ph">+'+(chars.length-5)+'</div></div>':'');
-    el.innerHTML = inner;
+    el.innerHTML = tokensHtml(chars);
   });
   // Update world dots
   document.querySelectorAll('.dot-char-tokens[data-world-name]').forEach(function(el){
     var worldName = el.getAttribute('data-world-name');
     var chars = getCharsAtWorld(worldName);
-    var inner = chars.map(function(c,i){
-      var name=c.n||'';
-      var inner2=c.img?'<img class="dot-char-token" src="'+imageUrl(c.img,IMG_THUMB)+'" alt="'+name+'" loading="lazy" decoding="async">':'<div class="dot-char-token-ph">'+name.charAt(0)+'</div>';
-      var hidden=i>=5?'dot-char-token-hidden':'';
-      return '<div class="dot-char-token-wrap '+hidden+'">'+inner2+'<div class="dot-char-token-name">'+name+'</div></div>';
-    }).join('')+(chars.length>5?'<div class="dot-char-token-wrap dot-char-token-extra"><div class="dot-char-token-ph">+'+(chars.length-5)+'</div></div>':'');
-    el.innerHTML = inner;
+    el.innerHTML = tokensHtml(chars);
   });
   // Update cluster dots (apartment complexes etc.) — aggregated over all lot URLs of the group
   document.querySelectorAll('.dot-char-tokens[data-cluster-urls]').forEach(function(el){
@@ -60,13 +70,7 @@ export function updateAllTokens(){
       seen[c.n] = true;
       chars.push(c);
     });
-    var inner = chars.map(function(c,i){
-      var name=c.n||'';
-      var inner2=c.img?'<img class="dot-char-token" src="'+imageUrl(c.img,IMG_THUMB)+'" alt="'+name+'" loading="lazy" decoding="async">':'<div class="dot-char-token-ph">'+name.charAt(0)+'</div>';
-      var hidden=i>=5?'dot-char-token-hidden':'';
-      return '<div class="dot-char-token-wrap '+hidden+'">'+inner2+'<div class="dot-char-token-name">'+name+'</div></div>';
-    }).join('')+(chars.length>5?'<div class="dot-char-token-wrap dot-char-token-extra"><div class="dot-char-token-ph">+'+(chars.length-5)+'</div></div>':'');
-    el.innerHTML = inner;
+    el.innerHTML = tokensHtml(chars);
   });
   // Update cluster item character indicators (small avatars at the right edge of each popup item)
   document.querySelectorAll('.cluster-item-chars[data-lot-url]').forEach(function(el){
@@ -92,22 +96,10 @@ export function updateAllTokens(){
 
 export function buildCharTokensHtml(chars){
   if(!chars||!chars.length) return '';
-  var MAX=5;
-  var extra=chars.length>MAX?chars.length-MAX:0;
-  // First MAX visible, rest hidden
-  return '<div class="dot-char-tokens">' +
-    chars.map(function(c,i){
-      var name=c.n||'';
-      var inner=c.img
-        ?'<img class="dot-char-token" src="'+imageUrl(c.img,IMG_THUMB)+'" alt="'+name+'" loading="lazy" decoding="async">'
-        :'<div class="dot-char-token-ph">'+name.charAt(0)+'</div>';
-      // tokens beyond MAX are hidden when stacked, shown when expanded
-      var hidden=i>=MAX?'dot-char-token-hidden':'';
-      return '<div class="dot-char-token-wrap '+hidden+'">'+inner+'<div class="dot-char-token-name">'+name+'</div></div>';
-    }).join('')+
-    (extra>0?'<div class="dot-char-token-wrap dot-char-token-extra"><div class="dot-char-token-ph">+'+extra+'</div></div>':'')+
-  '</div>';
+  return '<div class="dot-char-tokens">' + tokensHtml(chars) + '</div>';
 }
+
+export { getThreadIdFromUrl };
 
 export function getCharsAtWorld(worldName){
   if(!worldName) return [];

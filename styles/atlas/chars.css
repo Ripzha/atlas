@@ -93,3 +93,16 @@
   transform:none;
   display:flex !important;
   z-index:3;}
+
+/* Choice menu for a character token in the world view (token-menu.js):
+   last post or profile. */
+#atlas-token-menu {position:fixed;z-index:600;min-width:190px;max-width:260px;background:rgba(7,15,26,0.97);border:0.5px solid rgba(74,170,106,0.45);border-radius:10px;padding:8px;box-shadow:0 10px 30px rgba(0,0,0,0.6);backdrop-filter:blur(8px)}
+#atlas-token-menu .tm-name {font-size:11px;font-weight:600;color:#ddeedd;padding:2px 6px 7px;border-bottom:0.5px solid rgba(255,255,255,0.08);margin-bottom:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#atlas-token-menu .tm-item {display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:7px;color:#ddeedd;text-decoration:none;cursor:pointer}
+#atlas-token-menu .tm-item:hover, #atlas-token-menu .tm-item:focus-visible {background:rgba(74,170,106,0.18);outline:none}
+#atlas-token-menu .tm-icon {width:18px;text-align:center;font-size:13px;color:#6acc8a}
+#atlas-token-menu .tm-text {display:flex;flex-direction:column;min-width:0}
+#atlas-token-menu .tm-label {font-size:12px;font-weight:600}
+#atlas-token-menu .tm-sub {font-size:10px;color:rgba(255,255,255,0.4);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dot-char-token-wrap[data-char] {cursor:pointer}
+

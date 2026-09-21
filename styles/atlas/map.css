@@ -100,6 +100,9 @@
 .world-dot:hover .hover-card {display:block}
 .lot-dot {position:absolute;transform:translate(-50%,-50%);cursor:pointer;z-index:10}
 .lot-dot:hover {z-index:201}
+/* On touch there is no hover: the tapped dot comes to the front the same way,
+   so its character tokens are not covered by neighbouring dots. */
+.lot-dot.show-tokens {z-index:201}
 .lot-dot:hover .lot-inner, .lot-dot:active .lot-inner {width:13px!important;height:13px!important}
 .lot-dot.isactive .lot-pulse {display:block}
 .lot-dot:hover .lot-tooltip {display:block}
