@@ -8,6 +8,27 @@
 #left {width:165px;flex-shrink:0;background:rgba(0,0,0,0.55);border-right:0.5px solid rgba(255,255,255,0.06);padding:12px 10px;display:flex;flex-direction:column;gap:4px;overflow-y:auto}
 #right {width:165px;flex-shrink:0;background:rgba(0,0,0,0.55);border-left:0.5px solid rgba(255,255,255,0.06);padding:12px 10px;display:flex;flex-direction:column;gap:10px;overflow-y:auto}
 #left, #right {scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.15) transparent}
+/* Am Rechner mitwachsend statt fest 165 px: auf dem Laptop 220 px, auf grossen
+   Bildschirmen bis 280 px. Vorher brachen Eintraege um oder wurden gekuerzt.
+   Touch-Tablets haben weiter ihre eigene Breite (weiter unten). */
+@media (min-width:769px) and (pointer:fine) {
+  #left, #right {width:clamp(220px, 16vw, 280px)}
+  /* Mit der Maus genuegt eine etwas flachere Zeile; so passt die Leiste auf
+     einen 768 px hohen Laptop-Bildschirm, ohne dass man scrollen muss. */
+  #left .nav-item {padding-top:5px;padding-bottom:5px}
+}
+/* Unterpunkt, z.B. "Charakter erstellen" unter "Charaktere" */
+.nav-item.nav-sub {margin-left:14px;padding-top:4px;padding-bottom:4px;font-size:11.5px;color:rgba(170,230,190,0.85);background:rgba(74,170,106,0.07);border-color:rgba(74,170,106,0.22)}
+.nav-item.nav-sub::before {content:'└';margin-right:2px;color:rgba(255,255,255,0.3)}
+.nav-item.nav-sub:hover {color:#fff;border-color:rgba(74,170,106,0.55)}
+/* Online-Liste: Namen nebeneinander statt je eine Zeile — waechst sonst mit
+   jeder Person, die online ist, und schob Discord aus dem Bild. */
+#sidebar-online {display:flex;flex-wrap:wrap;gap:3px 12px}
+#sidebar-online .online-item {margin-bottom:0}
+/* Statistik: drei kleine Spalten nebeneinander, Zahl oben, Bezeichnung unten */
+#sidebar-stats {display:flex;justify-content:space-between;gap:6px}
+#sidebar-stats .stat-row {flex-direction:column-reverse;align-items:flex-start;justify-content:flex-start;margin-bottom:0;font-size:12px;font-weight:600;color:rgba(255,255,255,0.8)}
+#sidebar-stats .stat-key {font-size:9.5px;font-weight:400;letter-spacing:0.3px}
 #left::-webkit-scrollbar, #right::-webkit-scrollbar {width:6px;height:6px;background:transparent}
 #left::-webkit-scrollbar-thumb, #right::-webkit-scrollbar-thumb {background:rgba(255,255,255,0.12);border-radius:3px}
 #left::-webkit-scrollbar-thumb:hover, #right::-webkit-scrollbar-thumb:hover {background:rgba(255,255,255,0.22)}
