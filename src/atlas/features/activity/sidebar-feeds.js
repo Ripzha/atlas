@@ -3,11 +3,11 @@
    activity outside the RPG worlds. Data comes from the Apps Script
    (SCRIPT_URL); the last known data is shown immediately from the cache. */
 
-import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609211413';
-import { readCache, writeCache } from '../../core/cache.js?v=202609211413';
-import { SCRIPT_URL } from '../../config.js?v=202609211413';
-import { syncMobileActivitySheet } from '../../ui/mobile-sheets.js?v=202609211413';
-import { CHARS } from '../characters/character-view.js?v=202609211413';
+import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609211418';
+import { readCache, writeCache } from '../../core/cache.js?v=202609211418';
+import { SCRIPT_URL } from '../../config.js?v=202609211418';
+import { syncMobileActivitySheet } from '../../ui/mobile-sheets.js?v=202609211418';
+import { CHARS } from '../characters/character-view.js?v=202609211418';
 
 /* "Neue Charaktere" always shows two entries. "Im Forum" draws up to twelve;
    how many of them are visible is decided by sidebar-fit.js, depending on the
@@ -140,17 +140,19 @@ function renderForumEvents(el, events){
     var d=new Date(ts*1000);
     return d.getDate()+'.'+(d.getMonth()+1)+'.';
   }
-  function typeIcon(t){
-    if(t==='forum_topic') return '💬';
-    if(t==='forum_message') return '↩';
-    if(t==='gallery_picture') return '🖼';
-    if(t==='blog_entry') return '📝';
-    if(t==='blog_comment') return '💭';
-    if(t==='user_profile') return '👋';
-    if(t==='usergbook_message') return '📖';
-    if(t==='rating') return '⭐';
-    return '·';
+  /* Which group an entry belongs to. Shown as a readable label and a coloured
+     edge on the card, so the kind is clear at a glance — before, only a tiny
+     emoji on the avatar told them apart. Simstagram posts are blog entries
+     whose link the Apps Script rewrote to simstagram.html. */
+  function feedGroup(ev){
+    var t = ev.type;
+    if((t==='blog_entry'||t==='blog_comment') && /simstagram\.html/.test(ev.url||'')) return 'simstagram';
+    if(t==='forum_topic'||t==='forum_message') return 'forum';
+    if(t==='gallery_picture') return 'gallery';
+    if(t==='blog_entry'||t==='blog_comment') return 'blog';
+    return 'community';   // new member, guestbook, "gefällt das"
   }
+  var GROUP_LABEL = {simstagram:'Simstagram', forum:'Forum', gallery:'Galerie', blog:'Blog', community:'Community'};
   el.innerHTML=events.slice(0,FORUM_MAX).map(function(ev){
     var title=(ev.title||'');
     var titleShort = title.length>28 ? title.substr(0,26)+'…' : title;
@@ -163,17 +165,17 @@ function renderForumEvents(el, events){
     var tipLine1 = tipParts.join(' ');
     var tipText = (tipLine1 ? tipLine1 + (title ? ': ' : '') : '') + (title || '');
     var tipAttr = tipText ? ' data-tip="' + tipText.replace(/"/g,'&quot;') + '"' : '';
-    // Avatar with a type icon badge at the bottom right
+    // Avatar (the group is shown as a label on the card, see feedGroup)
     var avatar=ev.avatar
       ?'<img src="'+imageUrl(ev.avatar,IMG_THUMB)+'" loading="lazy" decoding="async" style="width:26px;height:26px;border-radius:50%;object-fit:cover;display:block;border:0.5px solid rgba(255,255,255,0.15)">'
       :'<div style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:13px;color:rgba(255,255,255,0.5)">'+(user.charAt(0)||'?')+'</div>';
-    var badge='<div style="position:absolute;bottom:-2px;right:-2px;width:13px;height:13px;border-radius:50%;background:#0a1420;display:flex;align-items:center;justify-content:center;font-size:9px;border:1px solid rgba(255,255,255,0.1)">'+typeIcon(ev.type)+'</div>';
-    return '<div class="activity-item" style="cursor:pointer" data-url="'+ev.url+'"'+tipAttr+'>'
-      +'<div style="position:relative;flex-shrink:0">'+avatar+badge+'</div>'
+    var group = feedGroup(ev);
+    return '<div class="activity-item feed-item feed-'+group+'" style="cursor:pointer" data-url="'+ev.url+'"'+tipAttr+'>'
+      +'<div style="position:relative;flex-shrink:0">'+avatar+'</div>'
       +'<div style="min-width:0;flex:1">'
+      +'<div class="feed-head"><span class="feed-label">'+GROUP_LABEL[group]+'</span><span class="feed-time">vor '+relTime(ev.ts)+'</span></div>'
       +'<div class="activity-name" style="font-size:10px">'+user+'</div>'
       +'<div class="activity-world" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(ev.action||'')+(titleShort?' &middot; '+titleShort:'')+'</div>'
-      +'<div style="font-size:9px;color:rgba(255,255,255,0.25);margin-top:1px">vor '+relTime(ev.ts)+'</div>'
       +'</div></div>';
   }).join('');
   el.querySelectorAll('[data-url]').forEach(function(item){
