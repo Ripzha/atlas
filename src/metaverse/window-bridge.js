@@ -19,7 +19,7 @@ import {
   slideNav,
   toggleInfo,
   toggleZoom,
-} from './main.js?v=202609201852';
+} from './main.js?v=202609211308';
 
 Object.assign(window, {
   autoH,

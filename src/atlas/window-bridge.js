@@ -5,22 +5,22 @@
    check. When an inline handler is replaced by addEventListener, remove its
    function from this list. */
 
-import { closeSheet, openSheet } from './ui/mobile-sheets.js?v=202609201852';
-import { mobileDotOpen } from './ui/mobile-dot-bar.js?v=202609201852';
-import { toggleLegend } from './ui/legend.js?v=202609201852';
+import { closeSheet, openSheet } from './ui/mobile-sheets.js?v=202609211308';
+import { mobileDotOpen } from './ui/mobile-dot-bar.js?v=202609211308';
+import { toggleLegend } from './ui/legend.js?v=202609211308';
 import {
   closeOtherWorlds,
   openOtherWorld,
-} from './features/otherworlds/otherworld-view.js?v=202609201852';
-import { changeBuildingFloor } from './features/buildings/building-view.js?v=202609201852';
+} from './features/otherworlds/otherworld-view.js?v=202609211308';
+import { changeBuildingFloor } from './features/buildings/building-view.js?v=202609211308';
 import {
   clearBuildingCalib,
   copyBuildingCalib,
   toggleBuildingCalib,
-} from './features/buildings/building-calibration.js?v=202609201852';
-import { clearCalib, copyCalib, toggleCalib } from './features/admin/calibration.js?v=202609201852';
-import { closeAdmin, setAdminTab } from './features/admin/admin-panel.js?v=202609201852';
-import { buildAssignUI } from './features/admin/lot-assignment.js?v=202609201852';
+} from './features/buildings/building-calibration.js?v=202609211308';
+import { clearCalib, copyCalib, toggleCalib } from './features/admin/calibration.js?v=202609211308';
+import { closeAdmin, setAdminTab } from './features/admin/admin-panel.js?v=202609211308';
+import { buildAssignUI } from './features/admin/lot-assignment.js?v=202609211308';
 import {
   charSearchFilter,
   closeCharView,
@@ -33,9 +33,9 @@ import {
   toggleCharSort,
   toggleGenderFilter,
   togglePlayerFilter,
-} from './features/characters/character-view.js?v=202609201852';
-import { closeAtlas } from './features/forum-bridge/forum-bridge.js?v=202609201852';
-import { goBack } from './features/map/world-view.js?v=202609201852';
+} from './features/characters/character-view.js?v=202609211308';
+import { closeAtlas } from './features/forum-bridge/forum-bridge.js?v=202609211308';
+import { goBack } from './features/map/world-view.js?v=202609211308';
 
 Object.assign(window, {
   closeSheet, openSheet, mobileDotOpen, toggleLegend, closeOtherWorlds,

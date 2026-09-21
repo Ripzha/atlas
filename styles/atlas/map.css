@@ -68,6 +68,12 @@
 #world-header {position:absolute;top:0;left:0;right:0;padding:10px 14px;background:linear-gradient(rgba(0,0,0,0.7),transparent);z-index:5;pointer-events:none}
 #world-header .wh-name {font-size:16px;font-weight:500}
 #world-header .wh-sub {font-size:11px;color:rgba(255,255,255,0.45);margin-top:2px}
+/* Name und "Neuer Ort" in einer Zeile. Der Kopf selbst laesst Klicks durch
+   (pointer-events:none), der Knopf muss sie wieder annehmen. */
+#world-header .wh-row {display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#world-header .wh-new-place {pointer-events:auto;display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;border:0.5px solid rgba(74,170,106,0.55);background:rgba(5,15,28,0.75);color:#6acc8a;font-size:11px;font-weight:600;text-decoration:none;white-space:nowrap;transition:background 0.15s,border-color 0.15s}
+#world-header .wh-new-place:hover {background:rgba(74,170,106,0.25);border-color:#4aaa6a;color:#fff}
+#world-header .wh-new-place[hidden] {display:none}
 .leg-cluster {width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0}
 #world-lots-bar {position:absolute;bottom:0;left:0;right:0;border-top:0.5px solid rgba(255,255,255,0.07);padding:8px 12px;background:rgba(0,0,0,0.8);display:flex;gap:6px;align-items:center;z-index:10;max-height:88px;flex-wrap:wrap;overflow-y:auto}
 .world-dot {position:absolute;transform:translate(-50%,-50%);cursor:pointer;z-index:10}
