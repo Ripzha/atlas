@@ -2,12 +2,16 @@
    Characters active in the last 14 days, grouped by forum post (merged cards
    with unfolding tokens), plus the hover preview of the latest post. */
 
-import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609211349';
-import { SCRIPT_URL } from '../../config.js?v=202609211349';
-import { WORLD_COLORS } from '../../data/worlds.js?v=202609211349';
-import { syncMobileActivitySheet } from '../../ui/mobile-sheets.js?v=202609211349';
-import { CHARS } from '../characters/character-view.js?v=202609211349';
-import { _hasInteracted, _isVisible } from '../../core/boot.js?v=202609211349';
+import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609211401';
+import { SCRIPT_URL } from '../../config.js?v=202609211401';
+import { WORLD_COLORS } from '../../data/worlds.js?v=202609211401';
+import { syncMobileActivitySheet } from '../../ui/mobile-sheets.js?v=202609211401';
+import { CHARS } from '../characters/character-view.js?v=202609211401';
+import { _hasInteracted, _isVisible } from '../../core/boot.js?v=202609211401';
+
+/* At most this many groups are drawn. How many of them are visible is decided
+   by sidebar-fit.js, depending on the room in the sidebar. */
+const LAST_SEEN_MAX = 12;
 
 export function updateSidebarActivity(){
   var el=document.getElementById('sidebar-activity');
@@ -61,10 +65,10 @@ export function updateSidebarActivity(){
     });
     return groups;
   }
-  var groups = _buildGroups(unique).slice(0, 6);
+  var groups = _buildGroups(unique).slice(0, LAST_SEEN_MAX);
 
-  // Fill up to 6 groups with undated characters (sheet order) if there is room
-  if(groups.length < 6){
+  // Fill up to LAST_SEEN_MAX groups with undated characters (sheet order) if there is room
+  if(groups.length < LAST_SEEN_MAX){
     var usedChars = new Set();
     groups.forEach(function(g){ g.chars.forEach(function(c){ usedChars.add(c.n); }); });
     var filler = CHARS.filter(function(c){
@@ -78,7 +82,7 @@ export function updateSidebarActivity(){
       return true;
     });
     var fillerGroups = _buildGroups(uniqueFiller);
-    groups = groups.concat(fillerGroups.slice(0, 6 - groups.length));
+    groups = groups.concat(fillerGroups.slice(0, LAST_SEEN_MAX - groups.length));
   }
 
   function _portraitHtml(c, color){

@@ -1,8 +1,7 @@
-/* PROJECT ATLAS - Charakter-Ansicht: Raster, Filter, Tokens
-   Aus styles/atlas/atlas.css herausgeloest (Etappe 4). Die Regeln stehen
-   untereinander in derselben Reihenfolge wie vorher, damit sich an der
-   Kaskade nichts aendert. Ladereihenfolge in index.html:
-   base, map, sidebar, chars, portal, admin, event. */
+/* PROJECT ATLAS - Character view: grid, filters, tokens
+   Split out of styles/atlas/atlas.css (stage 4). The rules keep their
+   original order among each other, so the cascade is unchanged. Load order in
+   index.html: base, map, sidebar, chars, portal, admin, event. */
 
 @media (pointer:coarse) {
   /* Char-Tokens auf Kontinentkarte standardmässig versteckt — nur anzeigen wenn angeklickt */

@@ -1,13 +1,19 @@
 /* PROJECT ATLAS - Sidebar feeds.
-   Forum statistics and online users, the three newest characters, and forum
+   Forum statistics and online users, the two newest characters, and forum
    activity outside the RPG worlds. Data comes from the Apps Script
    (SCRIPT_URL); the last known data is shown immediately from the cache. */
 
-import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609211349';
-import { readCache, writeCache } from '../../core/cache.js?v=202609211349';
-import { SCRIPT_URL } from '../../config.js?v=202609211349';
-import { syncMobileActivitySheet } from '../../ui/mobile-sheets.js?v=202609211349';
-import { CHARS } from '../characters/character-view.js?v=202609211349';
+import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609211401';
+import { readCache, writeCache } from '../../core/cache.js?v=202609211401';
+import { SCRIPT_URL } from '../../config.js?v=202609211401';
+import { syncMobileActivitySheet } from '../../ui/mobile-sheets.js?v=202609211401';
+import { CHARS } from '../characters/character-view.js?v=202609211401';
+
+/* "Neue Charaktere" always shows two entries. "Im Forum" draws up to twelve;
+   how many of them are visible is decided by sidebar-fit.js, depending on the
+   room in the sidebar. The Apps Script delivers at most 15. */
+const NEW_CHARS_MAX = 2;
+const FORUM_MAX = 12;
 
 let statsShown=false;
 
@@ -65,7 +71,7 @@ export function updateSidebarNewChars(){
   }
   var withId=CHARS.filter(function(c){return c.u && threadIdFromUrl(c.u)>0;}).slice();
   withId.sort(function(a,b){return threadIdFromUrl(b.u)-threadIdFromUrl(a.u);});
-  var top=withId.slice(0,3);
+  var top=withId.slice(0,NEW_CHARS_MAX);
   if(!top.length){
     el.innerHTML='<div style="font-size:10px;color:rgba(255,255,255,0.2)">Keine Daten</div>';
     return;
@@ -145,7 +151,7 @@ function renderForumEvents(el, events){
     if(t==='rating') return '⭐';
     return '·';
   }
-  el.innerHTML=events.slice(0,6).map(function(ev){
+  el.innerHTML=events.slice(0,FORUM_MAX).map(function(ev){
     var title=(ev.title||'');
     var titleShort = title.length>28 ? title.substr(0,26)+'…' : title;
     var user=ev.user||'Jemand';

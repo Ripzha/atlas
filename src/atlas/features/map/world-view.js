@@ -5,37 +5,37 @@
    Other files can react to entering a world via on('enter-world', fn) from
    core/events.js (the world search uses it for "Zuletzt besucht"). */
 
-import { IMG_CARD, imageUrl } from '../../core/images.js?v=202609211349';
-import { emit, on } from '../../core/events.js?v=202609211349';
-import { worldLots } from '../../data/world-lots.js?v=202609211349';
-import { customLots, state } from '../../core/state.js?v=202609211349';
+import { IMG_CARD, imageUrl } from '../../core/images.js?v=202609211401';
+import { emit, on } from '../../core/events.js?v=202609211401';
+import { worldLots } from '../../data/world-lots.js?v=202609211401';
+import { customLots, state } from '../../core/state.js?v=202609211401';
 import {
   fetchSheetLots,
   getLots,
   sheetLots,
   sheetLotsLoaded,
   sheetWorldMeta,
-} from '../../core/sheet-data.js?v=202609211349';
-import { repositionTooltips } from '../../ui/tooltips.js?v=202609211349';
-import { showMobileDotBar } from '../../ui/mobile-dot-bar.js?v=202609211349';
-import { updateAllTokens } from '../characters/tokens.js?v=202609211349';
-import { enterBuilding, exitBuilding } from '../buildings/building-view.js?v=202609211349';
+} from '../../core/sheet-data.js?v=202609211401';
+import { repositionTooltips } from '../../ui/tooltips.js?v=202609211401';
+import { showMobileDotBar } from '../../ui/mobile-dot-bar.js?v=202609211401';
+import { updateAllTokens } from '../characters/tokens.js?v=202609211401';
+import { enterBuilding, exitBuilding } from '../buildings/building-view.js?v=202609211401';
 import {
   calibWorldLots,
   updateCalibLog,
   updateCalibrating,
-} from '../admin/calibration.js?v=202609211349';
-import { renderAdminContent } from '../admin/admin-panel.js?v=202609211349';
-import { getBuildingNrRange, groupLots, parseLotLabel } from './lot-helpers.js?v=202609211349';
-import { mapC, mapIA } from './continent-map.js?v=202609211349';
+} from '../admin/calibration.js?v=202609211401';
+import { renderAdminContent } from '../admin/admin-panel.js?v=202609211401';
+import { getBuildingNrRange, groupLots, parseLotLabel } from './lot-helpers.js?v=202609211401';
+import { mapC, mapIA } from './continent-map.js?v=202609211401';
 
-/* "Neuer Ort": oeffnet im Forum das leere Formular fuer ein neues Thema in
-   genau dieser Welt. Die Forum-Nummer steckt in der Forum-Adresse der Welt
-   (".../f51780-Newcrest.html"). plan_world gibt Blaze die Welt mit, damit er
-   gleich einen passenden Titel vorschlaegt und durch das Anlegen fuehrt; nach
-   dem Speichern uebernimmt das Lot-Werkzeug im Forum die Zuweisung.
-   Neue Punkte an neuen Stellen kann das nicht anlegen — deren Koordinaten
-   stehen in data/world-lots.js. */
+/* "Neuer Ort": opens the empty new-topic form in the forum for exactly this
+   world. The forum id is part of the world's forum address
+   (".../f51780-Newcrest.html"). plan_world hands the world to Blaze, who then
+   suggests a fitting title and guides through creating it; after saving, the
+   lot tool in the forum does the assignment.
+   It cannot add new dots at new positions — their coordinates live in
+   data/world-lots.js. */
 const FORUM_NEW_THREAD = 'https://www.simsforumrpg.de/new.php';
 
 function setNewPlaceLink(w){

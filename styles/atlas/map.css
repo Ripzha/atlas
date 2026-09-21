@@ -1,8 +1,7 @@
-/* PROJECT ATLAS - Karte: Kontinent, Welten, Punkte, Cluster, Vorschaukarten
-   Aus styles/atlas/atlas.css herausgeloest (Etappe 4). Die Regeln stehen
-   untereinander in derselben Reihenfolge wie vorher, damit sich an der
-   Kaskade nichts aendert. Ladereihenfolge in index.html:
-   base, map, sidebar, chars, portal, admin, event. */
+/* PROJECT ATLAS - Map: continent, worlds, dots, clusters, preview cards
+   Split out of styles/atlas/atlas.css (stage 4). The rules keep their
+   original order among each other, so the cascade is unchanged. Load order in
+   index.html: base, map, sidebar, chars, portal, admin, event. */
 
 #world-search-dropdown, #world-lots-bar {scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.15) transparent}
 #world-search-dropdown::-webkit-scrollbar {width:6px;height:6px;background:transparent}
@@ -68,8 +67,8 @@
 #world-header {position:absolute;top:0;left:0;right:0;padding:10px 14px;background:linear-gradient(rgba(0,0,0,0.7),transparent);z-index:5;pointer-events:none}
 #world-header .wh-name {font-size:16px;font-weight:500}
 #world-header .wh-sub {font-size:11px;color:rgba(255,255,255,0.45);margin-top:2px}
-/* Name und "Neuer Ort" in einer Zeile. Der Kopf selbst laesst Klicks durch
-   (pointer-events:none), der Knopf muss sie wieder annehmen. */
+/* Name and "Neuer Ort" on one line. The header lets clicks through
+   (pointer-events:none), so the button has to accept them again. */
 #world-header .wh-row {display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 #world-header .wh-new-place {pointer-events:auto;display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;border:0.5px solid rgba(74,170,106,0.55);background:rgba(5,15,28,0.75);color:#6acc8a;font-size:11px;font-weight:600;text-decoration:none;white-space:nowrap;transition:background 0.15s,border-color 0.15s}
 #world-header .wh-new-place:hover {background:rgba(74,170,106,0.25);border-color:#4aaa6a;color:#fff}

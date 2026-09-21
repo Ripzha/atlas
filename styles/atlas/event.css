@@ -1,14 +1,13 @@
-/* PROJECT ATLAS - Event-Pille und Event-Panel
-   Aus styles/atlas/atlas.css herausgeloest (Etappe 4). Die Regeln stehen
-   untereinander in derselben Reihenfolge wie vorher, damit sich an der
-   Kaskade nichts aendert. Ladereihenfolge in index.html:
-   base, map, sidebar, chars, portal, admin, event. */
+/* PROJECT ATLAS - Event pill and event panel
+   Split out of styles/atlas/atlas.css (stage 4). The rules keep their
+   original order among each other, so the cascade is unchanged. Load order in
+   index.html: base, map, sidebar, chars, portal, admin, event. */
 
 /* ═══ ATLAS Event-Pille — Position überschreibt Forum-Defaults ═══ */
 /* Forum hatte: top:50% left:24px (vertikal zentriert im Header).
    Atlas: top:12px left:16px — oben links auf Kontinent.
-   In Welt-Ansicht: unten links. Mietpreise stehen oben rechts, die Legende
-   unten rechts — die Ecke unten links bleibt fuer die Pille frei. */
+   In the world view: bottom left. Rent prices sit top right and the legend
+   bottom right — the bottom left corner stays free for the pill. */
 #atlasEventPill {top:12px !important;
   left:16px !important;
   transform:none !important;
@@ -20,7 +19,7 @@
 #atlasEventPill .atlas-pill-name {font-size:12px !important;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #atlasEventPill:hover {transform:scale(1.04) !important}
 #atlasEventPillHint {display:none !important}
-/* Welt-Ansicht: Pille unten links (Mietpreise oben rechts, Legende unten rechts) */
+/* World view: pill bottom left (rent prices top right, legend bottom right) */
 body:has(#world-container.active) #atlasEventPill {top:auto !important;
   bottom:60px !important;
   left:12px !important;}

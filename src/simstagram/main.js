@@ -1,9 +1,8 @@
-/* PROJECT ATLAS - Simstagram: Charakter-Feed.
-   Aus simstagram.html herausgeloest (Etappe 5). Die Seite hatte zwei
-   script-Bloecke; sie stehen hier hintereinander in derselben Reihenfolge.
-   Der Code ist unveraendert; neu ist nur, dass er als ES-Modul laeuft. Die
-   Funktionen, die von Inline-Handlern aufgerufen werden, haengt
-   window-bridge.js an window. */
+/* PROJECT ATLAS - Simstagram: character feed.
+   Split out of simstagram.html (stage 5). The page had two script blocks; they
+   follow each other here in their original order. The code is unchanged; it
+   only runs as an ES module now. window-bridge.js attaches the functions that
+   inline handlers call to window. */
 
 // ╔══════════════════════════════════════════════════════════╗
 //   CONFIG
@@ -470,10 +469,10 @@ export function closeCompose() {
   document.body.style.overflow = '';
 }
 
-/* Laesst das Kommentar-Eingabefeld mit dem Text mitwachsen. Wird von
-   oninput="autoH(this)" im Markup und nach dem Abschicken aufgerufen. Die
-   Funktion fehlte hier seit jeher — beide Aufrufe liefen in einen Fehler und
-   das Feld blieb einzeilig. Gleiche Fassung wie in src/metaverse/main.js. */
+/* Lets the comment input grow with its text. Called by oninput="autoH(this)"
+   in the markup and after sending. The function had always been missing here —
+   both calls ran into an error and the field stayed one line high. Same
+   version as in src/metaverse/main.js. */
 export function autoH(el){ if(!el) return; el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
 
 function onFileSelect(e) {} // legacy stub — compose modal no longer has file upload
@@ -664,7 +663,7 @@ else         console.info('[Simstagram] Produktion → ' + XOBOR);
 
 loadFeed();
 
-/* --- zweiter script-Block aus simstagram.html, Reihenfolge unveraendert --- */
+/* --- second script block of simstagram.html, original order --- */
 
 (function(){
   var CLOSED_KEY = 'melissa_simstagram_closed';

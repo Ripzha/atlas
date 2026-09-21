@@ -41,7 +41,8 @@ src/
     features/  One folder per domain area:
       map/           continent map, world view, world search, lot helpers
       characters/    character view, tokens on the map
-      activity/      "Zuletzt gesehen", sidebar feeds
+      activity/      "Zuletzt gesehen", sidebar feeds; sidebar-fit.js fits the right
+                     sidebar to the available height
       otherworlds/   "Andere Welten" portal and view
       buildings/     floor plans, building calibration
       routing/       route planner, route editor

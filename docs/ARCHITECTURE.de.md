@@ -42,7 +42,8 @@ src/
     features/  Ein Ordner pro Fachbereich:
       map/           Kontinentkarte, Welt-Ansicht, Welten-Suche, Grundstücks-Hilfen
       characters/    Charakter-Ansicht, Portraits auf der Karte
-      activity/      „Zuletzt gesehen", Seitenleisten
+      activity/      „Zuletzt gesehen", Seitenleisten; sidebar-fit.js passt die rechte
+                     Leiste an die verfügbare Höhe an
       otherworlds/   Portal und Ansicht „Andere Welten"
       buildings/     Etagenpläne, Gebäude-Kalibrierung
       routing/       Routenplaner, Routen-Editor

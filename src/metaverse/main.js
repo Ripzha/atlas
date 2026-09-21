@@ -1,7 +1,7 @@
-/* PROJECT ATLAS - Metaverse: Blog fuer Interviews und OOC.
-   Aus metaverse.html herausgeloest (Etappe 5). Der Code ist unveraendert; neu
-   ist nur, dass er als ES-Modul laeuft. Die Funktionen, die von Inline-Handlern
-   im Markup aufgerufen werden, haengt window-bridge.js an window. */
+/* PROJECT ATLAS - Metaverse: blog for interviews and OOC.
+   Split out of metaverse.html (stage 5). The code is unchanged; it only runs
+   as an ES module now. window-bridge.js attaches the functions that inline
+   handlers in the markup call to window. */
 
 const APPSSCRIPT = 'https://script.google.com/macros/s/AKfycbxqLQvuPPdcu4zoLakqtRzKjx7Z2FUf69lwqhzmvoiKuIXMCtXVZHCGfKGFkVLW2JScOw/exec';
 const XOBOR = 'https://www.simsforumrpg.de';

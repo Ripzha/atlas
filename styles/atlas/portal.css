@@ -1,8 +1,7 @@
-/* PROJECT ATLAS - Andere Welten: Portal und dessen Tokens
-   Aus styles/atlas/atlas.css herausgeloest (Etappe 4). Die Regeln stehen
-   untereinander in derselben Reihenfolge wie vorher, damit sich an der
-   Kaskade nichts aendert. Ladereihenfolge in index.html:
-   base, map, sidebar, chars, portal, admin, event. */
+/* PROJECT ATLAS - Other worlds: portal and its tokens
+   Split out of styles/atlas/atlas.css (stage 4). The rules keep their
+   original order among each other, so the cascade is unchanged. Load order in
+   index.html: base, map, sidebar, chars, portal, admin, event. */
 
 /* ── CHARACTER VIEW ── */
 #otherworlds-container {position:fixed;inset:0;z-index:200;background:#050d18;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch}

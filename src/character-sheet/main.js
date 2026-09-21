@@ -1,12 +1,11 @@
-/* PROJECT ATLAS - Charakterbogen: Generator fuer den Charakter-Bogen.
-   Aus character-sheet.html herausgeloest (Etappe 5). Der Code ist
-   unveraendert; neu ist nur, dass er als ES-Modul laeuft. Die Seite hat keine
-   Inline-Handler, darum braucht sie keine Bruecke zu window.
+/* PROJECT ATLAS - Character sheet generator.
+   Split out of character-sheet.html (stage 5). The code is unchanged; it only
+   runs as an ES module now. The page has no inline handlers, so it needs no
+   bridge to window.
 
-   Abhaengigkeit: diese Datei liest src/atlas/data/world-lots.js als TEXT und
-   sucht die Deklaration von worldLots per Muster (siehe extractObj weiter
-   unten). Aendert sich dort die Schreibweise der Deklaration, bricht die
-   Wohnort-Auswahl hier. */
+   Dependency: this file reads src/atlas/data/world-lots.js as TEXT and finds
+   the worldLots declaration by pattern (see extractObj further down). If the
+   way that declaration is written changes, the home selection here breaks. */
 
 var APPS_SCRIPT_URL="https://script.google.com/macros/s/AKfycbzJ_fMI1LBjmFAQDhjD1sr3hJtdUj4OOor_WiWX3asl_eX0FXDN1wr64cNON3odhHdX/exec";
 
@@ -412,8 +411,8 @@ function loadHomeData(cb){
 // Dependency: if worldLots or BUILDINGS move or change their declaration, these paths must follow.
 function loadAtlasJsData_(){
   return Promise.all([
-    fetch("src/atlas/data/buildings.js?v=202609211349").then(function(r){return r.text();}),
-    fetch("src/atlas/data/world-lots.js?v=202609211349").then(function(r){return r.text();})
+    fetch("src/atlas/data/buildings.js?v=202609211401").then(function(r){return r.text();}),
+    fetch("src/atlas/data/world-lots.js?v=202609211401").then(function(r){return r.text();})
   ]).then(function(parts){return parts.join("\n");}).then(function(html){
     function extractObj(name){
       var re=new RegExp("const\\s+"+name+"\\s*=\\s*\\{");

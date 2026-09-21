@@ -1,8 +1,7 @@
-/* PROJECT ATLAS - Admin: Kalibrierung und Routen-Editor
-   Aus styles/atlas/atlas.css herausgeloest (Etappe 4). Die Regeln stehen
-   untereinander in derselben Reihenfolge wie vorher, damit sich an der
-   Kaskade nichts aendert. Ladereihenfolge in index.html:
-   base, map, sidebar, chars, portal, admin, event. */
+/* PROJECT ATLAS - Admin: calibration and route editor
+   Split out of styles/atlas/atlas.css (stage 4). The rules keep their
+   original order among each other, so the cascade is unchanged. Load order in
+   index.html: base, map, sidebar, chars, portal, admin, event. */
 
 .logo-icon.admin-active {background:#7a4a00;box-shadow:0 0 8px rgba(255,200,0,0.5)}
 #admin-content, .calib-log {scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.15) transparent}

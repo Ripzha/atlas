@@ -1,7 +1,6 @@
-/* PROJECT ATLAS - Simstagram: Charakter-Feed.
-   Aus simstagram.html herausgeloest (Etappe 5). Die Seite hatte zwei
-   style-Bloecke; sie stehen hier hintereinander in derselben Reihenfolge,
-   damit sich an der Kaskade nichts aendert. */
+/* PROJECT ATLAS - Simstagram: character feed.
+   Split out of simstagram.html (stage 5). The page had two style blocks; they
+   follow each other here in their original order, so the cascade is unchanged. */
 
 /* ─────────────────────────────────────────────────────
    TOKENS
@@ -396,7 +395,7 @@ button:active { transform: scale(.95); }
 .toast.ok  { border-color: var(--acc3); color: var(--acc3); }
 .toast.err { border-color: var(--red); color: var(--red); }
 
-/* --- zweiter style-Block aus simstagram.html, Reihenfolge unveraendert --- */
+/* --- second style block of simstagram.html, original order --- */
 
 #melissa-overlay {
   position: fixed; bottom: 80px; right: 20px; z-index: 99998;

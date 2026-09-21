@@ -1,8 +1,7 @@
-/* PROJECT ATLAS - Grundlagen: Seitenrahmen, Ladebildschirm, Sheets, gemeinsame Bausteine
-   Aus styles/atlas/atlas.css herausgeloest (Etappe 4). Die Regeln stehen
-   untereinander in derselben Reihenfolge wie vorher, damit sich an der
-   Kaskade nichts aendert. Ladereihenfolge in index.html:
-   base, map, sidebar, chars, portal, admin, event. */
+/* PROJECT ATLAS - Base: page frame, loading screen, sheets, shared parts
+   Split out of styles/atlas/atlas.css (stage 4). The rules keep their
+   original order among each other, so the cascade is unchanged. Load order in
+   index.html: base, map, sidebar, chars, portal, admin, event. */
 
 /* ==========================================================
    PROJEKT ATLAS - Stylesheet
@@ -17,10 +16,10 @@ html {overscroll-behavior:none}
 .logo-icon {width:24px;height:24px;background:#2a5a3a;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
 .title {font-size:12px;font-weight:500;letter-spacing:3px}
 .subtitle {font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:1px;margin-left:4px}
-/* "Zurueck" sieht in jeder Ansicht gleich aus und steht immer oben links:
-   Weltansicht und Gebaeude (#btn-back in der Kopfleiste), Charakter-
-   Uebersicht und Andere Welten (.view-back in deren eigenem Kopf, weil diese
-   Ansichten die Kopfleiste als Vollbild ueberdecken). */
+/* "Zurück" looks the same in every view and always sits top left: world view
+   and building (#btn-back in the top bar), character view and other worlds
+   (.view-back in their own header, because these views cover the top bar as a
+   full-screen layer). Basic functions stay in the same place everywhere. */
 #btn-back, .view-back {background:rgba(255,255,255,0.08);border:0.5px solid rgba(255,255,255,0.15);border-radius:5px;color:rgba(255,255,255,0.7);font-size:10px;padding:4px 9px;cursor:pointer;white-space:nowrap;flex-shrink:0}
 #btn-back {display:none}
 #btn-back:hover, .view-back:hover {color:#fff;border-color:rgba(255,255,255,0.35)}
@@ -61,8 +60,8 @@ html {overscroll-behavior:none}
 }
 
 .vignette {position:absolute;inset:0;background:radial-gradient(ellipse at 55% 50%,transparent 35%,rgba(0,0,0,0.55) 100%);pointer-events:none}
-/* Mietpreise oben rechts: oben links stehen Weltname und "Neuer Ort", und
-   frueher lag dort auch die Legende — sie verdeckte die Preise. */
+/* Rent prices top right: the world name and "Neuer Ort" sit top left, and the
+   legend used to sit there too — it covered the prices. */
 .rent-info-box {position:absolute;
   top:12px;
   right:12px;
@@ -91,13 +90,13 @@ html {overscroll-behavior:none}
   .rent-info-box {top:12px;right:10px;font-size:10px;padding:5px 8px;max-width:calc(100vw - 110px)}
 }
 
-/* Legende unten rechts; der Kasten klappt nach oben auf. */
+/* Legend bottom right; its box opens upwards. */
 .legend-btn {position:absolute;bottom:14px;right:12px;background:rgba(0,0,0,0.55);border:0.5px solid rgba(255,255,255,0.12);border-radius:6px;padding:4px 10px;font-size:10px;color:rgba(255,255,255,0.45);cursor:pointer;z-index:15;user-select:none}
 .legend-btn:hover {color:#fff}
 .legend-box {position:absolute;bottom:44px;right:12px;background:rgba(0,0,0,0.9);border:0.5px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 13px;z-index:15;display:none;min-width:185px}
 .legend-box.open {display:block}
 @media (max-width:768px) {
-  /* Ueber der unteren Leiste bleiben */
+  /* Stay above the bottom bar */
   .legend-btn {bottom:calc(60px + env(safe-area-inset-bottom));right:10px}
   .legend-box {bottom:calc(90px + env(safe-area-inset-bottom));right:10px}
 }
