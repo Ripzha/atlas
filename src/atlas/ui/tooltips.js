@@ -44,6 +44,19 @@ document.addEventListener('mouseout', function(e){
   if(t) hideNavTip();
 });
 
+/* Offset (in the dot's own CSS pixels) for a preview flipped below the dot:
+   just under the character tokens if the dot shows any, otherwise the old
+   18 px. The map can be zoomed, so screen pixels are converted back with the
+   dot's current scale. */
+function belowTokens(dot, dotR){
+  var tok = dot.querySelector('.dot-char-tokens');
+  if(!tok || !tok.children.length || getComputedStyle(tok).display === 'none') return 18;
+  var tr = tok.getBoundingClientRect();
+  if(!tr.height) return 18;
+  var scale = dot.offsetWidth ? dotR.width / dot.offsetWidth : 1;
+  return Math.round((tr.bottom - dotR.top) / (scale || 1)) + 8;
+}
+
 // Reposition lot/cluster tooltips that would go off-screen
 export function repositionTooltips(){
   document.querySelectorAll('.lot-dot, .cluster-dot').forEach(function(dot){
@@ -58,10 +71,12 @@ export function repositionTooltips(){
       requestAnimationFrame(function(){
         var r = tt.getBoundingClientRect();
         var dotR = dot.getBoundingClientRect();
-        // Off top
+        // Off top: flip below the dot — but below its character tokens,
+        // which sit right under the dot. The preview used to cover them, and
+        // with it the tokens a user was just about to click.
         if(r.top < 60){
           tt.style.bottom = 'auto';
-          tt.style.top = '18px';
+          tt.style.top = belowTokens(dot, dotR) + 'px';
           tt.style.transform = 'translateX(-50%)';
         }
         // Off right

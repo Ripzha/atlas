@@ -3,11 +3,11 @@
    activity outside the RPG worlds. Data comes from the Apps Script
    (SCRIPT_URL); the last known data is shown immediately from the cache. */
 
-import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609211447';
-import { readCache, writeCache } from '../../core/cache.js?v=202609211447';
-import { SCRIPT_URL } from '../../config.js?v=202609211447';
-import { syncMobileActivitySheet } from '../../ui/mobile-sheets.js?v=202609211447';
-import { CHARS } from '../characters/character-view.js?v=202609211447';
+import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609211500';
+import { readCache, writeCache } from '../../core/cache.js?v=202609211500';
+import { SCRIPT_URL } from '../../config.js?v=202609211500';
+import { syncMobileActivitySheet } from '../../ui/mobile-sheets.js?v=202609211500';
+import { CHARS } from '../characters/character-view.js?v=202609211500';
 
 /* "Neue Charaktere" always shows two entries. "Im Forum" draws up to twelve;
    how many of them are visible is decided by sidebar-fit.js, depending on the
