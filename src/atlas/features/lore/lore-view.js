@@ -22,12 +22,12 @@
    "#chars-…" does for the character view. The hash follows the view, so a
    refresh keeps it and the address can be shared. */
 
-import { escapeHtml } from '../../../shared/html.js?v=202609221512';
-import { closeSheet } from '../../ui/mobile-sheets.js?v=202609221512';
-import { WHEEL, LIBRARY, chapterInfo, iconSvg, isWheelChapter } from './families.js?v=202609221512';
-import { TEXT, MARKS } from './texts.js?v=202609221512';
-import { loadLore, chapterModel } from './lore-data.js?v=202609221512';
-import { buildIndex, compileQuery, search, snippet } from './lore-search.js?v=202609221512';
+import { escapeHtml } from '../../../shared/html.js?v=202609221517';
+import { closeSheet } from '../../ui/mobile-sheets.js?v=202609221517';
+import { WHEEL, LIBRARY, chapterInfo, iconSvg, isWheelChapter } from './families.js?v=202609221517';
+import { TEXT, MARKS } from './texts.js?v=202609221517';
+import { loadLore, chapterModel } from './lore-data.js?v=202609221517';
+import { buildIndex, compileQuery, search, snippet } from './lore-search.js?v=202609221517';
 
 var ALL = 'all';
 var view = { chapter: WHEEL[0].chapter, topic: null, filter: 'alle',
