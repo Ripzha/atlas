@@ -36,6 +36,9 @@
 .lore-moon-icon {color:var(--c);display:inline-flex}
 .lore-moon-name {font-family:var(--lore-serif);font-size:32px;font-weight:700;line-height:1}
 .lore-moon-count {font-size:12px;color:rgba(242,245,243,0.65)}
+/* Neutral moon: a library chapter is chosen, the wheel waits for a being */
+.lore-moon.is-neutral {border:1px dashed rgba(255,255,255,0.22);box-shadow:none;background:radial-gradient(circle at 38% 35%, #152538 0%, #0a1726 70%)}
+.lore-moon-hint {font-size:14px;color:rgba(242,245,243,0.6);line-height:1.4}
 
 .lore-sigil {position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);width:96px;padding:0;background:none;border:none;
   display:flex;flex-direction:column;align-items:center;gap:5px;color:inherit;cursor:pointer}
@@ -56,6 +59,7 @@
 .lore-chip.is-active {border-color:var(--c);background:var(--c-faint);color:#f2f5f3}
 
 .lore-library {margin-top:14px;display:flex;flex-direction:column;gap:8px}
+.lore-library-hint {font-size:13px;color:rgba(242,245,243,0.6);margin-top:-2px}
 .lore-library-list {display:flex;flex-wrap:wrap;gap:8px}
 .lore-book {height:38px;padding:0 14px;border-radius:19px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.04);
   color:rgba(242,245,243,0.85);font-size:13px;cursor:pointer}
@@ -67,6 +71,9 @@
 .lore-badge-icon {width:60px;height:60px;border-radius:14px;border:1px solid var(--c-soft);background:var(--c-faint);color:var(--c);
   display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .lore-lead {margin:0 0 18px;max-width:70ch;font-size:17px;line-height:1.55;color:rgba(242,245,243,0.86)}
+/* The chapter's own introduction, shown in full */
+.lore-intro {max-width:70ch;margin:0 0 18px;display:flex;flex-direction:column;gap:10px}
+.lore-intro p {margin:0;font-size:17px;line-height:1.55;color:rgba(242,245,243,0.86)}
 .lore-row {display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
 .lore-tiles {display:grid;grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));gap:10px}
 .lore-tile {display:flex;flex-direction:column;justify-content:space-between;gap:8px;min-height:78px;padding:14px 16px;border-radius:12px;
@@ -104,7 +111,9 @@
 .lore-list li + li {margin-top:4px}
 .lore-mark {align-self:flex-start;display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:11px;border:1px solid var(--m);
   color:var(--m);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
-.lore-block.is-dim, .lore-list.is-dim {opacity:0.4}
+/* Sub-heading inside a card ("Verwandelte Wesen" …) */
+.lore-subhead {margin:6px 0 -2px;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--c, #8fe0aa)}
+.lore-block.is-dim, .lore-list.is-dim, .lore-subhead.is-dim {opacity:0.4}
 
 .lore-pager {display:flex;justify-content:space-between;gap:12px;margin-top:22px}
 .lore-pager-btn {height:40px;padding:0 16px;border-radius:20px;border:1px solid rgba(255,255,255,0.14);background:none;color:#f2f5f3;font-size:13px;cursor:pointer}

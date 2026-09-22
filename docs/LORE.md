@@ -21,8 +21,13 @@ back to the map.
 
 ## Where the content comes from
 
-The only source is the **lore Word document**. `tools/lore/import-lore.py`
-turns it into `src/atlas/data/lore/lore.json`, which ATLAS reads.
+The only source is the **lore Word document**:
+`src/atlas/data/lore/Okkult-Lore.docx`. `tools/lore/import-lore.py` turns it
+into `src/atlas/data/lore/lore.json`, which ATLAS reads.
+
+Coloured highlights in the Word document (such as additions marked yellow for
+review) do not disturb the import: the text reads the same with or without
+colour.
 `lore.json` is **never edited by hand** — the next import would undo it.
 
 ATLAS only loads the lore when someone opens the view, so the map does not
@@ -34,7 +39,14 @@ get slower to start.
 2. Run the import (needs `pandoc`):
 
    ```bash
-   python3 tools/lore/import-lore.py Okkult-Lore.docx src/atlas/data/lore/lore.json
+   python3 tools/lore/import-lore.py src/atlas/data/lore/Okkult-Lore.docx src/atlas/data/lore/lore.json
+   ```
+
+   The importer also reads chapter drafts in forum BBCode
+   (`[big][b]6.1 …[/b][/big]`, one or more files, any order):
+
+   ```bash
+   python3 tools/lore/import-lore.py chapter-06.bbcode chapter-07.bbcode src/atlas/data/lore/lore.json
    ```
 
    The script reports how many chapters, sections and points it found and
@@ -66,14 +78,18 @@ the chapter heading is preferred for this.
 ## Which chapter goes where
 
 `src/atlas/features/lore/families.js` decides which chapter goes on the wheel
-(beings, with colour and icon) and which into the library (knowledge). If the
+(beings, with colour and icon) and which into the library (knowledge). The
+wheel answers "who", the library "where, how, what". The wheel therefore
+always names beings ("Waldwesen", not "Zauberwald"), and with a library
+chapter chosen its centre stays neutral. If the
 document gets new chapters or other numbers, only this file changes.
 
 ## Files
 
 | File | Purpose |
 |---|---|
-| `tools/lore/import-lore.py` | Word document → `lore.json` |
+| `src/atlas/data/lore/Okkult-Lore.docx` | the lore as a Word document, the only source |
+| `tools/lore/import-lore.py` | Word document or BBCode drafts → `lore.json` |
 | `src/atlas/data/lore/lore.json` | the lore as data, generated |
 | `src/atlas/features/lore/lore-view.js` | view: wheel, topics, cards, filter |
 | `src/atlas/features/lore/lore-data.js` | loading and shaping the data |

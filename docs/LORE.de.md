@@ -21,9 +21,14 @@ zurück zur Karte.
 
 ## Woher die Inhalte kommen
 
-Einzige Quelle ist das **Word-Dokument der Lore**. Daraus erzeugt
+Einzige Quelle ist das **Word-Dokument der Lore**:
+`src/atlas/data/lore/Okkult-Lore.docx`. Daraus erzeugt
 `tools/lore/import-lore.py` die Datei `src/atlas/data/lore/lore.json`, die
-ATLAS liest. `lore.json` wird **nie von Hand geändert** — beim nächsten Import
+ATLAS liest.
+
+Farbige Markierungen im Word-Dokument (etwa gelb hinterlegte Ergänzungen zur
+Prüfung) stören den Import nicht: Der Text wird mit oder ohne Farbe gleich
+gelesen. `lore.json` wird **nie von Hand geändert** — beim nächsten Import
 wäre die Änderung weg.
 
 ATLAS lädt die Lore erst, wenn jemand die Ansicht öffnet. Die Karte startet
@@ -35,7 +40,14 @@ dadurch nicht langsamer.
 2. Import ausführen (braucht `pandoc`):
 
    ```bash
-   python3 tools/lore/import-lore.py Okkult-Lore.docx src/atlas/data/lore/lore.json
+   python3 tools/lore/import-lore.py src/atlas/data/lore/Okkult-Lore.docx src/atlas/data/lore/lore.json
+   ```
+
+   Der Importer liest auch Kapitel-Entwürfe in BBCode aus dem Forum
+   (`[big][b]6.1 …[/b][/big]`, eine oder mehrere Dateien, Reihenfolge egal):
+
+   ```bash
+   python3 tools/lore/import-lore.py kapitel-06.bbcode kapitel-07.bbcode src/atlas/data/lore/lore.json
    ```
 
    Das Skript meldet, wie viele Kapitel, Abschnitte und Punkte es gefunden
@@ -69,6 +81,9 @@ Kapitelüberschrift wird dafür bevorzugt.
 
 `src/atlas/features/lore/families.js` legt fest, welches Kapitel ins Rad
 kommt (Wesen, mit Farbe und Symbol) und welches in die Bibliothek (Wissen).
+Das Rad beantwortet „wer", die Bibliothek „wo, wie, was". Im Rad stehen darum
+immer Wesen („Waldwesen", nicht „Zauberwald"), und ist ein Bibliothekskapitel
+gewählt, bleibt die Mitte des Rads neutral.
 Bekommt das Dokument neue Kapitel oder andere Nummern, wird nur diese Datei
 angepasst.
 
@@ -76,7 +91,8 @@ angepasst.
 
 | Datei | Aufgabe |
 |---|---|
-| `tools/lore/import-lore.py` | Word-Dokument → `lore.json` |
+| `src/atlas/data/lore/Okkult-Lore.docx` | die Lore als Word-Dokument, einzige Quelle |
+| `tools/lore/import-lore.py` | Word-Dokument oder BBCode-Entwürfe → `lore.json` |
 | `src/atlas/data/lore/lore.json` | die Lore als Daten, erzeugt |
 | `src/atlas/features/lore/lore-view.js` | Ansicht: Rad, Themen, Karten, Filter |
 | `src/atlas/features/lore/lore-data.js` | Laden und Aufbereiten der Daten |

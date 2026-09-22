@@ -1,8 +1,11 @@
 /* PROJECT ATLAS - Occult lore: which chapter is shown where.
 
    The lore document has two kinds of chapters:
-   - chapters about beings: shown on the wheel, each with a colour and an icon
+   - chapters about beings: shown on the wheel, each with a colour and an icon.
+     Names on the wheel are always beings ("Waldwesen", not "Zauberwald"), so
+     the wheel never looks like a list of places.
    - chapters of general knowledge: shown as the "Bibliothek" below the wheel
+   The wheel answers "who", the library "where, how, what".
 
    `chapter` is the chapter number in the lore document ("# 6. Vampire").
    If the document gets new chapters or new numbers, this is the only place
@@ -12,10 +15,10 @@
 
 export const WHEEL = [
   { chapter: '6',  name: 'Vampire',     color: '#e0676d', icon: 'vampire' },
-  { chapter: '11', name: 'Unterwelt',   color: '#e0874d', icon: 'underworld' },
+  { chapter: '11', name: 'Unterweltwesen', color: '#e0874d', icon: 'underworld' },
   { chapter: '7',  name: 'Werwölfe',    color: '#dba25a', icon: 'werewolf' },
   { chapter: '10', name: 'Goblins',     color: '#c9c05a', icon: 'goblin' },
-  { chapter: '9',  name: 'Zauberwald',  color: '#7fcf7a', icon: 'forest' },
+  { chapter: '9',  name: 'Waldwesen',   color: '#7fcf7a', icon: 'forest' },
   { chapter: '12', name: 'Erschaffene', color: '#5ccf9f', icon: 'created' },
   { chapter: '8',  name: 'Meersims',    color: '#57c2b9', icon: 'mermaid' },
   { chapter: '15', name: 'Aliens',      color: '#6ab4e0', icon: 'alien' },
@@ -62,6 +65,11 @@ export function iconSvg(name, size){
 }
 
 /* Look up the display settings of a chapter, wheel or library. */
+export function isWheelChapter(nr){
+  for (var i = 0; i < WHEEL.length; i++) if (WHEEL[i].chapter === nr) return true;
+  return false;
+}
+
 export function chapterInfo(nr){
   for (var i = 0; i < WHEEL.length; i++) if (WHEEL[i].chapter === nr) return WHEEL[i];
   for (var j = 0; j < LIBRARY.length; j++) {

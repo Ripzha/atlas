@@ -9,7 +9,7 @@
    cards: one card per point ("### 6.3.1"). A topic without points becomes a
    single card of its own, so every chapter reads the same way. */
 
-var LORE_URL = new URL('../../data/lore/lore.json?v=202609221307', import.meta.url).href;
+var LORE_URL = new URL('../../data/lore/lore.json?v=202609221331', import.meta.url).href;
 var loading = null;
 
 export function loadLore(){
@@ -83,7 +83,10 @@ export function chapterModel(lore, nr){
   return {
     nr: chapter.nr,
     title: chapter.titel,
-    lead: findLead(chapter),
+    // The chapter's own introduction is shown in full; without one, the first
+    // sentences of its text stand in as a short description.
+    intro: chapter.intro,
+    lead: chapter.intro.length ? '' : findLead(chapter),
     topics: topics,
     cardCount: topics.reduce(function(n, t){ return n + t.cards.length; }, 0)
   };

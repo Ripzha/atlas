@@ -7,6 +7,8 @@ export const TEXT = {
   heading: 'Wer lebt in Simswelt?',
   back: '← Zurück',
   library: 'Bibliothek',
+  libraryHint: 'Wissen über Welten, Ordnung, Artefakte und Geschichte',
+  pickBeing: 'Wähle ein Wesen',
   topics: 'Themen',
   allTopics: 'Alle Themen',
   loading: 'Lore wird geladen …',

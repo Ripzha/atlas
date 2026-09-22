@@ -3,7 +3,7 @@
  * Renders the header stats, the latest issue (hero) and the archive grid.
  */
 
-import { issues } from "./issues.js?v=202609221307";
+import { issues } from "./issues.js?v=202609221331";
 
 
 // Stats

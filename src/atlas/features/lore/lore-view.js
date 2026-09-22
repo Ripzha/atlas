@@ -12,11 +12,11 @@
    overview back to the map — like "Zurück" everywhere else in ATLAS.
    Opened from the menu (#nav-lore, and #nav-lore-mob in the phone sheet). */
 
-import { escapeHtml } from '../../../shared/html.js?v=202609221307';
-import { closeSheet } from '../../ui/mobile-sheets.js?v=202609221307';
-import { WHEEL, LIBRARY, chapterInfo, iconSvg } from './families.js?v=202609221307';
-import { TEXT, MARKS } from './texts.js?v=202609221307';
-import { loadLore, chapterModel } from './lore-data.js?v=202609221307';
+import { escapeHtml } from '../../../shared/html.js?v=202609221331';
+import { closeSheet } from '../../ui/mobile-sheets.js?v=202609221331';
+import { WHEEL, LIBRARY, chapterInfo, iconSvg, isWheelChapter } from './families.js?v=202609221331';
+import { TEXT, MARKS } from './texts.js?v=202609221331';
+import { loadLore, chapterModel } from './lore-data.js?v=202609221331';
 
 var ALL = 'all';
 var view = { chapter: WHEEL[0].chapter, topic: null, filter: 'alle' };
@@ -82,13 +82,18 @@ function wheel(active){
       + '<span class="lore-sigil-icon">' + iconSvg(f.icon, 26) + '</span>'
       + '<span class="lore-sigil-name">' + escapeHtml(f.name) + '</span></button>';
   }).join('');
+  // The moon only ever shows a being. With a library chapter chosen it stays
+  // neutral, so the library never looks like part of the wheel.
+  var moon = active
+    ? '<div class="lore-moon" style="' + colorVars(active.color) + '">'
+      + '<span class="lore-moon-icon">' + iconSvg(active.icon, 42) + '</span>'
+      + '<span class="lore-moon-name">' + escapeHtml(active.name) + '</span>'
+      + '<span class="lore-moon-count">' + escapeHtml(active.countText) + '</span>'
+      + '</div>'
+    : '<div class="lore-moon is-neutral"><span class="lore-moon-hint">' + escapeHtml(TEXT.pickBeing) + '</span></div>';
   return '<div class="lore-wheel">'
     + '<div class="lore-orbit" aria-hidden="true"></div>'
-    + '<div class="lore-moon" style="' + colorVars(active.color) + '">'
-    +   '<span class="lore-moon-icon">' + iconSvg(active.icon, 42) + '</span>'
-    +   '<span class="lore-moon-name">' + escapeHtml(active.name) + '</span>'
-    +   '<span class="lore-moon-count">' + escapeHtml(active.countText) + '</span>'
-    + '</div>'
+    + moon
     + sigils
     + '</div>';
 }
@@ -108,6 +113,7 @@ function chips(){
 function library(){
   return '<div class="lore-library">'
     + '<div class="lore-kicker">' + escapeHtml(TEXT.library) + '</div>'
+    + '<div class="lore-library-hint">' + escapeHtml(TEXT.libraryHint) + '</div>'
     + '<div class="lore-library-list">'
     + LIBRARY.map(function(l){
       var on = l.chapter === view.chapter;
@@ -132,7 +138,7 @@ function overview(){
     + '<section class="lore-pick" aria-label="' + escapeHtml(TEXT.heading) + '">'
     +   '<div class="lore-kicker">' + escapeHtml(TEXT.kicker) + '</div>'
     +   '<h1 class="lore-h1">' + escapeHtml(TEXT.heading) + '</h1>'
-    +   wheel(active) + chips() + library()
+    +   wheel(isWheelChapter(view.chapter) ? active : null) + chips() + library()
     + '</section>'
     + '<section class="lore-detail" style="' + colorVars(info.color) + '" aria-live="polite">'
     +   '<div class="lore-detail-head">'
@@ -140,7 +146,8 @@ function overview(){
     +     '<div>' + (model.title !== info.name ? '<div class="lore-kicker">' + inline(model.title) + '</div>' : '')
     +     '<h2 class="lore-h2">' + escapeHtml(info.name) + '</h2></div>'
     +   '</div>'
-    +   (model.lead ? '<p class="lore-lead">' + inline(model.lead) + '</p>' : '')
+    +   (model.intro.length ? '<div class="lore-intro">' + model.intro.map(blockHtml).join('') + '</div>'
+         : (model.lead ? '<p class="lore-lead">' + inline(model.lead) + '</p>' : ''))
     +   '<div class="lore-row"><span class="lore-kicker">' + escapeHtml(TEXT.topics) + '</span>'
     +   '<span class="lore-muted">' + escapeHtml(active.countText) + '</span></div>'
     +   '<div class="lore-tiles">' + tiles + '</div>'
@@ -151,6 +158,9 @@ function overview(){
 /* ---------- level 2: topic ---------- */
 
 function blockHtml(b){
+  if (b.art === 'zwischentitel') {
+    return '<h4 class="lore-subhead' + (view.filter !== 'alle' ? ' is-dim' : '') + '">' + inline(b.text) + '</h4>';
+  }
   if (b.art === 'liste') {
     var dimList = view.filter !== 'alle' ? ' is-dim' : '';
     return '<ul class="lore-list' + dimList + '">' + (b.punkte || []).map(function(x){ return '<li>' + inline(x) + '</li>'; }).join('') + '</ul>';
