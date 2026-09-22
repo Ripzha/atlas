@@ -3,7 +3,10 @@
 **Deutsch** · [English](LORE.md)
 
 Die Okkult-Lore ist eine eigene Ansicht in ATLAS. Sie öffnet sich über
-„🔮 Okkult-Lore" in der linken Leiste und im Handy-Menü.
+„🔮 Okkult-Lore" in der linken Leiste und im Handy-Menü — oder direkt über
+die Adresse: **https://ripzha.github.io/atlas/#lore** öffnet ATLAS gleich auf
+der Lore. Wie bei der Charakter-Übersicht (`#chars-…`) folgt die Adresse der
+Ansicht: Neu laden behält die Lore, Schliessen entfernt `#lore` wieder.
 
 ## Grundsatz: keine Textwand
 

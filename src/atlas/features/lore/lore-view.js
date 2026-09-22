@@ -17,14 +17,17 @@
 
    The header with the search field is built once and stays; only the page
    below it is redrawn, so typing never loses the cursor.
-   Opened from the menu (#nav-lore, and #nav-lore-mob in the phone sheet). */
+   Opened from the menu (#nav-lore, and #nav-lore-mob in the phone sheet) or
+   by the address: ".../atlas/#lore" opens ATLAS directly on the lore, like
+   "#chars-…" does for the character view. The hash follows the view, so a
+   refresh keeps it and the address can be shared. */
 
-import { escapeHtml } from '../../../shared/html.js?v=202609221359';
-import { closeSheet } from '../../ui/mobile-sheets.js?v=202609221359';
-import { WHEEL, LIBRARY, chapterInfo, iconSvg, isWheelChapter } from './families.js?v=202609221359';
-import { TEXT, MARKS } from './texts.js?v=202609221359';
-import { loadLore, chapterModel } from './lore-data.js?v=202609221359';
-import { buildIndex, compileQuery, search, snippet } from './lore-search.js?v=202609221359';
+import { escapeHtml } from '../../../shared/html.js?v=202609221406';
+import { closeSheet } from '../../ui/mobile-sheets.js?v=202609221406';
+import { WHEEL, LIBRARY, chapterInfo, iconSvg, isWheelChapter } from './families.js?v=202609221406';
+import { TEXT, MARKS } from './texts.js?v=202609221406';
+import { loadLore, chapterModel } from './lore-data.js?v=202609221406';
+import { buildIndex, compileQuery, search, snippet } from './lore-search.js?v=202609221406';
 
 var ALL = 'all';
 var view = { chapter: WHEEL[0].chapter, topic: null, filter: 'alle',
@@ -447,10 +450,13 @@ function render(){
   if (view.focus) { focusHit(page); view.focus = null; }
 }
 
+var LORE_HASH = '#lore';
+
 export function openLoreView(){
   var el = root();
   if (!el) return;
   el.classList.add('open');
+  if (location.hash !== LORE_HASH) location.hash = LORE_HASH.slice(1);
   ensureFont();
   render();
   if (!lore) {
@@ -463,6 +469,7 @@ export function openLoreView(){
 export function closeLoreView(){
   var el = root();
   if (el) el.classList.remove('open');
+  if (location.hash === LORE_HASH) location.hash = '';
 }
 
 function onClick(e){
@@ -507,6 +514,14 @@ function bind(){
   if (nav) nav.addEventListener('click', function(e){ e.preventDefault(); openLoreView(); });
   var navMob = document.getElementById('nav-lore-mob');
   if (navMob) navMob.addEventListener('click', function(e){ e.preventDefault(); closeSheet(); openLoreView(); });
+
+  // Address: "#lore" opens the lore, going back to an address without it closes it
+  if (location.hash === LORE_HASH) openLoreView();
+  window.addEventListener('hashchange', function(){
+    var open = root() && root().classList.contains('open');
+    if (location.hash === LORE_HASH && !open) openLoreView();
+    else if (location.hash !== LORE_HASH && open) closeLoreView();
+  });
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind);

@@ -2,12 +2,12 @@
    Characters active in the last 14 days, grouped by forum post (merged cards
    with unfolding tokens), plus the hover preview of the latest post. */
 
-import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609221359';
-import { SCRIPT_URL } from '../../config.js?v=202609221359';
-import { WORLD_COLORS } from '../../data/worlds.js?v=202609221359';
-import { syncMobileActivitySheet } from '../../ui/mobile-sheets.js?v=202609221359';
-import { CHARS } from '../characters/character-view.js?v=202609221359';
-import { _hasInteracted, _isVisible } from '../../core/boot.js?v=202609221359';
+import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609221406';
+import { SCRIPT_URL } from '../../config.js?v=202609221406';
+import { WORLD_COLORS } from '../../data/worlds.js?v=202609221406';
+import { syncMobileActivitySheet } from '../../ui/mobile-sheets.js?v=202609221406';
+import { CHARS } from '../characters/character-view.js?v=202609221406';
+import { _hasInteracted, _isVisible } from '../../core/boot.js?v=202609221406';
 
 /* At most this many groups are drawn. How many of them are visible is decided
    by sidebar-fit.js, depending on the room in the sidebar. */

@@ -11,8 +11,8 @@
    The click is caught in the capture phase, before it reaches the dot: the
    dot would otherwise open its own thread. */
 
-import { CHARS } from './character-view.js?v=202609221359';
-import { getThreadIdFromUrl } from './tokens.js?v=202609221359';
+import { CHARS } from './character-view.js?v=202609221406';
+import { getThreadIdFromUrl } from './tokens.js?v=202609221406';
 
 const MENU_ID = 'atlas-token-menu';
 
