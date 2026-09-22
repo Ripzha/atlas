@@ -37,6 +37,7 @@ export const TERMS = [
   // Magic
   { forms: ['Nekromantie'], chapter: '4', topic: 'Nekromantie' },
   { forms: ['Blutmagie'], chapter: '4', topic: 'Blutmagie' },
+  { forms: ['Animagi', 'Animagus'], chapter: '4', topic: 'Verwandlungsmagie', card: 'Animagi' },
   { forms: ['Karma'], chapter: '1', topic: 'Karma' },
 
   // Artefacts and potions

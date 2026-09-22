@@ -17,8 +17,8 @@
    })
 */
 
-import { callAppsScript } from '../backend.js?v=202609221539';
-import { escapeHtml } from '../html.js?v=202609221539';
+import { callAppsScript } from '../backend.js?v=202609221541';
+import { escapeHtml } from '../html.js?v=202609221541';
 
 const PILL_POS_KEY = 'atlas_event_pill_pos';
 const PHONE_WIDTH = 768;

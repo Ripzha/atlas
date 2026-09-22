@@ -6,9 +6,9 @@
    target's first sentence while the mouse rests on a link (devices with a
    mouse only; on touch a tap simply opens the target). */
 
-import { escapeHtml } from '../../../shared/html.js?v=202609221539';
-import { chapterModel } from './lore-data.js?v=202609221539';
-import { TERMS } from './terms.js?v=202609221539';
+import { escapeHtml } from '../../../shared/html.js?v=202609221541';
+import { chapterModel } from './lore-data.js?v=202609221541';
+import { TERMS } from './terms.js?v=202609221541';
 
 var resolvedFor = null;
 var byForm = {};

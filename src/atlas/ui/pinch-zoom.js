@@ -2,7 +2,7 @@
    Touch zoom/pan for the continent map and the world view. The world zoom is
    paused while calibration mode is active (calibWorldMode from core/state.js). */
 
-import { state } from '../core/state.js?v=202609221539';
+import { state } from '../core/state.js?v=202609221541';
 
 function makePinchZoom(el,opts={}){
   let tx=0,ty=0,sc=1;
