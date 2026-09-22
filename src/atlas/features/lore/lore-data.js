@@ -9,7 +9,7 @@
    cards: one card per point ("### 6.3.1"). A topic without points becomes a
    single card of its own, so every chapter reads the same way. */
 
-var LORE_URL = new URL('../../data/lore/lore.json?v=202609221541', import.meta.url).href;
+var LORE_URL = new URL('../../data/lore/lore.json?v=202609221545', import.meta.url).href;
 var loading = null;
 
 export function loadLore(){

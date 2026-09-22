@@ -4,11 +4,15 @@
    lore. linkTerms() turns the first mention of each name in a card into a
    link; a name is never linked inside its own topic. bindTermTips() shows the
    target's first sentence while the mouse rests on a link (devices with a
-   mouse only; on touch a tap simply opens the target). */
+   mouse only; on touch a tap simply opens the target).
 
-import { escapeHtml } from '../../../shared/html.js?v=202609221541';
-import { chapterModel } from './lore-data.js?v=202609221541';
-import { TERMS } from './terms.js?v=202609221541';
+   The hint text lives in data-term-tip, not data-tip: ui/tooltips.js shows its
+   own sidebar tooltip for every [data-tip] on the page, which would open a
+   second window on top of this one. */
+
+import { escapeHtml } from '../../../shared/html.js?v=202609221545';
+import { chapterModel } from './lore-data.js?v=202609221545';
+import { TERMS } from './terms.js?v=202609221545';
 
 var resolvedFor = null;
 var byForm = {};
@@ -91,7 +95,7 @@ export function linkTerms(html, ctx){
     ctx.seen[t.focus] = true;
     return before + '<span class="lore-term" role="link" tabindex="0" data-action="term"'
       + ' data-chapter="' + t.chapter + '" data-topic="' + t.topic + '" data-focus="' + escapeHtml(t.focus) + '"'
-      + ' data-tip-title="' + escapeHtml(t.title) + '" data-tip="' + escapeHtml(t.tip) + '">' + form + '</span>';
+      + ' data-term-title="' + escapeHtml(t.title) + '" data-term-tip="' + escapeHtml(t.tip) + '">' + form + '</span>';
   });
 }
 
@@ -108,8 +112,8 @@ export function bindTermTips(root){
     var term = e.target.closest && e.target.closest('.lore-term');
     if (!term) return;
     tip.innerHTML = '';
-    var h = document.createElement('strong'); h.textContent = term.getAttribute('data-tip-title');
-    var p = document.createElement('span'); p.textContent = term.getAttribute('data-tip');
+    var h = document.createElement('strong'); h.textContent = term.getAttribute('data-term-title');
+    var p = document.createElement('span'); p.textContent = term.getAttribute('data-term-tip');
     tip.appendChild(h); tip.appendChild(p);
     tip.classList.add('is-open');
     var r = term.getBoundingClientRect();

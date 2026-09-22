@@ -2,9 +2,9 @@
    Small portraits on world dots, lot dots and clusters showing where
    characters were last seen (matched by forum thread ID). */
 
-import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609221541';
-import { updateOtherworldArrowTokens } from '../otherworlds/portal.js?v=202609221541';
-import { CHARS } from './character-view.js?v=202609221541';
+import { IMG_THUMB, imageUrl } from '../../core/images.js?v=202609221545';
+import { updateOtherworldArrowTokens } from '../otherworlds/portal.js?v=202609221545';
+import { CHARS } from './character-view.js?v=202609221545';
 
 function getThreadIdFromUrl(url){
   if(!url) return null;
