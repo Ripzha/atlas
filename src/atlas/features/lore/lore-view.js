@@ -15,6 +15,9 @@
    overview back to the map — like "Zurück" everywhere else in ATLAS. A card
    opened from the search goes back to the results.
 
+   Names like "Morpidianer" link to the topic explaining them (terms.js,
+   lore-terms.js); "← Zurück" then returns to the card the link was in.
+
    The header with the search field is built once and stays; only the page
    below it is redrawn, so typing never loses the cursor.
    Opened from the menu (#nav-lore, and #nav-lore-mob in the phone sheet) or
@@ -22,16 +25,19 @@
    "#chars-…" does for the character view. The hash follows the view, so a
    refresh keeps it and the address can be shared. */
 
-import { escapeHtml } from '../../../shared/html.js?v=202609221517';
-import { closeSheet } from '../../ui/mobile-sheets.js?v=202609221517';
-import { WHEEL, LIBRARY, chapterInfo, iconSvg, isWheelChapter } from './families.js?v=202609221517';
-import { TEXT, MARKS } from './texts.js?v=202609221517';
-import { loadLore, chapterModel } from './lore-data.js?v=202609221517';
-import { buildIndex, compileQuery, search, snippet } from './lore-search.js?v=202609221517';
+import { escapeHtml } from '../../../shared/html.js?v=202609221526';
+import { closeSheet } from '../../ui/mobile-sheets.js?v=202609221526';
+import { WHEEL, LIBRARY, chapterInfo, iconSvg, isWheelChapter } from './families.js?v=202609221526';
+import { TEXT, MARKS } from './texts.js?v=202609221526';
+import { loadLore, chapterModel } from './lore-data.js?v=202609221526';
+import { buildIndex, compileQuery, search, snippet } from './lore-search.js?v=202609221526';
+import { resolveTerms, linkTerms, bindTermTips } from './lore-terms.js?v=202609221526';
 
 var ALL = 'all';
 var view = { chapter: WHEEL[0].chapter, topic: null, filter: 'alle',
-             query: '', searching: false, before: null, fromSearch: false, focus: null };
+             query: '', searching: false, before: null, fromSearch: false, focus: null,
+             stack: [] };   // where a followed name link came from, for "← Zurück"
+var linkCtx = null;          // set while one card is drawn: names are linked once per card
 var MIN_QUERY = 2;
 var lore = null;
 
@@ -183,7 +189,7 @@ function overview(){
     +     '<div>' + (model.title !== info.name ? '<div class="lore-kicker">' + inline(model.title) + '</div>' : '')
     +     '<h2 class="lore-h2">' + escapeHtml(info.name) + '</h2></div>'
     +   '</div>'
-    +   (model.intro.length ? '<div class="lore-intro" data-focus="chapter-intro">' + model.intro.map(blockHtml).join('') + '</div>'
+    +   (model.intro.length ? '<div class="lore-intro" data-focus="chapter-intro">' + linkedBlocks(model.intro, null) + '</div>'
          : (model.lead ? '<p class="lore-lead">' + inline(model.lead) + '</p>' : ''))
     +   '<div class="lore-row"><span class="lore-kicker">' + escapeHtml(TEXT.topics) + '</span>'
     +   '<span class="lore-muted">' + escapeHtml(active.countText) + '</span></div>'
@@ -200,13 +206,21 @@ function blockHtml(b){
   }
   if (b.art === 'liste') {
     var dimList = view.filter !== 'alle' ? ' is-dim' : '';
-    return '<ul class="lore-list' + dimList + '">' + (b.punkte || []).map(function(x){ return '<li>' + inline(x) + '</li>'; }).join('') + '</ul>';
+    return '<ul class="lore-list' + dimList + '">' + (b.punkte || []).map(function(x){ return '<li>' + linkTerms(inline(x), linkCtx) + '</li>'; }).join('') + '</ul>';
   }
   var m = markOf(b.art);
   var dim = (view.filter !== 'alle' && b.art !== view.filter) ? ' is-dim' : '';
   return '<div class="lore-block' + dim + '">'
     + (m ? '<span class="lore-mark" style="--m:' + m.color + '">' + escapeHtml(m.label) + '</span>' : '')
-    + '<p>' + inline(b.text) + '</p></div>';
+    + '<p>' + linkTerms(inline(b.text), linkCtx) + '</p></div>';
+}
+
+/* Draws blocks with names linked, once per target within this group of blocks. */
+function linkedBlocks(blocks, topicId){
+  linkCtx = { self: topicId, seen: {} };
+  var html = blocks.map(blockHtml).join('');
+  linkCtx = null;
+  return html;
 }
 
 function cardVisible(card){
@@ -214,11 +228,11 @@ function cardVisible(card){
   return card.blocks.some(function(b){ return b.art === view.filter; });
 }
 
-function cardHtml(card){
+function cardHtml(card, topicId){
   return '<article class="lore-card" data-focus="' + escapeHtml(card.id) + '">'
     + '<div class="lore-card-head"><span class="lore-card-nr">' + escapeHtml(card.nr) + '</span>'
     + '<h3 class="lore-card-title">' + inline(card.title) + '</h3></div>'
-    + card.blocks.map(blockHtml).join('')
+    + linkedBlocks(card.blocks, topicId)
     + '</article>';
 }
 
@@ -252,11 +266,11 @@ function topicView(){
   var body = shown.map(function(t){
     var cards = t.cards.filter(cardVisible);
     var lead = t.intro.length && view.filter === 'alle'
-      ? '<div class="lore-topic-intro" data-focus="intro-' + t.id + '">' + t.intro.map(blockHtml).join('') + '</div>' : '';
+      ? '<div class="lore-topic-intro" data-focus="intro-' + t.id + '">' + linkedBlocks(t.intro, t.id) + '</div>' : '';
     if (!cards.length && showAll) return '';
     return (showAll ? '<h3 class="lore-group-title">' + inline(t.title) + '</h3>' : '')
       + lead
-      + (cards.length ? '<div class="lore-cards">' + cards.map(cardHtml).join('') + '</div>'
+      + (cards.length ? '<div class="lore-cards">' + cards.map(function(c){ return cardHtml(c, t.id); }).join('') + '</div>'
                       : '<p class="lore-note">' + escapeHtml(TEXT.noCards) + '</p>');
   }).join('');
   if (!body) body = '<p class="lore-note">' + escapeHtml(TEXT.noCards) + '</p>';
@@ -446,6 +460,7 @@ function render(){
     page.innerHTML = '<p class="lore-note">' + escapeHtml(loadFailed ? TEXT.loadError : TEXT.loading) + '</p>';
     return;
   }
+  resolveTerms(lore);
   page.innerHTML = view.searching ? resultsView() : (view.topic ? topicView() : overview());
   if (view.focus) { focusHit(page); view.focus = null; }
 }
@@ -482,6 +497,11 @@ function onClick(e){
       root().querySelector('.lore-search-input').value = '';
       view.query = '';
       leaveSearch();
+    } else if (view.stack.length) {
+      // a followed name link goes back to the card it was in
+      var from = view.stack.pop();
+      view.chapter = from.chapter; view.topic = from.topic; view.filter = from.filter;
+      view.fromSearch = from.fromSearch; view.focus = from.focus;
     } else if (view.fromSearch) {
       // a card opened from the results goes back to the results
       view.searching = true; view.fromSearch = false; view.filter = 'alle';
@@ -494,8 +514,19 @@ function onClick(e){
     view.searching = false;
     view.fromSearch = true;
     view.focus = t.getAttribute('data-focus');
+  } else if (action === 'term') {
+    var holder = t.parentElement && t.parentElement.closest('[data-focus]');
+    view.stack.push({ chapter: view.chapter, topic: view.topic, filter: view.filter,
+                      fromSearch: view.fromSearch, focus: holder ? holder.getAttribute('data-focus') : null });
+    view.chapter = t.getAttribute('data-chapter');
+    view.topic = t.getAttribute('data-topic');
+    view.filter = 'alle';
+    view.searching = false;
+    view.fromSearch = false;
+    view.focus = t.getAttribute('data-focus');
   } else if (action === 'chapter') {
     view.chapter = t.getAttribute('data-chapter'); view.topic = null; view.filter = 'alle';
+    view.stack = [];   // a new chapter from the wheel starts a new way
   } else if (action === 'topic') {
     view.topic = t.getAttribute('data-topic'); view.filter = 'alle';
   } else if (action === 'filter') {
@@ -503,13 +534,21 @@ function onClick(e){
   } else {
     return;
   }
+  var focusing = !!view.focus;
   render();
-  if (action !== 'filter' && action !== 'hit') root().scrollTop = 0;
+  if (action !== 'filter' && !focusing) root().scrollTop = 0;
 }
 
 function bind(){
   var el = root();
-  if (el) el.addEventListener('click', onClick);
+  if (el) {
+    el.addEventListener('click', onClick);
+    // Name links are spans with role="link": Enter follows them like a click
+    el.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('lore-term')) { e.preventDefault(); e.target.click(); }
+    });
+    bindTermTips(el);
+  }
   var nav = document.getElementById('nav-lore');
   if (nav) nav.addEventListener('click', function(e){ e.preventDefault(); openLoreView(); });
   var navMob = document.getElementById('nav-lore-mob');

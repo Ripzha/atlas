@@ -26,6 +26,14 @@ point on average. The view therefore never shows everything at once:
    the singular finds the plural ("werwolf" finds "Werwölfe"). A hit opens
    exactly its card, which lights up briefly.
 
+4. **Links:** names like "Morpidianer", "Sinenima" or "Lupus Noctis" are
+   clickable in the cards and open the topic explaining them. With a mouse,
+   hovering shows that topic's first sentence. Each name is linked once per
+   card and never inside its own topic. Which names lead where is listed in
+   `src/atlas/features/lore/terms.js` — targets are found by title, not by
+   number, so renumbering breaks nothing. A target that cannot be found
+   leaves the word as plain text.
+
 "← Zurück" goes one level up: from a topic to the overview, from the overview
 back to the map. A card opened from the search goes back to the results, and
 from the results back to where the search started.
@@ -105,6 +113,8 @@ document gets new chapters or other numbers, only this file changes.
 | `src/atlas/features/lore/lore-view.js` | view: wheel, topics, cards, filter |
 | `src/atlas/features/lore/lore-data.js` | loading and shaping the data |
 | `src/atlas/features/lore/lore-search.js` | search: hits, spellings, text snippets |
+| `src/atlas/features/lore/terms.js` | list of linked names and their targets |
+| `src/atlas/features/lore/lore-terms.js` | links: resolve targets, set links, hint window |
 | `src/atlas/features/lore/families.js` | chapter → wheel or library, colours, icons |
 | `src/atlas/features/lore/texts.js` | German UI text, names of the markings |
 | `styles/atlas/lore.css` | look, all scoped to `#lore-container` |

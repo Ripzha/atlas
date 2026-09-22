@@ -27,6 +27,15 @@ rund 20 Wörter pro Unterpunkt. Die Ansicht zeigt deshalb nie alles auf einmal:
    („werwolf" findet „Werwölfe"). Ein Treffer öffnet genau seine Karte, die
    kurz aufleuchtet.
 
+4. **Verweise:** Namen wie „Morpidianer", „Sinenima" oder „Lupus Noctis"
+   sind in den Karten anklickbar und führen zum Thema, das sie erklärt. Am
+   Rechner zeigt ein Darüberfahren dessen ersten Satz. Verlinkt wird jeder
+   Name pro Karte nur beim ersten Vorkommen und nie in seinem eigenen Thema.
+   Welche Namen wohin führen, steht in
+   `src/atlas/features/lore/terms.js` — das Ziel wird über den Titel
+   gefunden, nicht über die Nummer, damit neue Nummerierungen nichts
+   zerstören. Findet ATLAS ein Ziel nicht, bleibt das Wort normaler Text.
+
 „← Zurück" geht eine Stufe hoch: vom Thema zur Übersicht, von der Übersicht
 zurück zur Karte. Eine aus der Suche geöffnete Karte führt zurück zu den
 Treffern, aus den Treffern geht es dorthin, wo die Suche begann.
@@ -109,6 +118,8 @@ angepasst.
 | `src/atlas/features/lore/lore-view.js` | Ansicht: Rad, Themen, Karten, Filter |
 | `src/atlas/features/lore/lore-data.js` | Laden und Aufbereiten der Daten |
 | `src/atlas/features/lore/lore-search.js` | Suche: Treffer, Schreibweisen, Textausschnitte |
+| `src/atlas/features/lore/terms.js` | Liste der verlinkten Namen und ihrer Ziele |
+| `src/atlas/features/lore/lore-terms.js` | Verweise: Ziele finden, Links setzen, Hinweisfenster |
 | `src/atlas/features/lore/families.js` | Kapitel → Rad oder Bibliothek, Farben, Symbole |
 | `src/atlas/features/lore/texts.js` | deutsche Oberflächentexte, Namen der Markierungen |
 | `styles/atlas/lore.css` | Aussehen, alles unter `#lore-container` |

@@ -126,6 +126,15 @@
 .lore-pager-btn {height:40px;padding:0 16px;border-radius:20px;border:1px solid rgba(255,255,255,0.14);background:none;color:#f2f5f3;font-size:13px;cursor:pointer}
 .lore-pager-btn:hover {border-color:var(--c)}
 
+/* ---------- links from names to their topic (lore-terms.js) ---------- */
+.lore-term {color:inherit;border-bottom:1px dotted rgba(143,224,170,0.7);cursor:pointer;transition:color 0.15s, border-color 0.15s}
+.lore-term:hover, .lore-term:focus-visible {color:#b8f0c8;border-bottom-color:#b8f0c8;outline:none}
+.lore-tip {position:fixed;z-index:260;display:none;max-width:320px;padding:10px 12px;border-radius:10px;pointer-events:none;
+  background:rgba(7,17,31,0.97);border:1px solid rgba(143,224,170,0.35);box-shadow:0 8px 24px rgba(0,0,0,0.45);
+  color:rgba(242,245,243,0.9);font-size:13px;line-height:1.45}
+.lore-tip.is-open {display:flex;flex-direction:column;gap:4px}
+.lore-tip strong {font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#8fe0aa}
+
 /* ---------- search results ---------- */
 .lore-results {max-width:1100px}
 .lore-results-summary {margin:0 0 14px;font-size:15px;color:rgba(242,245,243,0.8)}
