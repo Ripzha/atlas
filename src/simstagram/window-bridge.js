@@ -19,7 +19,7 @@ import {
   openLikePopup,
   openPost,
   refreshCmts,
-} from './main.js?v=202609211500';
+} from './main.js?v=202609221307';
 
 Object.assign(window, {
   autoH,

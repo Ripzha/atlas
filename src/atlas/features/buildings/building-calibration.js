@@ -3,10 +3,10 @@
    from inline handlers: toggleBuildingCalib(), clearBuildingCalib(),
    copyBuildingCalib(). */
 
-import { updateCalibrating } from '../admin/calibration.js?v=202609211500';
-import { state } from '../../core/state.js?v=202609211500';
-import { BUILDINGS } from '../../data/buildings.js?v=202609211500';
-import { buildingFloorIdx, currentBuildingKey } from './building-view.js?v=202609211500';
+import { updateCalibrating } from '../admin/calibration.js?v=202609221307';
+import { state } from '../../core/state.js?v=202609221307';
+import { BUILDINGS } from '../../data/buildings.js?v=202609221307';
+import { buildingFloorIdx, currentBuildingKey } from './building-view.js?v=202609221307';
 
 let calibBuildingData=[];
 

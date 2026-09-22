@@ -3,9 +3,9 @@
    "assign" (lot assignment) and "routen" (route editor). Called from inline
    handlers: closeAdmin(), setAdminTab(), renderAdminContent(). */
 
-import { ADMIN_PASS } from '../../config.js?v=202609211500';
-import { state } from '../../core/state.js?v=202609211500';
-import { renderAssignTab } from './lot-assignment.js?v=202609211500';
+import { ADMIN_PASS } from '../../config.js?v=202609221307';
+import { state } from '../../core/state.js?v=202609221307';
+import { renderAssignTab } from './lot-assignment.js?v=202609221307';
 
 document.getElementById('logo-icon').addEventListener('click',()=>{
   state.logoClicks++;clearTimeout(state.logoTimer);state.logoTimer=setTimeout(()=>state.logoClicks=0,5000);

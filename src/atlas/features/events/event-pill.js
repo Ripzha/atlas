@@ -9,7 +9,7 @@
    override (body:has(#world-container.active)) moves it bottom right.
    The pill can be dragged anywhere; the position is remembered per browser. */
 
-import { createEventPill } from '../../../shared/event-pill/event-pill.js?v=202609211500';
+import { createEventPill } from '../../../shared/event-pill/event-pill.js?v=202609221307';
 
 createEventPill({
   anchors: ['#center'],

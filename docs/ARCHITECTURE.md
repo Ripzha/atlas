@@ -36,6 +36,7 @@ src/
     window-bridge.js  Functions called from inline handlers, attached to window
     config.js  Global constants (BASE, IMG, SCRIPT_URL, ADMIN_PASS)
     data/      Static data: buildings, worlds, lot coordinates, road network
+               lore/lore.json is generated from the lore document (never edit by hand)
     core/      Shared state, sheet data access, data cache, events, image sizes, start-up (boot.js)
     ui/        Cross-cutting UI building blocks (tooltips, sheets, zoom …)
     features/  One folder per domain area:
@@ -49,6 +50,7 @@ src/
       admin/         admin panel, calibration, lot assignment
       forum-bridge/  messages from/to the forum header
       events/        event pill
+      lore/          Occult lore: wheel of beings, topics, knowledge cards (see LORE.md)
   news/        Kiosk
   simstagram/  Feed — main.js, window-bridge.js
   metaverse/   Blog — main.js, window-bridge.js
@@ -57,6 +59,7 @@ src/
 styles/        CSS, mirrors the src/ layout
 docs/          This documentation
 tools/         Helper scripts, e.g. bump-version.sh (no build step)
+               lore/import-lore.py turns the Word document into lore.json
 assets/        Images and static files
 ```
 

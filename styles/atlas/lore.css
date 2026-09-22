@@ -1,0 +1,132 @@
+/* PROJECT ATLAS - Occult lore view (src/atlas/features/lore/).
+   Everything is scoped to #lore-container, so nothing here reaches the map.
+   Colours of a being come in as --c, --c-soft and --c-faint (lore-view.js). */
+
+#lore-container {position:fixed;inset:0;z-index:200;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  background:radial-gradient(ellipse at 28% 40%, #0c1d33 0%, #050d18 70%);color:#f2f5f3;
+  --lore-serif:'Cormorant Garamond', Georgia, 'Times New Roman', serif}
+#lore-container.open {display:block}
+#lore-container button {font-family:inherit}
+#lore-container button:focus-visible {outline:2px solid var(--c, #6acc8a);outline-offset:3px}
+
+/* Header: "← Zurück" top left like in every view; room on the right for the red close button */
+.lore-header {position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:14px;padding:10px 64px 10px 14px;
+  background:rgba(5,13,24,0.94);border-bottom:0.5px solid rgba(255,255,255,0.08);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.lore-crumbs {display:flex;gap:8px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(242,245,243,0.55);min-width:0;overflow:hidden;white-space:nowrap}
+.lore-crumb-root {color:#f2f5f3;font-weight:700}
+.lore-crumb-sep {opacity:0.5}
+
+.lore-page {padding:22px 40px 48px;max-width:1500px;margin:0 auto;box-sizing:border-box}
+.lore-note {padding:30px 14px;color:rgba(242,245,243,0.7);font-size:15px}
+.lore-kicker {font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(242,245,243,0.5)}
+.lore-muted {font-size:12px;color:rgba(242,245,243,0.55)}
+.lore-h1 {margin:4px 0 14px;font-family:var(--lore-serif);font-size:38px;font-weight:600;line-height:1.1}
+.lore-h2 {margin:2px 0 0;font-family:var(--lore-serif);font-size:36px;font-weight:700;line-height:1.1}
+
+/* ---------- overview ---------- */
+.lore-overview {display:grid;grid-template-columns:minmax(320px, 44%) minmax(0, 1fr);gap:36px;align-items:start}
+.lore-pick {display:flex;flex-direction:column;min-width:0}
+
+.lore-wheel {position:relative;width:100%;max-width:560px;aspect-ratio:1 / 1;margin:0 auto}
+.lore-orbit {position:absolute;inset:11.5%;border-radius:50%;border:1px dashed rgba(255,255,255,0.10)}
+.lore-moon {position:absolute;left:50%;top:50%;width:43%;aspect-ratio:1 / 1;transform:translate(-50%,-50%);box-sizing:border-box;
+  border-radius:50%;border:1px solid var(--c);padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;
+  background:radial-gradient(circle at 38% 35%, #1c2f47 0%, #0b1a2c 60%, #07111f 100%);
+  box-shadow:0 0 80px var(--c-soft), inset 0 0 60px var(--c-faint)}
+.lore-moon-icon {color:var(--c);display:inline-flex}
+.lore-moon-name {font-family:var(--lore-serif);font-size:32px;font-weight:700;line-height:1}
+.lore-moon-count {font-size:12px;color:rgba(242,245,243,0.65)}
+
+.lore-sigil {position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);width:96px;padding:0;background:none;border:none;
+  display:flex;flex-direction:column;align-items:center;gap:5px;color:inherit;cursor:pointer}
+.lore-sigil-icon {width:58px;height:58px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.14);background:rgba(10,22,38,0.92);color:var(--c);
+  display:flex;align-items:center;justify-content:center;transition:border-color 0.15s, background 0.15s, box-shadow 0.15s}
+.lore-sigil:hover .lore-sigil-icon {border-color:var(--c)}
+.lore-sigil.is-active .lore-sigil-icon {border-color:var(--c);background:var(--c-faint);box-shadow:0 0 22px var(--c-soft)}
+.lore-sigil-name {font-size:12px;color:rgba(242,245,243,0.68)}
+.lore-sigil.is-active .lore-sigil-name {color:#f2f5f3;font-weight:700}
+.lore-sigil:focus-visible {outline:none}
+.lore-sigil:focus-visible .lore-sigil-icon {outline:2px solid var(--c);outline-offset:3px}
+
+/* Phone replacement for the wheel */
+.lore-chips {display:none}
+.lore-chip {display:inline-flex;align-items:center;gap:7px;height:44px;padding:0 14px;border-radius:22px;border:1px solid rgba(255,255,255,0.14);
+  background:rgba(255,255,255,0.03);color:rgba(242,245,243,0.8);font-size:14px;white-space:nowrap;flex-shrink:0;cursor:pointer}
+.lore-chip-icon {display:inline-flex;color:var(--c)}
+.lore-chip.is-active {border-color:var(--c);background:var(--c-faint);color:#f2f5f3}
+
+.lore-library {margin-top:14px;display:flex;flex-direction:column;gap:8px}
+.lore-library-list {display:flex;flex-wrap:wrap;gap:8px}
+.lore-book {height:38px;padding:0 14px;border-radius:19px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.04);
+  color:rgba(242,245,243,0.85);font-size:13px;cursor:pointer}
+.lore-book:hover {border-color:rgba(255,255,255,0.3)}
+.lore-book.is-active {border-color:#8fb3a0;background:rgba(143,179,160,0.16);color:#f2f5f3}
+
+.lore-detail {border:1px solid rgba(255,255,255,0.09);border-radius:16px;background:rgba(7,17,31,0.84);padding:26px 30px 28px;min-width:0}
+.lore-detail-head {display:flex;align-items:center;gap:18px;margin-bottom:12px}
+.lore-badge-icon {width:60px;height:60px;border-radius:14px;border:1px solid var(--c-soft);background:var(--c-faint);color:var(--c);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lore-lead {margin:0 0 18px;max-width:70ch;font-size:17px;line-height:1.55;color:rgba(242,245,243,0.86)}
+.lore-row {display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.lore-tiles {display:grid;grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));gap:10px}
+.lore-tile {display:flex;flex-direction:column;justify-content:space-between;gap:8px;min-height:78px;padding:14px 16px;border-radius:12px;
+  border:1px solid rgba(255,255,255,0.09);background:rgba(255,255,255,0.035);color:#f2f5f3;text-align:left;cursor:pointer;
+  transition:border-color 0.15s, background 0.15s}
+.lore-tile:hover {border-color:var(--c-soft);background:var(--c-faint)}
+.lore-tile-title {font-size:15px;font-weight:600;line-height:1.3}
+.lore-tile-count {font-size:12px;color:var(--c)}
+
+/* ---------- topic ---------- */
+.lore-topic-body {display:grid;grid-template-columns:230px minmax(0, 1fr);gap:28px;align-items:start;margin-top:18px}
+.lore-topic-nav {position:sticky;top:70px;display:flex;flex-direction:column;gap:4px}
+.lore-topic-link {text-align:left;background:none;border:1px solid transparent;border-radius:8px;padding:8px 10px;color:rgba(242,245,243,0.7);
+  font-size:13px;line-height:1.3;cursor:pointer}
+.lore-topic-link:hover {color:#f2f5f3;background:rgba(255,255,255,0.04)}
+.lore-topic-link.is-active {color:#f2f5f3;border-color:var(--c-soft);background:var(--c-faint);font-weight:600}
+.lore-topic-main {min-width:0}
+
+.lore-filters {display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.lore-filter {height:40px;padding:0 16px;border-radius:20px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.04);
+  color:rgba(242,245,243,0.85);font-size:13px;font-weight:600;cursor:pointer}
+.lore-filter.is-active {border-color:var(--m, var(--c));color:#f2f5f3;background:rgba(255,255,255,0.09)}
+
+.lore-topic-intro {max-width:75ch;margin-bottom:14px}
+.lore-group-title {margin:24px 0 10px;font-family:var(--lore-serif);font-size:24px;font-weight:600}
+.lore-topic-main > .lore-group-title:first-child {margin-top:0}
+.lore-cards {display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:14px;align-items:start}
+.lore-card {padding:18px 20px;border-radius:14px;border:1px solid rgba(255,255,255,0.1);background:rgba(10,18,32,0.88);display:flex;flex-direction:column;gap:10px}
+.lore-card-head {display:flex;align-items:baseline;gap:10px}
+.lore-card-nr {font-size:12px;color:rgba(242,245,243,0.4);flex-shrink:0}
+.lore-card-title {margin:0;font-family:var(--lore-serif);font-size:21px;font-weight:700;line-height:1.2}
+.lore-block {display:flex;flex-direction:column;gap:6px}
+.lore-block p {margin:0;font-size:15px;line-height:1.55;color:rgba(242,245,243,0.88)}
+.lore-list {margin:0;padding-left:18px;font-size:15px;line-height:1.55;color:rgba(242,245,243,0.88)}
+.lore-list li + li {margin-top:4px}
+.lore-mark {align-self:flex-start;display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:11px;border:1px solid var(--m);
+  color:var(--m);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.lore-block.is-dim, .lore-list.is-dim {opacity:0.4}
+
+.lore-pager {display:flex;justify-content:space-between;gap:12px;margin-top:22px}
+.lore-pager-btn {height:40px;padding:0 16px;border-radius:20px;border:1px solid rgba(255,255,255,0.14);background:none;color:#f2f5f3;font-size:13px;cursor:pointer}
+.lore-pager-btn:hover {border-color:var(--c)}
+
+/* ---------- tablets and phones ---------- */
+@media (max-width:1100px) {
+  .lore-page {padding:18px 24px 48px}
+  .lore-overview {gap:24px}
+}
+@media (max-width:768px) {
+  .lore-page {padding:14px 14px 96px}
+  .lore-overview {grid-template-columns:minmax(0, 1fr);gap:16px}
+  .lore-h1 {font-size:28px;margin-bottom:10px}
+  .lore-wheel {display:none}
+  .lore-chips {display:flex;gap:8px;overflow-x:auto;margin:0 -14px;padding:0 14px 6px}
+  .lore-detail {padding:18px}
+  .lore-h2 {font-size:28px}
+  .lore-badge-icon {width:48px;height:48px}
+  .lore-tiles {grid-template-columns:minmax(0, 1fr)}
+  .lore-topic-body {grid-template-columns:minmax(0, 1fr);gap:12px}
+  .lore-topic-nav {position:static;flex-direction:row;overflow-x:auto;gap:6px;margin:0 -14px;padding:0 14px 6px}
+  .lore-topic-link {white-space:nowrap;border-color:rgba(255,255,255,0.12);border-radius:18px}
+  .lore-cards {grid-template-columns:minmax(0, 1fr)}
+}

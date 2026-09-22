@@ -36,7 +36,8 @@ src/
     main.js    Einstieg: bindet alle Module ein
     window-bridge.js  Funktionen für Inline-Handler, an window gehängt
     config.js  Globale Konstanten (BASE, IMG, SCRIPT_URL, ADMIN_PASS)
-    data/      Feste Daten: Gebäude, Welten, Grundstücks-Koordinaten, Strassennetz
+    data/      Feste Daten: Gebäude, Welten, Grundstücks-Koordinaten, Strassennetz;
+               lore/lore.json wird aus dem Lore-Dokument erzeugt (nie von Hand ändern)
     core/      Gemeinsamer Zustand, Sheet-Zugriff, Daten-Zwischenspeicher, Ereignisse, Bildgrössen, Start (boot.js)
     ui/        Übergreifende Oberflächen-Bausteine (Tooltips, Sheets, Zoom …)
     features/  Ein Ordner pro Fachbereich:
@@ -50,6 +51,7 @@ src/
       admin/         Admin-Panel, Kalibrierung, Zuweisung
       forum-bridge/  Nachrichten von/zur Forum-Kopfzeile
       events/        Event-Pille
+      lore/          Okkult-Lore: Rad der Wesen, Themen, Wissenskarten (siehe LORE.de.md)
   news/        Kiosk
   simstagram/  Feed — main.js, window-bridge.js
   metaverse/   Blog — main.js, window-bridge.js
@@ -57,7 +59,8 @@ src/
 
 styles/        CSS, gespiegelt zur src-Struktur
 docs/          Diese Unterlagen
-tools/         Hilfsskripte, z.B. bump-version.sh (kein Build-Schritt)
+tools/         Hilfsskripte, z.B. bump-version.sh (kein Build-Schritt);
+               lore/import-lore.py macht aus dem Word-Dokument lore.json
 assets/        Bilder und Statisches
 ```
 
