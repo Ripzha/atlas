@@ -16,8 +16,16 @@ point on average. The view therefore never shows everything at once:
    list of topics to switch, with "Alle Themen" for the whole chapter on top;
    above the cards a filter by marking (Regeln, Gesichert, Offen …).
 
+3. **Search:** the field at the top right searches the whole lore while
+   typing — text, headings and sub-headings. Several words must all occur in
+   the same card. Case does not matter, the start of a word is enough
+   ("vampir" finds "Vampirblut"), umlauts may be typed out ("werwoelfe"), and
+   the singular finds the plural ("werwolf" finds "Werwölfe"). A hit opens
+   exactly its card, which lights up briefly.
+
 "← Zurück" goes one level up: from a topic to the overview, from the overview
-back to the map.
+back to the map. A card opened from the search goes back to the results, and
+from the results back to where the search started.
 
 ## Where the content comes from
 
@@ -93,6 +101,7 @@ document gets new chapters or other numbers, only this file changes.
 | `src/atlas/data/lore/lore.json` | the lore as data, generated |
 | `src/atlas/features/lore/lore-view.js` | view: wheel, topics, cards, filter |
 | `src/atlas/features/lore/lore-data.js` | loading and shaping the data |
+| `src/atlas/features/lore/lore-search.js` | search: hits, spellings, text snippets |
 | `src/atlas/features/lore/families.js` | chapter → wheel or library, colours, icons |
 | `src/atlas/features/lore/texts.js` | German UI text, names of the markings |
 | `styles/atlas/lore.css` | look, all scoped to `#lore-container` |

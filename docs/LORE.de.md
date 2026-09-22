@@ -16,8 +16,17 @@ rund 20 Wörter pro Unterpunkt. Die Ansicht zeigt deshalb nie alles auf einmal:
    zum Wechseln, darüber „Alle Themen" für das ganze Kapitel, oben ein Filter
    nach Markierungen (Regeln, Gesichert, Offen …).
 
+3. **Suche:** Das Feld oben rechts durchsucht beim Tippen die ganze Lore —
+   Text, Überschriften und Zwischentitel. Mehrere Wörter müssen alle in
+   derselben Karte vorkommen. Gross- und Kleinschreibung sind egal, ein
+   Wortanfang genügt („vampir" findet „Vampirblut"), Umlaute dürfen
+   ausgeschrieben werden („werwoelfe"), und die Einzahl findet die Mehrzahl
+   („werwolf" findet „Werwölfe"). Ein Treffer öffnet genau seine Karte, die
+   kurz aufleuchtet.
+
 „← Zurück" geht eine Stufe hoch: vom Thema zur Übersicht, von der Übersicht
-zurück zur Karte.
+zurück zur Karte. Eine aus der Suche geöffnete Karte führt zurück zu den
+Treffern, aus den Treffern geht es dorthin, wo die Suche begann.
 
 ## Woher die Inhalte kommen
 
@@ -96,6 +105,7 @@ angepasst.
 | `src/atlas/data/lore/lore.json` | die Lore als Daten, erzeugt |
 | `src/atlas/features/lore/lore-view.js` | Ansicht: Rad, Themen, Karten, Filter |
 | `src/atlas/features/lore/lore-data.js` | Laden und Aufbereiten der Daten |
+| `src/atlas/features/lore/lore-search.js` | Suche: Treffer, Schreibweisen, Textausschnitte |
 | `src/atlas/features/lore/families.js` | Kapitel → Rad oder Bibliothek, Farben, Symbole |
 | `src/atlas/features/lore/texts.js` | deutsche Oberflächentexte, Namen der Markierungen |
 | `styles/atlas/lore.css` | Aussehen, alles unter `#lore-container` |

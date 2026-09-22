@@ -18,7 +18,13 @@ export const TEXT = {
   next: 'Nächstes Thema →',
   cards: function(n){ return n === 1 ? '1 Karte' : n + ' Karten'; },
   topicsCount: function(n){ return n === 1 ? '1 Thema' : n + ' Themen'; },
-  filterAll: 'Alle'
+  filterAll: 'Alle',
+  searchPlaceholder: 'In der Lore suchen …',
+  searchLabel: 'Okkult-Lore durchsuchen',
+  searchCrumb: 'Suche',
+  hits: function(n, k){ return (n === 1 ? '1 Treffer' : n + ' Treffer') + ' in ' + (k === 1 ? '1 Kapitel' : k + ' Kapiteln'); },
+  noHits: function(q){ return 'Keine Treffer für „' + q + '“.'; },
+  noHitsHint: 'Versuch es mit einem kürzeren Wort oder einem Wortanfang, etwa „vampir“ statt „Vampirfähigkeiten“.'
 };
 
 /* Labels of the markings in the document ("**Regel:**" …), in filter order. */
