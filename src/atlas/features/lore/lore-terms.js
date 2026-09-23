@@ -10,9 +10,9 @@
    own sidebar tooltip for every [data-tip] on the page, which would open a
    second window on top of this one. */
 
-import { escapeHtml } from '../../../shared/html.js?v=202609221545';
-import { chapterModel } from './lore-data.js?v=202609221545';
-import { TERMS } from './terms.js?v=202609221545';
+import { escapeHtml } from '../../../shared/html.js?v=202609230614';
+import { chapterModel } from './lore-data.js?v=202609230614';
+import { TERMS } from './terms.js?v=202609230614';
 
 var resolvedFor = null;
 var byForm = {};

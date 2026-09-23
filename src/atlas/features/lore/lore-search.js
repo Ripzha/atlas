@@ -12,7 +12,7 @@
    - umlauts can be typed out: "werwoelfe" finds "Werwölfe", "strasse" finds
      "Straße", and the other way round */
 
-import { chapterModel } from './lore-data.js?v=202609221545';
+import { chapterModel } from './lore-data.js?v=202609230614';
 
 var index = null;
 var indexedLore = null;
